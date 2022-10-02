@@ -12,7 +12,7 @@ function utilities:c(instance,props, children)
 	return i
 end
 
-utilities:t = function(properties)
+utilities:t(properties)
 	--[[
 	properties.Object -> any ui object
 	properties.Animation -> {List of ui components}
@@ -36,7 +36,7 @@ utilities:t = function(properties)
 	return Animate
 end
 
-utilities:gt = function(properties)
+utilities:gt(properties)
 	--[[
 	properties.Objects -> {List of objects}
 	properties.Animation -> {List of ui components}
@@ -61,7 +61,7 @@ utilities:gt = function(properties)
 	end
 end
 
-utilities:b = function(object,properties)
+utilities:b(object,properties)
 	--[[
 	object -> object affected
 	properties.Down -> On mousebutton1down
