@@ -1,6 +1,6 @@
-local utilities = {}
+local u = {} 
 
-function utilities:c(instance,props, children)
+function u:c(instance,props, children)
 	local i = Instance.new(instance)
 	local children = children or {}
 	for prop, v in pairs(props) do
@@ -12,79 +12,94 @@ function utilities:c(instance,props, children)
 	return i
 end
 
-function utilities:t(properties)
+function u:tween(properties)
 	--[[
-	properties.Object -> any ui object
-	properties.Animation -> {List of ui components}
-	properties.Time -> <number>
-	properties.Direction -> <string> In Out InOut
-	properties.Style -> <string> Sine Linear Exponential etc
-	properties.Repeat -> <number>
+	properties.o -> ui object
+	properties.a -> {Table of ui modications}
+	properties.t -> <number>
+	properties.d -> <string> In Out InOut
+	properties.s -> <string> Sine Linear Exponential etc
+	properties.r -> <number>
 	]]--
-	local TweenService = game:GetService("TweenService")
-	local tweeninfo = TweenInfo.new(
-		properties.Time, 
-		Enum.EasingStyle[properties.Style], 
-		Enum.EasingDirection[properties.Direction], 
-		properties.Repeat
-	)
-	local Animate = TweenService:Create(
-		properties.Object,
-		tweeninfo,
-		properties.Animation
-	)
-	return Animate
-end
-
-function utilities:gt(properties)
-	--[[
-	properties.Objects -> {List of objects}
-	properties.Animation -> {List of ui components}
-	properties.Time -> <number>
-	properties.Direction -> <string> In Out InOut
-	properties.Style -> <string> Sine Linear Exponential etc
-	properties.Repeat -> <number>
-	]]--
-	local TweenService = game:GetService("TweenService")
-	local tweeninfo = TweenInfo.new(
-		properties.Time, 
-		Enum.EasingStyle[properties.Style], 
-		Enum.EasingDirection[properties.Direction], 
-		properties.Repeat
-	)
-	for i,v in next, properties.Objects do
-		TweenService:Create(
-			v,
+	if not properties.r then properties.r = 0 end
+	if not properties.d then properties.d = "InOut" end
+	if not properties.s then properties.s = "Linear" end
+	if not properties.t then properties.t = 1 end
+	
+	if not properties.a or not properties.o then
+		return warn('\nUI-UTILITIES ERROR: \nMissing one of the required propertoes: a, o')
+	elseif properties.a and properties.o then
+		local TweenService = game:GetService("TweenService")
+		local tweeninfo = TweenInfo.new(
+			properties.t, 
+			Enum.EasingStyle[properties.s], 
+			Enum.EasingDirection[properties.d], 
+			properties.r
+		)
+		local Animate = TweenService:Create(
+			properties.o,
 			tweeninfo,
-			properties.Animation
-		):Play()
+			properties.a
+		)
+		return Animate
 	end
 end
 
-function utilities:b(object,properties)
+function u:gtween(properties)
 	--[[
-	object -> object affected
-	properties.Down -> On mousebutton1down
-	properties.Up -> On mousebutton1up
-	properties.Click -> On mousebutton1click
-	properties.Enter -> On mouseenter
-	properties.Leave -> On mouseleave
+	properties.O -> {List of objects}
+	properties.A -> {List of ui components}
+	properties.T -> <number>
+	properties.D -> <string> In Out InOut
+	properties.S -> <string> Sine Linear Exponential etc
+	properties.R -> <number>
+	]]--
+	local TweenService = game:GetService("TweenService")
+	local tweeninfo = TweenInfo.new(
+		properties.T, 
+		Enum.EasingStyle[properties.S], 
+		Enum.EasingDirection[properties.D], 
+		properties.R
+	)
+	for i,v in next, properties.O do
+		TweenService:Create(
+			v,
+			tweeninfo,
+			properties.A
+		):Play()
+	end
+end
+function u:button(o,properties)
+	--[[
+	o -> object affected
+	properties.d -> On mousebutton1down
+	properties.u -> On mousebutton1up
+	properties.c -> On mousebutton1click
+	properties.e -> On mouseenter
+	properties.l -> On mouseleave
 	]]
-	object.MouseButton1Down:Connect(function()
-		properties.Down()
+	for i,v in next, properties do
+		if not v then
+			v = function() wait() end
+		else
+			wait()
+		end
+	end
+	o.MouseButton1Down:Connect(function()
+		properties.d()
 	end)
-	object.MouseButton1Up:Connect(function()
-		properties.Up()
+	o.MouseButton1Up:Connect(function()
+		properties.u()
 	end)
-	object.MouseButton1Click:Connect(function()
-		properties.Click()
+	o.MouseButton1Click:Connect(function()
+		properties.c()
 	end)
-	object.MouseEnter:Connect(function()
-		properties.Enter()
+	o.MouseEnter:Connect(function()
+		properties.e()
 	end)
-	object.MouseLeave:Connect(function()
-		properties.Leave()
+	o.MouseLeave:Connect(function()
+		properties.l()
 	end)
 end
 
-return utilities
+return u
