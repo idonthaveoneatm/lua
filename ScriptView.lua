@@ -11,7 +11,7 @@ end
 local folderreader = Instance.new("ScreenGui")
 
 folderreader.Name = "folderreader"
-folderreader.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+folderreader.Parent = game.CoreGui
 folderreader.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 folderreader.DisplayOrder = 1
 
