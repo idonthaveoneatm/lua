@@ -5,7 +5,7 @@ repeat task.wait() until not game:GetService("Players").LocalPlayer.PlayerGui:Fi
 local failed = false
 print("started")
 local PATH = game.Players.LocalPlayer.PlayerGui:WaitForChild("Loading").Black.BackgroundTransparency
-
+task.wait(10)
 while true do
     if PATH ==0 then
         print("failed check 1")
