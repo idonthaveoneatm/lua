@@ -12,7 +12,7 @@ while true do
         failed = true
     end
     task.wait(WaitTime)
-    if PATH ==  then
+    if PATH == 0 then
         print("failed check 2")
         print("Worked")
         local function Hop()
