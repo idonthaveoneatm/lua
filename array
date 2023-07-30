@@ -11,9 +11,9 @@ Arrays  | Designing + Programming + New Features
 griffindoescooking
 Added DestroySearchbar for dropdown
 fixed indexed nil FadeDescription
+swapped _G for getgenv().
 
 ]]
-
 
 
 local Release = "Release 2A"
@@ -131,8 +131,8 @@ if game["Run Service"]:IsStudio() then
 end
 
 pcall(function()
-	_G.LastRayField.Name = 'Old Arrayfield'
-	_G.LastRayField.Enabled = false
+	getgenv().LastRayField.Name = 'Old Arrayfield'
+	getgenv().LastRayField.Enabled = false
 end)
 local ParentObject = function(Gui)
 	local success, failure = pcall(function()
@@ -149,7 +149,7 @@ local ParentObject = function(Gui)
 	if not success and failure then
 		Gui.Parent = LocalPlayer:FindFirstChildWhichIsA("PlayerGui")
 	end
-	_G.LastRayField = ArrayField
+	getgenv().LastRayField = ArrayField
 end
 ParentObject(ArrayField)
 
@@ -772,7 +772,7 @@ function ArrayFieldLibrary:Notify(NotificationSettings)
 		end
 
 		if not NotificationSettings.Actions then
-			wait(NotificationSettings.Duration or NotificationDuration - 0.5)
+			wait(NotificationSettings.Duration or 10)
 		else
 			wait(0.8)
 			TweenService:Create(Notification, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 295, 0, 132)}):Play()
@@ -1309,9 +1309,9 @@ function ArrayFieldLibrary:CreateWindow(Settings)
 			local KeyUI = game:GetObjects("rbxassetid://11695805160")[1]
 			KeyUI.Enabled = true
 			pcall(function()
-				_G.KeyUI:Destroy()
+				getgenv().KeyUI:Destroy()
 			end)
-			_G.KeyUI = KeyUI
+			getgenv().KeyUI = KeyUI
 
 			ParentObject(KeyUI)
 
