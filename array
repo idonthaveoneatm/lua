@@ -8,6 +8,10 @@ Original by Sirius
 -------------------------------
 Arrays  | Designing + Programming + New Features
 
+griffindoescooking
+Added DestroySearchbar for dropdown
+fixed indexed nil FadeDescription
+
 ]]
 
 
@@ -281,6 +285,9 @@ local function FadeDescription(Infos,type,Out:boolean?)
 		if not Infos.Info.Image then
 			InfoPrompt.ImageLabel.Visible = false
 			InfoPrompt.Description.Position = InfoPrompt.ImageLabel.Position
+
+        elseif Infos == nil then
+            wait()
 		else
 			InfoPrompt.ImageLabel.Visible = true
 			InfoPrompt.ImageLabel.Image = 'rbxassetid://'..Infos.Info.Image
