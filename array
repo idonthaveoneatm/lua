@@ -1497,16 +1497,9 @@ function ArrayFieldLibrary:CreateWindow(Settings)
 	TweenService:Create(Main.SideTabList, TweenInfo.new(0, Enum.EasingStyle.Quint), {BackgroundTransparency = 1,Size = UDim2.new(0,150,0,390),Position = UDim2.new(0,10,0.5,22)}):Play()
 	TweenService:Create(Main.SideTabList.UIStroke, TweenInfo.new(0, Enum.EasingStyle.Quint),{Transparency = 1}):Play()
 	TweenService:Create(Main.SideTabList.RDMT, TweenInfo.new(0, Enum.EasingStyle.Quint),{TextTransparency = 1}):Play()
-	--delay(4,function()
-	--	qNotePrompt({
-	--		Title = 'Preview',
-	--		Description = 'This is a preview for the official ArrayField forum post. Remember that things are subject to change.',
-
-	--	})
-	--end)
 
 	TweenService:Create(InfoPrompt,TweenInfo.new(.3,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{
-		Size = UDim2.fromOffset(212,254),BackgroundTransparency = 1
+		Size = UDim2.fromOffset(2120,254),BackgroundTransparency = 1
 	}):Play()
 	TweenService:Create(InfoPrompt.ImageLabel,TweenInfo.new(.25,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{
 		ImageTransparency = 1
