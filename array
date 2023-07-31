@@ -1563,10 +1563,13 @@ function ArrayFieldLibrary:CreateWindow(Settings)
         elseif Image == nil then
             TopTabButton.Image.Image = ""
 			SideTabButton.Image.Image = ""
-            TopTabButton.Title.TextXAlignment = Enum.TextXAlignment.Left
+
+            SideTabButton.Title.TextXAlignment = Enum.TextXAlignment.Left
+            SideTabButton.Title.AnchorPoint = Vector2.new(0, 0.5)
+			SideTabButton.Title.Position = UDim2.new(0, 5, 0.5, 0)
 		end
 
-		TopTabButton.BackgroundTransparency = 1
+		--TopTabButton.BackgroundTransparency = 1
 		TopTabButton.Title.TextTransparency = 1
 		TopTabButton.Shadow.ImageTransparency = 1
 		TopTabButton.Image.ImageTransparency = 1
@@ -3470,4 +3473,3 @@ function ArrayFieldLibrary:LoadConfiguration()
 	end
 end
 task.delay(9, ArrayFieldLibrary.LoadConfiguration, ArrayFieldLibrary)
-return ArrayFieldLibrary
