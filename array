@@ -1563,6 +1563,7 @@ function ArrayFieldLibrary:CreateWindow(Settings)
         elseif Image == nil then
             TopTabButton.Image.Image = ""
 			SideTabButton.Image.Image = ""
+            TopTabButton.Title.TextXAlignment = Enum.TextXAlignment.Left
 		end
 
 		TopTabButton.BackgroundTransparency = 1
