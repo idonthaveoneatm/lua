@@ -1,2 +1,0 @@
-local url = "https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/ClickerFightingSimulator/src"
-loadstring(game:HttpGet(url))()
