@@ -3473,3 +3473,4 @@ function ArrayFieldLibrary:LoadConfiguration()
 	end
 end
 task.delay(9, ArrayFieldLibrary.LoadConfiguration, ArrayFieldLibrary)
+return ArrayFieldLibrary
