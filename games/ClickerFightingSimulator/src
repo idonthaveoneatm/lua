@@ -1,0 +1,427 @@
+getgenv().Settings = {
+    autoPower = false,
+    farmWorld = false,
+    collectQuests = false,
+    farmEgg = false,
+    rebirth = false
+}
+
+local ArrayField = loadstring(game:HttpGet('https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/array'))()
+
+local VIM = game:GetService("VirtualInputManager")
+local RS = game:GetService("RunService")
+
+local function firesignal(Button)
+    VIM:SendMouseButtonEvent(Button.AbsolutePosition.X + Button.AbsoluteSize.X / 2, Button.AbsolutePosition.Y + Button.AbsoluteSize.Y / 2 + 30, 0, true, yomama, 1)
+    VIM:SendMouseButtonEvent(Button.AbsolutePosition.X + Button.AbsoluteSize.X / 2, Button.AbsolutePosition.Y + Button.AbsoluteSize.Y / 2 + 30, 0, false, yomama, 1)
+end
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Remotes = ReplicatedStorage.Remotes
+
+local LocalPlayer = game.Players.LocalPlayer
+local PlayerGui = LocalPlayer.PlayerGui
+local Character = LocalPlayer.Character
+
+local function notify(vars)
+    ArrayField:Notify({
+        Title = vars.Name,
+        Content = vars.Body,
+        Duration = vars.Time,
+        Image = 4483362458,
+        Actions = {}
+    })
+end
+
+local window, main, autoPower, worldSelector, farmWorld, collectQuests, eggSelector, farmEgg, rebirth, teleports, worldSelector2, teleportToWorld, eggSelector2, teleportToEgg, currentWorld, availableEggs, removeButtons, fightSummon, guide, misc
+
+local worlds = {}
+
+local worldCount = 0
+for i = 1,32 do
+    worldCount = worldCount +1
+    if worldCount < 10 then
+        table.insert(worlds, "World00"..worldCount)
+    else
+        table.insert(worlds, "World0"..worldCount)
+    end
+end
+
+local eggs = {}
+
+local eggCount = 0
+for i = 1,33 do
+    eggCount = eggCount +1
+    if eggCount < 10 then
+        table.insert(eggs, "Draw00"..eggCount)
+    else
+        table.insert(eggs, "Draw0"..eggCount)
+    end
+end
+
+window = ArrayField:CreateWindow({
+    Name = "Clicker Fighting Simulator",
+    LoadingTitle = "Clicker Fighting Simulator",
+    LoadingSubtitle = "by griffindoescooking",
+    ConfigurationSaving = {
+        Enabled = false,
+        FolderName = nil,
+        FileName = "ArrayField"
+    },
+    Discord = {
+        Enabled = false,
+        Invite = "noinvitelink", 
+        RememberJoins = true 
+    },
+    KeySystem = false, 
+    KeySettings = {
+        Title = "Untitled",
+        Subtitle = "Key System",
+        Note = "No method of obtaining the key is provided",
+        FileName = "Key", 
+        SaveKey = true, 
+        GrabKeyFromSite = false, 
+        Actions = {
+                [1] = {
+                    Text = 'Click here to copy the key link <--',
+                    OnPress = function()
+                        print('Pressed')
+                    end,
+                    }
+                },
+        Key = {"Hello"} 
+    }
+})
+
+local function createMain()
+    main = window:CreateTab("Main",nil)
+
+    main:CreateSection("Main",true)
+
+    autoPower = main:CreateToggle({
+        Name = "Auto power",
+        CurrentValue = false,
+        Flag = "autoPower", 
+        Callback = function(Value)
+            Settings.autoPower = Value
+            while Settings.autoPower do
+                if not Settings.autoPower then break end
+                task.wait()
+                for i = 1, math.huge do
+                    task.wait()
+                    if not Settings.autoPower then break end
+                    game:GetService("ReplicatedStorage").Remotes.RE_ClickPower:FireServer()
+                end
+            end
+        end,
+    })
+
+    collectQuests = main:CreateToggle({
+        Name = "Auto collect quests",
+        CurrentValue = false,
+        Flag = "collectQuests", 
+        Callback = function(Value)
+            Settings.collectQuests = Value
+            while Settings.collectQuests do
+                task.wait()
+                if not Settings.collectQuests then break end
+                if PlayerGui.MainUI.TopMenu.Mid.QuestFrame.Progress.Bar.Size.X.Scale == 1 then
+                    firesignal(PlayerGui.MainUI.TopMenu.Mid.QuestFrame.Reward.TextButton)
+                end
+            end
+        end,
+    })
+
+    rebirth = main:CreateToggle({
+        Name = "Auto rebirth",
+        CurrentValue = false,
+        Flag = "Toggle5", 
+        Callback = function(Value)
+            Settings.rebirth = Value
+            while Settings.rebirth do
+                task.wait()
+                if not Settings.rebirth then break end
+                if PlayerGui.MainUI.CenterMenu.Rebirth.Frame.CoinsBar.Clipping.Size.X.Scale == 1 then
+                    Remotes.RE_Rebirth:FireServer()
+                end
+            end
+        end,
+    })
+
+    main:CreateSection("Worlds",true)
+
+    currentWorld = main:CreateLabel("Currently in ".."griffindoescooking")
+
+    local worldNumber
+    worldSelector = main:CreateDropdown({
+        Name = "Select World",
+        Options = worlds,
+        CurrentOption = "nil",
+        MultiSelection = false,
+        Flag = "worldSelector",
+        Callback = function(Option)
+            if not game.workspace.Maps:FindFirstChild(Option) then
+                notify({
+                    Name = "Select World Error",
+                    Body = "You aren't in the right section to access this world!",
+                    Time = 15
+                })
+                farmWorld:Set(false)
+                farmWorld:Lock("Bad World")
+            else
+                farmWorld:Unlock()
+                worldNumber = Option
+            end
+        end,
+    }) --worldSelector:DestroySearchbar()
+    farmWorld = main:CreateToggle({
+        Name = "Farm world",
+        CurrentValue = false,
+        Flag = "farmWorld", 
+        Callback = function(Value)
+            Settings.farmWorld = Value
+            local oldPos = Character.HumanoidRootPart.CFrame
+            local selectedWorld = worldNumber
+            while Settings.farmWorld do
+                if not Settings.farmWorld then break end
+
+                for i,v in ipairs(game.workspace.Maps[worldNumber].Enemies:GetChildren()) do
+                    if not Settings.farmWorld then break end
+                    if selectedWorld ~= worldNumber then farmWorld:Set(true) break end
+                    repeat
+                        
+                        if not Settings.farmWorld then break end
+                        if selectedWorld ~= worldNumber then farmWorld:Set(true) break end
+                        task.wait()
+                        Remotes.RE_TakeDamage:FireServer(v.Name)
+                        Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame +Vector3.new(0, 5, 0)
+
+                    until v.NPCTag.Progress.Bar.Size.X.Scale == 0
+
+                end
+                Character.HumanoidRootPart.CFrame = game.workspace.Maps[worldNumber].Chest.HitBox.CFrame
+                wait(0.2)
+
+            end
+            wait(0.1)
+            Character.HumanoidRootPart.CFrame = oldPos
+        end,
+    })
+
+    main:CreateSection("Eggs",true)
+
+    availableEggs = main:CreateLabel("Available: ")
+
+    local eggNumber
+    local requiredWorld
+    eggSelector = main:CreateDropdown({
+        Name = "Select Egg",
+        Options = eggs,
+        CurrentOption = "nil",
+        MultiSelection = false,
+        Flag = "Dropdown2",
+        Callback = function(Option)
+            if not game.workspace.Maps[tostring(LocalPlayer.CurWorld.Value)]:FindFirstChild(Option, true) then
+                if game.workspace.Maps:FindFirstChild(Option, true) then
+                    requiredWorld = game.workspace.Maps:FindFirstChild(Option, true).Parent.Parent.Name
+                else
+                    notify({
+                        Name = "Select Egg Error",
+                        Body = "You aren't in the right section to access this egg!",
+                        Time = 15
+                    })
+                    farmEgg:Lock("Bad Egg")
+                end
+            else
+                farmEgg:Unlock()
+            end
+            eggNumber = Option
+        end,
+    }) --eggSelector:DestroySearchbar()
+    farmEgg = main:CreateToggle({
+        Name = "Auto hatch egg",
+        CurrentValue = false,
+        Flag = "farmEgg", 
+        Callback = function(Value)
+            Settings.farmEgg = Value
+            while Settings.farmEgg do
+                task.wait()
+                if not Settings.farmEgg then break end
+                Remotes.RE_Enter:FireServer(requiredWorld)
+                Remotes.RE_Draw:FireServer("Hatch", eggNumber,{})
+            end
+        end,
+    })
+
+end
+
+local function createTeleports()
+    teleports = window:CreateTab("Teleports",nil)
+
+    teleports:CreateSection("Worlds",true)
+
+    local teleportWorld
+    worldSelector2 = teleports:CreateDropdown({
+        Name = "Select World",
+        Options = worlds,
+        CurrentOption = "nil",
+        MultiSelection = false,
+        Flag = "worldSelector2",
+        Callback = function(Option)
+            if not game.workspace.Maps:FindFirstChild(Option) then
+                notify({
+                    Name = "Select World Error",
+                    Body = "You aren't in the right section to access this world!",
+                    Time = 15
+                })
+                teleportToWorld:Lock("Bad World")
+            else
+                teleportToWorld:Unlock()
+                teleportWorld = Option
+                teleportToWorld:Set("Teleport to: "..teleportWorld,'Click')
+            end
+        end,
+    }) --worldSelector2:DestroySearchbar()
+    teleportToWorld = teleports:CreateButton({
+        Name = "Teleport to: ",
+        Interact = "Click",
+        Callback = function()
+            Character.HumanoidRootPart.CFrame = game.workspace.Maps[teleportWorld].SpawnLocation.CFrame + Vector3.new(0, 5, 0)
+        end
+    })
+
+    teleports:CreateSection("Eggs",true)
+
+    local teleportEgg
+    eggSelector2 = teleports:CreateDropdown({
+        Name = "Select Egg",
+        Options = eggs,
+        CurrentOption = "nil",
+        MultiSelection = false,
+        Flag = "eggSelector2",
+        Callback = function(Option)
+            if not game.workspace.Maps[tostring(LocalPlayer.CurWorld.Value)]:FindFirstChild(Option, true) then
+                notify({
+                    Name = "Select Egg Error",
+                    Body = "You aren't in the right world to access this egg!",
+                    Time = 15
+                })
+                teleportToEgg:Lock("Bad Egg")
+            else
+                teleportToEgg:Unlock()
+                teleportEgg = Option
+                teleportToEgg:Set("Teleport to: "..teleportEgg,'Click')
+            end
+        end,
+    }) --eggSelector2:DestroySearchbar()
+    teleportToEgg = teleports:CreateButton({
+        Name = "Teleport to: ",
+        Interact = "Click",
+        Callback = function()
+            Character.HumanoidRootPart.CFrame = game.workspace.Maps[tostring(LocalPlayer.CurWorld.Value)].Eggs[teleportEgg].Main.CFrame + Vector3.new(0, 10, 0)
+        end
+    })
+end
+
+local function createMiscellaneous()
+    misc = window:CreateTab("Miscellaneous",nil)
+
+    misc:CreateSection("Miscellaneous",true)
+
+    removeButtons = misc:CreateButton({
+        Name = "Remove plus on power and wins",
+        Interact = "Click",
+        Callback = function()
+            PlayerGui.MainUI.LeftMenu.Frame.Strength:FindFirstChild("Plus", true).Parent.Visible = false
+            PlayerGui.MainUI.LeftMenu.Frame.Wins:FindFirstChild("Plus", true).Parent.Visible = false
+        end
+    })
+
+    fightSummon = misc:CreateToggle({
+        Name = "Auto fight summon",
+        CurrentValue = false,
+        Flag = "fightSummon", 
+        Callback = function(Value)
+            Settings.fightSummon = Value
+            while Settings.fightSummon do
+                task.wait()
+                if not Settings.fightSummon then break end
+                Remotes.RE_SummonDamage:FireServer()
+            end
+        end,
+    })
+
+    misc:CreateLabel("THESE MAY NOT WORK 100% OF THE TIME")
+end
+
+local function createGuide()
+    guide = window:CreateTab("Guide",nil)
+
+    guide:CreateSection("Guide",true)
+
+    guide:CreateLabel("World001-4 have eggs Draw001-5")
+    guide:CreateLabel("World005-8 have eggs Draw006-10")
+    guide:CreateLabel("World009-12 have eggs Draw011-14")
+    guide:CreateLabel("World013-16 have eggs Draw015-17")
+    guide:CreateLabel("World017-20 have eggs Draw018-21")
+    guide:CreateLabel("World021-24 have eggs Draw022-25")
+    guide:CreateLabel("World025-28 have eggs Draw026-29")
+    guide:CreateLabel("World029-32 have eggs Draw030-33")
+end
+
+local function createCredits()
+    credits = window:CreateTab("Credits",nil)
+
+    credits:CreateSection("Credits",true)
+
+    credits:CreateLabel("Created by griffindoescooking")
+    credits:CreateLabel("UI: Arrayfield modified")
+    credits:CreateButton({
+        Name = "Discord (join for suggestions/bug reports)",
+        Interaction = "Click",
+        Callback = function()
+            setclipboard("https://griffineats.rocks/discord/invite.html")
+        end
+    })
+
+end
+
+createMain() createTeleports() createMiscellaneous() createGuide() createCredits()
+
+print("Finished loading Clicker Fighting Simulator by griffindoescooking")
+
+RS.RenderStepped:Connect(function()
+
+    if eggNumber == nil then
+        task.wait()
+    else
+        if game.workspace.Maps[tostring(LocalPlayer.CurWorld.Value)]:FindFirstChild(eggNumber, true) then 
+            farmEgg:Unlock()
+        else
+            farmEgg:Set(false)
+            farmEgg:Lock("BadEgg")
+        end
+    end
+    if teleportEgg == nil then
+        task.wait()
+    else
+        if game.workspace.Maps[tostring(LocalPlayer.CurWorld.Value)]:FindFirstChild(teleportEgg, true) then 
+            teleportToEgg:Unlock()
+        else
+            teleportToEgg:Lock("BadEgg")
+        end
+    end
+
+
+    currentWorld:Set("Currently in "..tostring(LocalPlayer.CurWorld.Value))
+    local oldText = ""
+    for i,v in ipairs(game.workspace.Maps:GetDescendants()) do
+        if v.Parent.Name == "Eggs" then
+            oldText = oldText..v.Name.." "
+        end
+    end 
+
+    availableEggs:Set("Available: "..oldText)
+    task.wait()
+
+end)
