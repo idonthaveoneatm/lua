@@ -11,6 +11,17 @@ function u:c(instance,props, children)
 	end
 	return i
 end
+function u:create(instance,props, children)
+	local i = Instance.new(instance)
+	local children = children or {}
+	for prop, v in pairs(props) do
+		i[prop] = v
+	end
+	for _, child in pairs(children) do
+		child.Parent = i
+	end
+	return i
+end
 
 function u:tween(properties)
 	--[[
