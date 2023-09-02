@@ -1,16 +1,5 @@
 local u = {} 
 
-function u:c(instance,props, children)
-	local i = Instance.new(instance)
-	local children = children or {}
-	for prop, v in pairs(props) do
-		i[prop] = v
-	end
-	for _, child in pairs(children) do
-		child.Parent = i
-	end
-	return i
-end
 function u:create(instance,props, children)
 	local i = Instance.new(instance)
 	local children = children or {}
@@ -80,83 +69,56 @@ function u:gtween(properties)
 		):Play()
 	end
 end
-function u:button(o,properties)
-	--[[
-	o -> object affected
-	properties.d -> On mousebutton1down
-	properties.u -> On mousebutton1up
-	properties.c -> On mousebutton1click
-	properties.e -> On mouseenter
-	properties.l -> On mouseleave
-	]]
-	for i,v in next, properties do
-		if not v then
-			v = function() wait() end
-		else
-			wait()
-		end
+function u:drag(inst,speed)
+	local UserInputService = game:GetService("UserInputService")
+	local runService = (game:GetService("RunService"))
+	local gui = inst
+    local dragSpeed = tonumber(speed)
+	local dragging, dragInput, dragStart, startPos, lastMousePos, lastGoalPos
+	
+    local function Lerp(a, b, m)
+		return a + (b - a) * m
 	end
-	o.MouseButton1Down:Connect(function()
-		properties.d()
-	end)
-	o.MouseButton1Up:Connect(function()
-		properties.u()
-	end)
-	o.MouseButton1Click:Connect(function()
-		properties.c()
-	end)
-	o.MouseEnter:Connect(function()
-		properties.e()
-	end)
-	o.MouseLeave:Connect(function()
-		properties.l()
-	end)
+	
+    local function Update(dt)
+        if not (startPos) then 
+            return 
+        end
+        if not (dragging) and (lastGoalPos) then
+            gui.Position = UDim2.new(startPos.X.Scale, Lerp(gui.Position.X.Offset, lastGoalPos.X.Offset, dt * dragSpeed), startPos.Y.Scale, Lerp(gui.Position.Y.Offset, lastGoalPos.Y.Offset, dt * dragSpeed))
+            return 
+        end
+
+        local delta = (lastMousePos - UserInputService:GetMouseLocation())
+        local xGoal = (startPos.X.Offset - delta.X)
+        local yGoal = (startPos.Y.Offset - delta.Y)
+
+        lastGoalPos = UDim2.new(startPos.X.Scale, xGoal, startPos.Y.Scale, yGoal)
+        gui.Position = UDim2.new(startPos.X.Scale, Lerp(gui.Position.X.Offset, xGoal, dt * dragSpeed), startPos.Y.Scale, Lerp(gui.Position.Y.Offset, yGoal, dt * dragSpeed))
+    end
+        
+    gui.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = gui.Position
+            lastMousePos = UserInputService:GetMouseLocation()
+            
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+
+    gui.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+	runService.Heartbeat:Connect(Update)
 end
-function u:drag(o)
-local UserInputService = game:GetService("UserInputService")
-local runService = (game:GetService("RunService"));
-local gui = o
-local dragging
-local dragInput
-local dragStart
-local startPos
-local function Lerp(a, b, m)
-return a + (b - a) * m
-end
-local lastMousePos
-local lastGoalPos
-local DRAG_SPEED = (10); -- // The speed of the UI darg.
-local function Update(dt)
-if not (startPos) then return end;
-if not (dragging) and (lastGoalPos) then
-gui.Position = UDim2.new(startPos.X.Scale, Lerp(gui.Position.X.Offset, lastGoalPos.X.Offset, dt * DRAG_SPEED), startPos.Y.Scale, Lerp(gui.Position.Y.Offset, lastGoalPos.Y.Offset, dt * DRAG_SPEED))
-return 
-end;
-local delta = (lastMousePos - UserInputService:GetMouseLocation())
-local xGoal = (startPos.X.Offset - delta.X);
-local yGoal = (startPos.Y.Offset - delta.Y);
-lastGoalPos = UDim2.new(startPos.X.Scale, xGoal, startPos.Y.Scale, yGoal)
-gui.Position = UDim2.new(startPos.X.Scale, Lerp(gui.Position.X.Offset, xGoal, dt * DRAG_SPEED), startPos.Y.Scale, Lerp(gui.Position.Y.Offset, yGoal, dt * DRAG_SPEED))
-end
-gui.InputBegan:Connect(function(input)
-if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-dragging = true
-dragStart = input.Position
-startPos = gui.Position
-lastMousePos = UserInputService:GetMouseLocation()
-input.Changed:Connect(function()
-if input.UserInputState == Enum.UserInputState.End then
-dragging = false
-end
-end)
-end
-end)
-gui.InputChanged:Connect(function(input)
-if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-dragInput = input
-end
-end)
-runService.Heartbeat:Connect(Update)
-end
+
 
 return u
