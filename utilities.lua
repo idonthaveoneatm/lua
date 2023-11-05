@@ -1,6 +1,6 @@
 local u = {} 
 
-function u:create(instance,props, children)
+function u.create(instance,props, children)
 	local i = Instance.new(instance)
 	local children = children or {}
 	for prop, v in pairs(props) do
@@ -12,7 +12,7 @@ function u:create(instance,props, children)
 	return i
 end
 
-function u:tween(properties)
+function u.tween(properties)
 	--[[
 	properties.o -> ui object
 	properties.a -> {Table of ui modications}
@@ -45,7 +45,7 @@ function u:tween(properties)
 	end
 end
 
-function u:gtween(properties)
+function u.gtween(properties)
 	--[[
 	properties.O -> {List of objects}
 	properties.A -> {List of ui components}
@@ -69,7 +69,7 @@ function u:gtween(properties)
 		):Play()
 	end
 end
-function u:drag(inst,speed)
+function u.drag(inst,speed)
 	local UserInputService = game:GetService("UserInputService")
 	local runService = (game:GetService("RunService"))
 	local gui = inst
