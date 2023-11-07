@@ -1,0 +1,66 @@
+--[[
+
+Made by griffindoescooking
+
+]]--
+repeat task.wait() until game:IsLoaded()
+if not game.PlaceId == 10919241870 then
+    game.Players.LocalPlayer:Kick("not right game")
+end
+local LocalPlayer = game.Players.LocalPlayer
+local Tycoons = game.workspace.Tycoons
+local myTycoon
+
+
+for _,v in ipairs(Tycoons:GetDescendants()) do
+    if v.Name == "Owner" and v.Value == LocalPlayer.Name then
+        print("Tycoon "..v.Parent.Name.." belongs to LocalPlayer")
+        myTycoon = v.Parent
+    end
+end
+
+task.spawn(function()
+    local function delP2WParts(list)
+        for _,name in ipairs(list) do
+            if myTycoon:FindFirstChild(name) then 
+                myTycoon[name]:Destroy()
+            end
+        end
+    end
+
+    if config.deleteP2W then
+        delP2WParts({
+            "VIP",
+            "QuickSell",
+            "2xLuck",
+            "AutoCollect",
+            "BoostButtons",
+            "RobuxDropperButton",
+            "InviteFriendsButton"
+        })
+    end
+end)
+
+task.spawn(function()
+    while config.collectOrbs and task.wait() do
+        for _,drop in ipairs(myTycoon['Drops']:GetChildren()) do
+            if drop:IsA("Part") then
+                drop.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame
+            end
+        end
+    end
+end)
+
+task.spawn(function()
+    local depositButton = myTycoon["Orb Processor"]:FindFirstChild("Deposit", true).Button
+    local oldDeposit = depositButton.CFrame
+    while config.depositOrbs and task.wait() do
+        depositButton.CanCollide = false
+        depositButton.Transparency = 1
+        depositButton.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame
+        task.wait()
+        depositButton.CFrame = oldDeposit
+    end
+    depositButton.CanCollide = true
+    depositButton.Transparency = 0
+end)
