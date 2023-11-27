@@ -1960,7 +1960,7 @@ function ArrayFieldLibrary:CreateWindow(Settings)
 				element = Paragraph
 			}
 
-			if SectionParent or ParagraphSettings.SectionParent.Holder then
+			if SectionParent then
 				Paragraph.Parent = SectionParent.Holder or ParagraphSettings.SectionParent.Holder
 			else
 				Paragraph.Parent = TabPage
