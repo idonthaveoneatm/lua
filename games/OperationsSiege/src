@@ -1,0 +1,160 @@
+local function addCham(object, tbl)
+    if not object:FindFirstChild("cham") then
+        local h = Instance.new("Highlight")
+        h.Name = "cham"
+        h.Parent = object
+        h.Adornee = object
+        h.Enabled = true
+        h.FillColor = tbl.color
+        h.FillTransparency = tbl.fTransparency
+        h.OutlineColor = tbl.color
+        h.OutlineTransparency = tbl.oTransparency
+    end
+end
+local function playerIndex(func)
+    for i,v in ipairs(game.Players:GetPlayers()) do
+        func(i,v)
+    end
+end
+local function spawnLoop(var,t,f)
+    f = f or function() end
+    task.spawn(function()
+        while var and task.wait() do
+            t()
+        end
+        f()
+    end)
+end
+local function removeCham(object)
+    if object then
+       for _,cham in ipairs(object:GetChildren()) do
+            if cham:IsA("Highlight") and cham.Name == "cham" then
+                cham:Destroy()
+            end
+        end
+    end
+end
+local function teamCheck(player)
+    if player.Team.Name == "Attackers" then
+        return config.teamColor.attacker
+    elseif player.Team.Name == "Defenders" then
+        return config.teamColor.defender
+    end
+end
+
+
+print("\nOperations:Siege started | griffindoescooking \n Chams: "..tostring(config.chams).."\n Team Fix: "..tostring(config.fixTeam).."\n Transparent Soft Walls: "..tostring(config.transSoftWall).."\n Transparent Barricades: "..tostring(config.transBarricade).."\n Bring Enemies: "..tostring(config.bringEnemies).."\n Bomb Color: ("..tostring(config.bombColor)..")\n Attacker Color: ("..tostring(config.teamColor.attacker)..")\n Defender Color: ("..tostring(config.teamColor.defender)..")\n\n")
+
+local LocalPlayer = game.Players.LocalPlayer
+local pgui = LocalPlayer.PlayerGui
+local context = pgui.GameGui.TimerHUD.Contex.TextLabel
+local Breach = game.workspace["SE_Workspace"].Breach
+local Doors = game.workspace["SE_Workspace"].Doors
+
+playerIndex(function(index,player)
+    removeCham(player.Character)
+end)
+
+spawnLoop(config.chams, function()
+    playerIndex(function(index ,player)
+        if player.Name ~= LocalPlayer.Name and player.Character then
+            local playerColor = teamCheck(player) or Color3.fromHex("#ffffff")
+            addCham(player.Character, {
+                color = playerColor,
+                oTransparency = 0,
+                fTransparency = 0.5
+            })
+        elseif not player.Character then
+            removeCham(player.Character)
+        end
+    end)
+    for _,v in ipairs(game.workspace.Objective:GetChildren()) do
+        if not v:FindFirstChild("cham") and v.Name ~= "Defuser" then
+            addCham(v,{
+                color = config.bombColor,
+                oTransparency = 0,
+                fTransparency = 0.5
+            })
+        end
+    end
+end, function()
+    playerIndex(function(index,player)
+        removeCham(player.Character)
+    end)
+    for _,v in ipairs(game.workspace.Objective:GetChildren()) do
+        removeCham(v)
+    end
+end)
+
+spawnLoop(config.fixTeam, function()
+    if context.Text == "Operation" and task.wait(2) then
+        playerIndex(function(index,player)
+            removeCham(player.Character)
+        end)
+        repeat task.wait()
+        until context.Text ~= "Operation"
+    elseif context.Text == "Setup" and task.wait(2) then
+        playerIndex(function(index,player)
+            removeCham(player.Character)
+        end)
+        repeat task.wait()
+        until context.Text ~= "Setup"
+    end
+end)
+
+spawnLoop(config.transSoftWall, function()
+    for _,v in ipairs(Breach:GetDescendants()) do
+        if v:IsA("Part") then
+            if (v.Material == Enum.Material.WoodPlanks and v.Transparency ~= 0.4957) then
+                v.Transparency = 0.4957
+            else
+                if (v.Material ~= Enum.Material.WoodPlanks and v.Transparency ~= 0.1953) then
+                    v.Transparency = 0.1953
+                end
+            end
+        end
+    end
+end, function()
+    for _,v in ipairs(Breach:GetDescendants()) do
+        if v:IsA("Part") and (v.Transparency == 0.4957 or v.Transparency == 0.1953) then
+            v.Transparency = 0
+        end
+    end
+end)
+
+spawnLoop(config.bringEnemies, function()
+    if not LocalPlayer.Character then
+        repeat task.wait() until LocalPlayer.Character
+    end
+    local HumanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart", true)
+    playerIndex(function(index, player)
+        if player.Name ~= LocalPlayer.Name and player.Team.Name ~= LocalPlayer.Team.Name then
+            if player.Character then
+                player.Character:FindFirstChild("HumanoidRootPart", true).CFrame = HumanoidRootPart.CFrame + Vector3.new(7,0,7)
+                print("bringing: "..player.Name)
+            end
+        end
+    end)
+end)
+
+spawnLoop(config.transBarricade, function()
+    for _, door in ipairs(Doors:GetChildren()) do
+
+        for _,doorPart in ipairs(door:FindFirstChild("Door"):GetChildren()) do
+            if doorPart:IsA("Part") and doorPart.Transparency ~= 0.74955 then
+                doorPart.Transparency = 0.74955
+            end
+        end
+
+    end
+end,function()
+    for _, door in ipairs(Doors:GetChildren()) do
+
+        for _,doorPart in ipairs(door:FindFirstChild("Door"):GetChildren()) do
+            if doorPart:IsA("Part") and doorPart.Transparency == 0.74955 then
+                doorPart.Transparency = 0
+            end
+        end
+
+    end
+end)
