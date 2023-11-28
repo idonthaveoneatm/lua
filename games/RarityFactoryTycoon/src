@@ -15,7 +15,7 @@ for _,v in ipairs(Tycoons:GetDescendants()) do
     end
 end
 
-print("Rarity Factory Tycoon griffindoescooking")
+print("\nRarity Factory Tycoon started | griffindoescooking")
 
 task.spawn(function()
     local function delP2WParts(list)
