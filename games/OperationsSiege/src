@@ -76,7 +76,7 @@ end)
 
 spawnLoop(config.chams.bombs, function()
     for _,bomb in ipairs(game.workspace.Objective:GetChildren()) do
-        if not bomb:FindFirstChild("cham") and v.Name ~= "Defuser" then
+        if not bomb:FindFirstChild("cham") and bomb.Name ~= "Defuser" then
             addCham(bomb,{
                 color = config.colors.bombs,
                 oTransparency = 0,
