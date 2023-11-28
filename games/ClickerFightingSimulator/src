@@ -5,10 +5,7 @@ getgenv().Settings = {
     farmEgg = false,
     rebirth = false
 }
-repeat task.wait() until game:IsLoaded()
-if not game.PlaceId == 12985134424 then
-    game.Players.LocalPlayer:Kick("wrong game")
-end
+repeat task.wait() until game:IsLoaded() if game.PlaceId ~= 12985134424 then game.Players.LocalPlayer:Kick("wrong game") end
 local ArrayField = loadstring(game:HttpGet('https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/array'))()
 
 local VIM = game:GetService("VirtualInputManager")
