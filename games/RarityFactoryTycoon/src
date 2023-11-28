@@ -11,7 +11,6 @@ local myTycoon
 
 for _,v in ipairs(Tycoons:GetDescendants()) do
     if v.Name == "Owner" and v.Value == LocalPlayer.Name then
-        print("Tycoon "..v.Parent.Name.." belongs to LocalPlayer")
         myTycoon = v.Parent
     end
 end
