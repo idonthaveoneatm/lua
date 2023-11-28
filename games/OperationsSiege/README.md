@@ -7,7 +7,7 @@ getgenv().config = {
     chams = {
         players = true,
         bombs = true,
-        gadgets = true
+        gadgets = true -- very laggy due to barbed wire might change
     },
     transSoftWall = true,
     transBarricade = true,
