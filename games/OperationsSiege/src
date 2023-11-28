@@ -1,3 +1,11 @@
+print("\nOperations:Siege started | griffindoescooking \n Chams: \n  Players: "..tostring(config.chams.players).."\n  Bombs: "..tostring(config.chams.bombs).."\n  Gadgets: "..tostring(config.chams.gadgets).."\n Team Fix: "..tostring(config.fixTeam).."\n Transparent Soft Walls: "..tostring(config.transSoftWall).."\n Transparent Barricades: "..tostring(config.transBarricade).."\n Bring Enemies: "..tostring(config.bringEnemies).."\n Bomb Color: ("..tostring(config.bombColor)..")\n Attacker Color: ("..tostring(config.teamColor.attacker)..")\n Defender Color: ("..tostring(config.teamColor.defender)..")\n\n")
+
+local LocalPlayer = game.Players.LocalPlayer
+local pgui = LocalPlayer.PlayerGui
+local context = pgui.GameGui.TimerHUD.Contex.TextLabel
+local Breach = game.workspace["SE_Workspace"].Breach
+local Doors = game.workspace["SE_Workspace"].Doors
+
 local function addCham(object, tbl)
     if not object:FindFirstChild("cham") then
         local h = Instance.new("Highlight")
@@ -36,26 +44,18 @@ local function removeCham(object)
 end
 local function teamCheck(player)
     if player.Team.Name == "Attackers" then
-        return config.teamColor.attacker
+        return config.colors.attackers
     elseif player.Team.Name == "Defenders" then
-        return config.teamColor.defender
+        return config.colors.defenders
     end
 end
 
-
-print("\nOperations:Siege started | griffindoescooking \n Chams: "..tostring(config.chams).."\n Team Fix: "..tostring(config.fixTeam).."\n Transparent Soft Walls: "..tostring(config.transSoftWall).."\n Transparent Barricades: "..tostring(config.transBarricade).."\n Bring Enemies: "..tostring(config.bringEnemies).."\n Bomb Color: ("..tostring(config.bombColor)..")\n Attacker Color: ("..tostring(config.teamColor.attacker)..")\n Defender Color: ("..tostring(config.teamColor.defender)..")\n\n")
-
-local LocalPlayer = game.Players.LocalPlayer
-local pgui = LocalPlayer.PlayerGui
-local context = pgui.GameGui.TimerHUD.Contex.TextLabel
-local Breach = game.workspace["SE_Workspace"].Breach
-local Doors = game.workspace["SE_Workspace"].Doors
 
 playerIndex(function(index,player)
     removeCham(player.Character)
 end)
 
-spawnLoop(config.chams, function()
+spawnLoop(config.chams.players, function()
     playerIndex(function(index ,player)
         if player.Name ~= LocalPlayer.Name and player.Character then
             local playerColor = teamCheck(player) or Color3.fromHex("#ffffff")
@@ -68,37 +68,53 @@ spawnLoop(config.chams, function()
             removeCham(player.Character)
         end
     end)
-    for _,v in ipairs(game.workspace.Objective:GetChildren()) do
-        if not v:FindFirstChild("cham") and v.Name ~= "Defuser" then
-            addCham(v,{
-                color = config.bombColor,
+end, function()
+    playerIndex(function(index,player)
+        removeCham(player.Character)
+    end)
+end)
+
+spawnLoop(config.chams.bombs, function()
+    for _,bomb in ipairs(game.workspace.Objective:GetChildren()) do
+        if not bomb:FindFirstChild("cham") and v.Name ~= "Defuser" then
+            addCham(bomb,{
+                color = config.colors.bombs,
                 oTransparency = 0,
                 fTransparency = 0.5
             })
         end
     end
-end, function()
-    playerIndex(function(index,player)
-        removeCham(player.Character)
-    end)
-    for _,v in ipairs(game.workspace.Objective:GetChildren()) do
-        removeCham(v)
+end,function()
+    for _,bomb in ipairs(game.workspace.Objective:GetChildren()) do
+        removeCham(bomb)
     end
 end)
 
-spawnLoop(config.fixTeam, function()
+spawnLoop(config.chams.gadgets,function()
+    for _,gadget in ipairs(game.workspace.Gadgets:GetChildren()) do
+        addCham(gadget,{
+            color = config.colors.gadgets,
+            oTransparency = 0,
+            fTransparency = 0.5
+        })
+    end
+end,function()
+    for _,gadget in ipairs(game.workspace.Gadgets:GetChildren()) do
+        removeCham(gadget)
+    end
+end)
+
+spawnLoop(true, function()
     if context.Text == "Operation" and task.wait(2) then
         playerIndex(function(index,player)
             removeCham(player.Character)
         end)
-        repeat task.wait()
-        until context.Text ~= "Operation"
+        repeat task.wait() until context.Text ~= "Operation"
     elseif context.Text == "Setup" and task.wait(2) then
         playerIndex(function(index,player)
             removeCham(player.Character)
         end)
-        repeat task.wait()
-        until context.Text ~= "Setup"
+        repeat task.wait() until context.Text ~= "Setup"
     end
 end)
 
