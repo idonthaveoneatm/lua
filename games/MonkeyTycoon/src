@@ -4,6 +4,8 @@ local lp = game.Players.LocalPlayer
 local codes = [[Nirvana GOOBLESTHEALIEN Boostmeup ELSEP03M MichaelsaJoestar CIPHER RIGVSQERGIV MonkeyTycoonForever Nothing bottle asteroid rollthedice Ape Bakery Plantain Tarantula September Medusa Thanks Nevergonnagiveyouup Nevergonnaletyoudown Nevergonnarunaroundanddesertyou Nevergonnamakeyoucry Nevergonnasaygoodbye freeslimemonkey Nevergonnatellalieandhurtyou]]
 getgenv().config = {cD = false,bM = false,bMM = false,uL = false,mM = false}
 
+repeat task.wait() until game:IsLoaded() if game.PlaceId ~= 11400511154 then lp:Kick("wrong game") end
+
 local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/array'))()
 local Window = Rayfield:CreateWindow({
     Name = "Monkey Tycoon",
