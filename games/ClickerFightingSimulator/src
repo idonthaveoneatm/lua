@@ -386,9 +386,9 @@ local function createCredits()
 
 end
 
-createMain() createTeleports() createMiscellaneous() createGuide() createCredits()
+print("Clicker Fighting Simulator | griffindoescooking")
 
-print("Finished loading Clicker Fighting Simulator by griffindoescooking")
+createMain() createTeleports() createMiscellaneous() createGuide() createCredits()
 
 RS.RenderStepped:Connect(function()
 
