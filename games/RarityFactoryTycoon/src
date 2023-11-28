@@ -3,10 +3,7 @@
 Made by griffindoescooking
 
 ]]--
-repeat task.wait() until game:IsLoaded()
-if not game.PlaceId == 10919241870 then
-    game.Players.LocalPlayer:Kick("not right game")
-end
+repeat task.wait() until game:IsLoaded() if game.PlaceId ~= 10919241870 then game.Players.LocalPlayer:Kick("wrong game") end
 local LocalPlayer = game.Players.LocalPlayer
 local Tycoons = game.workspace.Tycoons
 local myTycoon
