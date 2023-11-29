@@ -1,3 +1,8 @@
+--[[
+
+Made by griffindoescooking
+
+]]--
 local Remotes = game:GetService("ReplicatedStorage").GTycoonClient.Remotes
 local Drops = game.workspace:FindFirstChild("Drops")
 local lp = game.Players.LocalPlayer
