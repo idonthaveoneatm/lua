@@ -1,0 +1,45 @@
+--[[
+
+Made by griffindoescooking
+
+]]--
+print("Pet Simulator 99 | griffindoescooking")
+
+local LocalPlayer = game.Players.LocalPlayer
+local HumanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart", true)
+
+local Things = game.workspace['__THINGS']
+local Lootbags = Things.Lootbags
+local Orbs = Things.Orbs
+local ShinyRelics = Things.ShinyRelics
+local Breakables = Things.Breakables
+local Pets = Things.Pets
+local Network = game:GetService("ReplicatedStorage").Network
+local PetInventory = LocalPlayer.PlayerGui.Inventory.Frame.Main.Pets.EquippedPets
+local equippedPets = {}
+
+for _,pet in ipairs(Pets:GetChildren()) do
+    if PetInventory:FindFirstChild(pet.Name) then
+        table.insert(equippedPets, pet.Name)
+        print("added: "..pet.Name)
+    end
+end
+
+task.spawn(function()
+    while config.autoLootbag and task.wait() do
+        for _, v in ipairs(Lootbags:GetDescendants()) do
+            if v:IsA("MeshPart") then
+                v.CFrame = HumanoidRootPart.CFrame
+             end
+         end
+    end
+end)
+task.spawn(function()
+    while config.autoOrb and task.wait() do
+        for _, v in ipairs(Orbs:GetChildren()) do
+            if v:IsA("Part") then
+                v.CFrame = HumanoidRootPart.CFrame
+             end
+         end
+    end
+end)
