@@ -3,6 +3,7 @@
 Made by griffindoescooking
 
 ]]--
+repeat task.wait() until game:IsLoaded() if game.PlaceId ~= 8737899170 then game.Players.LocalPlayer:Kick("wrong game") end
 print("Pet Simulator 99 | griffindoescooking")
 
 local LocalPlayer = game.Players.LocalPlayer
