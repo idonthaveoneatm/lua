@@ -32,7 +32,6 @@ local function indexPets()
     for _,pet in ipairs(Pets:GetChildren()) do
         if PetInventory:FindFirstChild(pet.Name) then
             table.insert(equippedPets, pet.Name)
-            print("added: "..pet.Name)
         end
     end
     return equippedPets
@@ -54,10 +53,7 @@ local function getCenter()
 
     return {frame.AbsolutePosition.X,frame.AbsolutePosition.Y}
 end
-local function addTo(num, val)
-    num = num + val
-    return num
-end
+
 task.spawn(function()
     while config.autoLootbag and task.wait() do
 
@@ -107,7 +103,7 @@ task.spawn(function()
                             task.wait(config.farm.wait)
                             Network.Breakables_PlayerDealDamage:FireServer(v.Name)
                         until not Breakables:FindFirstChild(v.Name)
-                        addTo(totalClaimed, 1); addTo(totalTime, os.clock() - startTime)
+                        totalClaimed = totalClaimed + 1; totalTime = totalTime + (os.clock() - startTime)
                         if config.farm.farmPrint then print("farmed "..tmpName.." in: "..tostring(os.clock() - startTime).." Avg: "..tostring(totalTime/totalClaimed)) end
                     else
                         if not table.find(currentCoins, v.Name) then
@@ -127,7 +123,7 @@ task.spawn(function()
                                     Network.Breakables_PlayerDealDamage:FireServer(tmpName)
                                 until not Breakables:FindFirstChild(tmpName)
                                 table.remove(currentCoins, table.find(currentCoins, v.Name))
-                                addTo(totalClaimed, 1); addTo(totalTime, os.clock() - startTime)
+                                totalClaimed = totalClaimed + 1; totalTime = totalTime + (os.clock() - startTime)
                                 if config.farm.farmPrint then print("farmed "..tmpName.." in: "..tostring(os.clock() - startTime).." Avg: "..tostring(totalTime/totalClaimed)) end
                             end)
                         end
