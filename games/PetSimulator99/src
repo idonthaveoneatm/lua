@@ -108,7 +108,7 @@ task.spawn(function()
                             Network.Breakables_PlayerDealDamage:FireServer(v.Name)
                         until not Breakables:FindFirstChild(v.Name)
                         addTo(totalClaimed, 1); addTo(totalTime, os.clock() - startTime)
-                        if config.farmPrint then print("farmed "..tmpName.." in: "..tostring(os.clock() - startTime).." Avg: "..tostring(totalTime/totalClaimed)) end
+                        if config.farm.farmPrint then print("farmed "..tmpName.." in: "..tostring(os.clock() - startTime).." Avg: "..tostring(totalTime/totalClaimed)) end
                     else
                         if not table.find(currentCoins, v.Name) then
                             table.insert(currentCoins, v.Name)
@@ -128,7 +128,7 @@ task.spawn(function()
                                 until not Breakables:FindFirstChild(tmpName)
                                 table.remove(currentCoins, table.find(currentCoins, v.Name))
                                 addTo(totalClaimed, 1); addTo(totalTime, os.clock() - startTime)
-                                if config.farmPrint then print("farmed "..tmpName.." in: "..tostring(os.clock() - startTime).." Avg: "..tostring(totalTime/totalClaimed)) end
+                                if config.farm.farmPrint then print("farmed "..tmpName.." in: "..tostring(os.clock() - startTime).." Avg: "..tostring(totalTime/totalClaimed)) end
                             end)
                         end
                     end
