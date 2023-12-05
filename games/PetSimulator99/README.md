@@ -7,7 +7,7 @@ https://www.roblox.com/games/8737899170/Pet-Simulator-99-NEW
 getgenv().config = {
     farm = {
         toggle = true,
-        singleTarget = true,
+        singleTarget = false,
         farmPrint = true, -- prints in console the coin name, time to break, average time
         radius = 40,
         wait = 0.2
