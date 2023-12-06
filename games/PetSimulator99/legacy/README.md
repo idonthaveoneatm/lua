@@ -17,7 +17,7 @@ getgenv().config = {
     autoOrb = true
 }
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/src"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/legacy/src"))()
 ```
 
 if you are on mobile and cannot copy this to replace the loadstring:
