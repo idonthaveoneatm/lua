@@ -54,21 +54,30 @@ function u.gtween(properties)
 	properties.S -> <string> Sine Linear Exponential etc
 	properties.R -> <number>
 	]]--
-	local TweenService = game:GetService("TweenService")
-	local tweeninfo = TweenInfo.new(
-		properties.T, 
-		Enum.EasingStyle[properties.S], 
-		Enum.EasingDirection[properties.D], 
-		properties.R
-	)
-	for i,v in next, properties.O do
-		TweenService:Create(
-			v,
-			tweeninfo,
-			properties.A
-		):Play()
+	if not properties.r then properties.r = 0 end
+	if not properties.d then properties.d = "InOut" end
+	if not properties.s then properties.s = "Linear" end
+	if not properties.t then properties.t = 1 end
+	if not properties.a or not properties.o then
+		return warn('\nUI-UTILITIES ERROR: \nMissing one of the required propertoes: a, o')
+	elseif properties.a and properties.o then
+		local TweenService = game:GetService("TweenService")
+		local tweeninfo = TweenInfo.new(
+			properties.t, 
+			Enum.EasingStyle[properties.s], 
+			Enum.EasingDirection[properties.d], 
+			properties.r
+		)
+		for i,v in next, properties.o do
+			TweenService:Create(
+				v,
+				tweeninfo,
+				properties.a
+			):Play()
+		end
 	end
 end
+
 function u.drag(inst,speed)
 	local UserInputService = game:GetService("UserInputService")
 	local runService = (game:GetService("RunService"))
