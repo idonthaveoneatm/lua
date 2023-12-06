@@ -1,0 +1,140 @@
+--[[
+
+Made by griffindoescooking
+
+]]--
+repeat task.wait() until game:IsLoaded() if game.PlaceId ~= 8737899170 then game.Players.LocalPlayer:Kick("wrong game") end
+print("Pet Simulator 99 | griffindoescooking")
+
+local LocalPlayer = game.Players.LocalPlayer
+local HumanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart", true)
+
+local vim = game:GetService("VirtualInputManager")
+local sqrt = math.sqrt
+local pow = math.pow
+
+local Things = game.workspace['__THINGS']
+local Lootbags = Things.Lootbags
+local Orbs = Things.Orbs
+local ShinyRelics = Things.ShinyRelics
+local Breakables = Things.Breakables
+local Pets = Things.Pets
+local Network = game:GetService("ReplicatedStorage").Network
+local PetInventory = LocalPlayer.PlayerGui.Inventory.Frame.Main.Pets.EquippedPets
+
+getgenv().currentCoins = {}
+getgenv().equippedPets = {}
+getgenv().totalClaimed = 0
+getgenv().totalTime = 0
+
+local function indexPets()
+    table.clear(equippedPets)
+    for _,pet in ipairs(Pets:GetChildren()) do
+        if PetInventory:FindFirstChild(pet.Name) then
+            table.insert(equippedPets, pet.Name)
+        end
+    end
+    return equippedPets
+end
+local function calcDistance(obj1,obj2)
+    local pPosX,pPosZ = obj1.CFrame.X,obj1.CFrame.Z
+    local hPosX, hPosZ = obj2.CFrame.X, obj2.CFrame.Z
+
+    return sqrt(pow(pPosX-hPosX, 2) + pow(pPosZ-hPosZ, 2))
+end
+local function getCenter()
+    local frame = Instance.new("Frame")
+    frame.Parent = game.CoreGui
+    frame.Name = LocalPlayer.Name
+    frame.AnchorPoint = Vector2.new(0.5,0.5)
+    frame.Position = UDim2.fromScale(0.5,0.5)
+    frame.Size = UDim2.fromOffset(10,10)
+    frame.Visible = false
+
+    return {frame.AbsolutePosition.X,frame.AbsolutePosition.Y}
+end
+
+task.spawn(function()
+    while config.autoLootbag and task.wait() do
+
+
+        for _, lootbag in ipairs(Lootbags:GetDescendants()) do
+            if lootbag:IsA("MeshPart") then
+                lootbag.CFrame = HumanoidRootPart.CFrame
+                task.wait()
+             end
+        end
+
+
+    end
+end)
+
+task.spawn(function()
+    while config.autoOrb and task.wait() do
+
+
+        for _, v in ipairs(Orbs:GetChildren()) do
+            if v:IsA("Part") then
+                v.CFrame = HumanoidRootPart.CFrame
+                task.wait()
+             end
+        end
+
+
+    end
+end)
+
+task.spawn(function()
+    while config.farm.toggle and task.wait() do
+
+
+        for _,v in ipairs(Breakables:GetChildren()) do
+            if v.Name ~= "Highlight" and v:FindFirstChild("Hitbox", true) then
+                local part = v:FindFirstChild("Hitbox", true)
+
+                if calcDistance(part, HumanoidRootPart) <= config.farm.radius then
+                    if config.farm.singleTarget then
+                        local tmpName = v.Name
+                        local startTime = os.clock()
+
+                        repeat
+                            if calcDistance(part, HumanoidRootPart) > config.farm.radius then
+                                break
+                            end
+                            task.wait(config.farm.wait)
+                            Network.Breakables_PlayerDealDamage:FireServer(v.Name)
+                        until not Breakables:FindFirstChild(v.Name)
+
+                        totalClaimed = totalClaimed + 1; totalTime = totalTime + (os.clock() - startTime)
+                        if config.farm.farmPrint then print("farmed "..tmpName.." in: "..tostring(os.clock() - startTime).." Avg: "..tostring(totalTime/totalClaimed)) end
+                    else
+                        if not table.find(currentCoins, v.Name) then
+                            table.insert(currentCoins, v.Name)
+                            task.spawn(function()
+                                local tmpPart = part
+                                local tmpName = v.Name
+                                local startTime = os.clock()
+                                repeat
+                                    if calcDistance(tmpPart, HumanoidRootPart) > config.farm.radius then
+                                        table.remove(currentCoins, table.find(currentCoins, v.Name))
+                                        break
+                                    end
+
+                                    task.wait(config.farm.wait*math.random(1,2))
+
+                                    Network.Breakables_PlayerDealDamage:FireServer(tmpName)
+                                until not Breakables:FindFirstChild(tmpName)
+
+                                table.remove(currentCoins, table.find(currentCoins, v.Name))
+                                totalClaimed = totalClaimed + 1; totalTime = totalTime + (os.clock() - startTime)
+                                if config.farm.farmPrint then print("farmed "..tmpName.." in: "..tostring(os.clock() - startTime).." Avg: "..tostring(totalTime/totalClaimed)) end
+                            end)
+                        end
+                    end
+                end
+            end
+        end
+
+
+    end
+end)
