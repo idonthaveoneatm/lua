@@ -363,6 +363,16 @@ farming:CreateToggle({
 
 
 egg:CreateTextLabel("You must be near eggs to hatch them, currently 1-71")
+local amount = 0
+egg:CreateSlider({
+    Name = "Amount of eggs",
+    Step = 1,
+    Maximum = 10,
+    Minimum = 1,
+    Callback = function(eggAmount)
+        amount = eggAmount
+    end
+})
 for _,eggName in ipairs(eggTable) do
     egg:CreateButton({
         Name = eggName,
@@ -370,7 +380,7 @@ for _,eggName in ipairs(eggTable) do
             local splitName = string.split(eggName, " | ")
             local args = {
                 splitName[2],
-                1
+                tonumber(amount)
             }
             Network.Eggs_RequestPurchase:InvokeServer(unpack(args))
         end
