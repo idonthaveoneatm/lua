@@ -33,8 +33,11 @@ local HumanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart"
 local vim = game:GetService("VirtualInputManager")
 local sqrt = math.sqrt
 local pow = math.pow
+local u = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/utilities.lua"))()
 
 local Things = game.workspace['__THINGS']
+local instanceSpawnObby = Things.Instances.SpawnObby
+local instanceContainer = Things['__INSTANCE_CONTAINER']
 local Lootbags = Things.Lootbags
 local Orbs = Things.Orbs
 local ShinyRelics = Things.ShinyRelics
@@ -162,8 +165,15 @@ local function sendNotification(title, text, duration)
         Button1 = "Got It!"
     })
 end
+local function goToPart(cframe, time: number)
+    u.tween({
+        o = HumanoidRootPart,
+        a = {CFrame = cframe},
+        t = time,s = "Sine",d = "In"
+    }):Play()
+end
+
 local libary = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/Libraries/normal/tmp/src"))()
-local u = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/utilities.lua"))()
 local main = libary:CreateWindow({
     Title = "Pet Simulator 99"
 })
@@ -392,14 +402,26 @@ for _,zone in ipairs(zoneTable) do
     teleports:CreateButton({
         Name = tostring(zone[1]),
         Callback = function() 
-            u.tween({
-                o = HumanoidRootPart,
-                a = {CFrame = zone[2]},
-                t = 0.2,s = "Sine",d = "InOut"
-            }):Play()
+            goToPart(zone[2] + Vector3.new(0,5,0), 0.2)
         end
     })
 end
+
+obbies:CreateButton({
+    Name = 'Complete "Spawn Obby"',
+    Callback = function()
+        goToPart(instanceSpawnObby:FindFirstChild("Enter", true).CFrame, 0.2)
+        task.wait(0.2)
+        
+        local spawnObby = instanceContainer.Active:WaitForChild("SpawnObby")
+        local startLine = spawnObby.StartLine
+        local endPad = spawnObby.Goal.Pad
+        
+        goToPart(startLine:FindFirstChild("Part").CFrame + Vector3.new(0,5,0), 0.2)
+        task.wait(0.2)
+        goToPart( endPad.CFrame + Vector3.new(0,5,0), 0.2)
+    end
+})
 
 credits:CreateTextLabel("UI: griffindoescooking")
 credits:CreateTextLabel("Script: griffindoescooking, project L")
