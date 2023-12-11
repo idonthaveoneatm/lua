@@ -10,6 +10,7 @@ getgenv().config = {
     autoOrb = false,
     egg = {
         selectedEgg = "",
+        amount = 0,
         farm = false
     }
 }
@@ -127,7 +128,7 @@ local function clickPosition(x,y)
 end
 local function getCenter(visible)
     local frame
-    if not game.CoreGui:FindFirstChild(LocalPlayer.Name).warning then
+    if not game.CoreGui:FindFirstChild(LocalPlayer.Name) then
         local gui = Instance.new("ScreenGui")
         gui.Name = LocalPlayer.Name
         gui.Parent = game.CoreGui
@@ -322,13 +323,26 @@ farming:CreateDropdown({
         config.egg.selectedEgg = eggPicked
     end
 })
+farming:CreateSlider({
+    Name = "Amount of eggs",
+    Step = 1,
+    Maximum = 10,
+    Minimum = 1,
+    Callback = function(eggAmount)
+        config.egg.amount = eggAmount
+        print(tostring(config.egg.amount))
+    end
+})
 farming:CreateToggle({
     Name = "Farm selected egg",
     Callback = function(value)
         config.egg.farm = value
         while config.egg.farm and task.wait() do
             local splitName = string.split(config.egg.selectedEgg, " | ")
-            local args = {splitName[2],1}
+            local args = {
+                [1] = splitName[2],
+                [2] = config.egg.amount
+            }
             Network.Eggs_RequestPurchase:InvokeServer(unpack(args))
             task.wait(0.4)
             local center = getCenter(true)
