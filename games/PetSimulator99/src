@@ -336,7 +336,7 @@ farming:CreateToggle({
                 clickPosition(center[1],center[2])
                 task.wait()
             end
-            task.wait(0.2)
+            task.wait(1)
         end 
         getCenter(false)
     end
