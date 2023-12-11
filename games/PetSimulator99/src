@@ -341,7 +341,7 @@ farming:CreateToggle({
             local splitName = string.split(config.egg.selectedEgg, " | ")
             local args = {
                 [1] = splitName[2],
-                [2] = config.egg.amount
+                [2] = tonumber(config.egg.amount)
             }
             Network.Eggs_RequestPurchase:InvokeServer(unpack(args))
             task.wait(0.4)
@@ -350,7 +350,11 @@ farming:CreateToggle({
                 clickPosition(center[1],center[2])
                 task.wait()
             end
-            task.wait(1)
+            if config.egg.amount > 1 then
+                task.wait(3)
+            else
+                task.wait(1)
+            end
         end 
         getCenter(false)
     end
