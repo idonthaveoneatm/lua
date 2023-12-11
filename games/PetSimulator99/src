@@ -350,7 +350,7 @@ farming:CreateToggle({
                 clickPosition(center[1],center[2])
                 task.wait()
             end
-            if config.egg.amount > 1 then
+            if tonumber(config.egg.amount) > 1 then
                 task.wait(3)
             else
                 task.wait(1)
@@ -359,6 +359,8 @@ farming:CreateToggle({
         getCenter(false)
     end
 })
+
+
 
 egg:CreateTextLabel("You must be near eggs to hatch them, currently 1-71")
 for _,eggName in ipairs(eggTable) do
@@ -388,8 +390,6 @@ for _,zone in ipairs(zoneTable) do
         end
     })
 end
-
-obbies:CreateTextLabel("Soon...")
 
 credits:CreateTextLabel("UI: griffindoescooking")
 credits:CreateTextLabel("Script: griffindoescooking, project L")
