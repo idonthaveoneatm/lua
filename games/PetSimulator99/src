@@ -360,8 +360,6 @@ farming:CreateToggle({
     end
 })
 
-
-
 egg:CreateTextLabel("You must be near eggs to hatch them, currently 1-71")
 for _,eggName in ipairs(eggTable) do
     egg:CreateButton({
@@ -390,6 +388,8 @@ for _,zone in ipairs(zoneTable) do
         end
     })
 end
+
+obbies:CreateTextLabel("Soon...")
 
 credits:CreateTextLabel("UI: griffindoescooking")
 credits:CreateTextLabel("Script: griffindoescooking, project L")
