@@ -411,7 +411,7 @@ obbies:CreateButton({
     Name = 'Complete "Spawn Obby"',
     Callback = function()
         goToPart(instanceSpawnObby:FindFirstChild("Enter", true).CFrame, 0.2)
-        task.wait(0.2)
+        task.wait(1)
         
         local spawnObby = instanceContainer.Active:WaitForChild("SpawnObby")
         local startLine = spawnObby.StartLine
