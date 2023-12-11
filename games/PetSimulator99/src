@@ -111,6 +111,33 @@ local eggTable = {
     "70 | Crowned Egg", 
     "71 | Royal Egg"
 }
+local zoneTable = {
+    {"1 | Spawn", CFrame.new(212.035538, 20.1876869, -388.115417)}, 
+    {"2 | Colorful Forest", CFrame.new(372.539154, 16.6393204, -211.668884)}, 
+    {"3 | Castle",  CFrame.new(530.453491, 16.6393204, -196.13797)}, 
+    {"4 | Green Forest",  CFrame.new(689.05304, 16.6393204, -205.87149)}, 
+    {"5 | Autumn",  CFrame.new(867.194641, 16.6393204, -189.63826)}, 
+    {"6 | Cherry Blossom",  CFrame.new(862.67627, 16.6393204, 11.237937)}, 
+    {"7 | Farm",  CFrame.new(692.400391, 16.6393204, 17.9911346)}, 
+    {"8 | Backyard",  CFrame.new(532.868164, 16.639328, 43.6470337)}, 
+    {"9 | Misty Falls",  CFrame.new(376.211975, 16.6393242, 18.0910645)}, 
+    {"10 | Mine",  CFrame.new(192.829605, 16.6393204, 45.5758171)}, 
+    {"11 | Crystal Caverns",  CFrame.new(209.164581, 16.6393204, 246.451965)}, 
+    {"12 | Dead Forest",  CFrame.new(373.901062, 16.6393204, 272.476379)}, 
+    {"13 | Dark Forest",  CFrame.new(532.400635, 16.639328, 265.901733)}, 
+    {"14 | Mushroom Field",  CFrame.new(691.71637, 16.6393204, 274.932434)}, 
+    {"15 | Enchanted Forest",  CFrame.new(875.281921, 16.639328, 267.881653)}, 
+    {"16 | Crimson Forest",  CFrame.new(862.621338, 16.639328, 486.007843)},
+    {"17 | Jungle",  CFrame.new(693.105652, 16.6393204, 498.760559)}, 
+    {"19 | Oasis",  CFrame.new(372.10672, 16.639328, 499.208069)},
+    {"18 | Jungle Temple",  CFrame.new(532.636536, 16.639328, 497.795471)}, 
+    {"20 | Beach",  CFrame.new(190.732224, 16.6393204, 487.357147)}, 
+    {"21 | Coral Reef",  CFrame.new(207.498001, -33.3606873, 768.545471)}, 
+    {"22 | Shipwreck",  CFrame.new(372.649658, -33.3606873, 786.346558)}, 
+    {"23 | Atlantis",  CFrame.new(533.234131, -93.8606186, 767.947815)}, 
+    {"24 | Palm Beach",  CFrame.new(808.733521, -69.4857025, 785.823608)}, 
+    {"25 | Tiki",  CFrame.new(1014.25232, 16.6393356, 773.097778)}
+}
 
 local function indexPets()
     table.clear(equippedPets)
@@ -148,6 +175,7 @@ local function sendNotification(title,text,duration)
     })
 end
 local libary = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/Libraries/normal/tmp/src"))()
+local u = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/utilities.lua"))()
 local main = libary:CreateWindow({
 	Title = "Pet Simulator 99"
 })
@@ -159,9 +187,9 @@ local egg = main:CreateTab({
     Name = "Egging",
     Icon = "rbxassetid://10723345518"
 }) egg:CreateSection("Egging")
-local teleports = main:CreateTab({
-    Name = "Teleports"
-}) teleports:CreateSection("Teleport")
+local zones = main:CreateTab({
+    Name = "Zones"
+}) zones:CreateSection("Zones")
 local credits = main:CreateTab({
     Name = "Credits",
     Icon = "rbxassetid://10723396402"
@@ -307,7 +335,19 @@ for _,eggName in ipairs(eggTable) do
     })
 end
 
-teleports:CreateTextLabel("Soon...")
+zones:CreateTextLabel("Has zones 1-25")
+for _,zone in ipairs(zoneTable) do
+    zones:CreateButton({
+        Name = tostring(zone[1]),
+        Callback = function() 
+            u.tween({
+                o = HumanoidRootPart,
+                a = {CFrame = zone[2]},
+                t = 0.2,s = "Sine",d = "InOut"
+            }):Play()
+        end
+    })
+end
 
 credits:CreateTextLabel("UI: griffindoescooking")
 credits:CreateTextLabel("Script: griffindoescooking")
