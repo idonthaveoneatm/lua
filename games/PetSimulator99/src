@@ -184,6 +184,8 @@ farming:CreateInput({
     end
 })
 farming:CreateSection("Collection")
+farming:CreateTextLabel("Auto Collect Orbs is currently broken/patched")
+--[[
 farming:CreateToggle({
     Name = "Collect Orbs",
     Callback = function(value)
@@ -199,6 +201,7 @@ farming:CreateToggle({
         end
     end
 })
+]]
 farming:CreateToggle({
     Name = "Collect Lootbags",
     Callback = function(value)
