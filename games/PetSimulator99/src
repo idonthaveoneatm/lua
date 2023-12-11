@@ -3,7 +3,7 @@ getgenv().config = {
         toggle = false,
         singleTarget = false,
         farmPrint = false,
-        radius = 70,
+        radius = 40,
         wait = 0.2
     },
     autoLootbag = false,
@@ -13,8 +13,13 @@ getgenv().config = {
 
 Made by griffindoescooking
 
-]]--
-repeat task.wait() until game:IsLoaded() if game.PlaceId ~= 8737899170 then game.Players.LocalPlayer:Kick("wrong game") end
+]] --
+repeat
+    task.wait()
+until game:IsLoaded()
+if game.PlaceId ~= 8737899170 then
+    game.Players.LocalPlayer:Kick("wrong game")
+end
 print("Pet Simulator 99 | griffindoescooking")
 
 local LocalPlayer = game.Players.LocalPlayer
@@ -111,6 +116,7 @@ local eggTable = {
     "70 | Crowned Egg", 
     "71 | Royal Egg"
 }
+
 local zoneTable = {
     {"1 | Spawn", CFrame.new(212.035538, 20.1876869, -388.115417)}, 
     {"2 | Colorful Forest", CFrame.new(372.539154, 16.6393204, -211.668884)}, 
@@ -136,64 +142,102 @@ local zoneTable = {
     {"22 | Shipwreck",  CFrame.new(372.649658, -33.3606873, 786.346558)}, 
     {"23 | Atlantis",  CFrame.new(533.234131, -93.8606186, 767.947815)}, 
     {"24 | Palm Beach",  CFrame.new(808.733521, -69.4857025, 785.823608)}, 
-    {"25 | Tiki",  CFrame.new(1014.25232, 16.6393356, 773.097778)}
+    {"25 | Tiki",  CFrame.new(1014.25232, 16.6393356, 773.097778)},
+    {"26 | Pirate Cove"}, {CFrame.new(970.85302734375, 16.94143295288086, 923.5709838867188)},
+    {"27 | Pirate Tavern"}, {CFrame.new(878.7459716796875, 16.957433700561523, 1018.3610229492188)},
+    {"28 | Shanty Town"}, {CFrame.new(721.1669921875, 16.957433700561523, 1017.6840209960938)},
+    {"29 | Desert Village"}, {CFrame.new(567.2160034179688, 16.957433700561523, 1017.6840209960938)},
+    {"30 | Fossil Digsite"}, {CFrame.new(406.0140075683594, 16.957433700561523, 1017.6840209960938)},
+    {"31 | Desert Pyramids"}, {CFrame.new(360.9360046386719, 16.94143295288086, 1161.2469482421875)},
+    {"32 | Red Desert"}, {CFrame.new(458.25799560546875, 16.957433700561523, 1256.342041015625)},
+    {"33 | Wild West"}, {CFrame.new(607.89697265625, 16.957433700561523, 1256.342041015625)},
+    {"34 | Grand Canyons"}, {CFrame.new(757.2940063476562, 16.957433700561523, 1256.342041015625)},
+    {"35 | Safari"}, {CFrame.new(909.9240112304688, 16.957433700561523, 1256.342041015625)},
+    {"36 | Mountains"}, {CFrame.new(1076.3909912109375, 16.957433700561523, 1256.342041015625)},
+    {"37 | Snow Village"}, {CFrame.new(1121.7769775390625, 16.94143295288086, 1400.458984375)},
+    {"38 | Icy Peaks"}, {CFrame.new(1023.5139770507812, 16.957433700561523, 1494.6949462890625)},
+    {"39 | Ice Rink"}, {CFrame.new(874.1409912109375, 16.957433700561523, 1494.6949462890625)},
+    {"40 | Ski Town"}, {CFrame.new(707.9400024414062, 16.957433700561523, 1494.6949462890625)},
+    {"41 | Hot Springs"}, {CFrame.new(662.7490234375, 16.94143295288086, 1637.83203125)},
+    {"42 | Fire and Ice"}, {CFrame.new(760.2379760742188, 16.957433700561523, 1732.842041015625)},
+    {"43 | Volcano"}, {CFrame.new(909.4849243164062, 16.957433700561523, 1732.842041015625)},
+    {"44 | Obsidian Cave"}, {CFrame.new(1057.867919921875, 16.957433700561523, 1732.842041015625)},
+    {"45 | Lava Forest"}, {CFrame.new(1206.64892578125, 16.957433700561523, 1732.842041015625)},
+    {"46 | Underworld"}, {CFrame.new(1371.876953125, 16.957433700561523, 1732.842041015625)},
+    {"47 | Underworld Bridge"}, {CFrame.new(1416.886962890625, 16.957433700561523, 1873.783935546875)},
+    {"48 | Underworld Castle"}, {CFrame.new(1416.886962890625, 16.957433700561523, 2025.4990234375)},
+    {"49 | Metal Dojo"}, {CFrame.new(1324.8709716796875, 16.957433700561523, 2120.532958984375)},
+    {"50 | Fire Dojo"}, {CFrame.new(1158.8800048828125, 16.957433700561523, 2120.532958984375)},
+    {"51 | Samurai Village"}, {CFrame.new(789.0751953125, 16.957012176513672, 2119.5673828125)},
+    {"52 | Bamboo Forest"}, {CFrame.new(641.6153564453125, 16.957035064697266, 2119.66650390625)},
+    {"53 | Zen Garden"}, {CFrame.new(482.8709716796875, 16.957433700561523, 2119.866943359375)},
+    {"54 | Flower Field"}, {CFrame.new(318.35394287109375, 16.941783905029297, 2119.868896484375)},
+    {"55 | FairyTale Meadows"}, {CFrame.new(257.15765380859375, 16.957441329956055, 2245.4831542968752)},
+    {"56 | FairyTable Castle"}, {CFrame.new(257.15765380859375, 16.957441329956055, 2403.983154296875)},
+    {"57 | Royal Kingdom"}, {CFrame.new(318.35394287109375, 16.94178581237793, 2664.445068359375)},
+    {"58 | Fairy Castle"}, {CFrame.new(349.2230224609375, 16.957448959350586, 2664.471435546875)}
 }
 
 local function indexPets()
     table.clear(equippedPets)
-    for _,pet in ipairs(Pets:GetChildren()) do
+    for _, pet in ipairs(Pets:GetChildren()) do
         if PetInventory:FindFirstChild(pet.Name) then
             table.insert(equippedPets, pet.Name)
         end
     end
     return equippedPets
 end
-local function calcDistance(obj1,obj2)
-    local pPosX,pPosZ = obj1.CFrame.X,obj1.CFrame.Z
+local function calcDistance(obj1, obj2)
+    local pPosX, pPosZ = obj1.CFrame.X, obj1.CFrame.Z
     local hPosX, hPosZ = obj2.CFrame.X, obj2.CFrame.Z
 
-    return sqrt(pow(pPosX-hPosX, 2) + pow(pPosZ-hPosZ, 2))
+    return sqrt(pow(pPosX - hPosX, 2) + pow(pPosZ - hPosZ, 2))
 end
 local function getCenter()
     local frame = Instance.new("Frame")
     frame.Parent = game.CoreGui
     frame.Name = LocalPlayer.Name
-    frame.AnchorPoint = Vector2.new(0.5,0.5)
-    frame.Position = UDim2.fromScale(0.5,0.5)
-    frame.Size = UDim2.fromOffset(10,10)
+    frame.AnchorPoint = Vector2.new(0.5, 0.5)
+    frame.Position = UDim2.fromScale(0.5, 0.5)
+    frame.Size = UDim2.fromOffset(10, 10)
     frame.Visible = false
 
-    return {frame.AbsolutePosition.X,frame.AbsolutePosition.Y}
+    return {frame.AbsolutePosition.X, frame.AbsolutePosition.Y}
 end
-local function sendNotification(title,text,duration)
-    game:GetService("StarterGui"):SetCore("SendNotification",{
+local function sendNotification(title, text, duration)
+    game:GetService("StarterGui"):SetCore("SendNotification", {
         Title = title,
         Text = text,
         Duration = tonumber(duration),
-        Callback = function() end,
+        Callback = function()
+        end,
         Button1 = "Got It!"
     })
 end
 local libary = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/Libraries/normal/tmp/src"))()
 local u = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/utilities.lua"))()
 local main = libary:CreateWindow({
-	Title = "Pet Simulator 99"
+    Title = "Pet Simulator 99"
 })
 local farming = main:CreateTab({
     Name = "Farming",
     Icon = "rbxassetid://10709769841"
-}) farming:CreateSection("Farming")
+})
+farming:CreateSection("Farming")
 local egg = main:CreateTab({
     Name = "Egging",
     Icon = "rbxassetid://10723345518"
-}) egg:CreateSection("Egging")
-local zones = main:CreateTab({
-    Name = "Zones"
-}) zones:CreateSection("Zones")
+})
+egg:CreateSection("Egging")
+local teleports = main:CreateTab({
+    Name = "Teleports"
+})
+teleports:CreateSection("Teleport")
 local credits = main:CreateTab({
     Name = "Credits",
     Icon = "rbxassetid://10723396402"
-}) credits:CreateSection("Credits")
+})
+credits:CreateSection("Credits")
 
 farming:CreateToggle({
     Name = "Farm Coins",
@@ -201,7 +245,7 @@ farming:CreateToggle({
         config.farm.toggle = value
         while config.farm.toggle and task.wait() do
 
-            for _,v in ipairs(Breakables:GetChildren()) do
+            for _, v in ipairs(Breakables:GetChildren()) do
                 if v.Name ~= "Highlight" and v:FindFirstChild("Hitbox", true) then
                     local part = v:FindFirstChild("Hitbox", true)
 
@@ -218,8 +262,11 @@ farming:CreateToggle({
                                 Network.Breakables_PlayerDealDamage:FireServer(v.Name)
                             until not Breakables:FindFirstChild(v.Name)
 
-                            totalClaimed = totalClaimed + 1; totalTime = totalTime + (os.clock() - startTime)
-                            if config.farm.farmPrint then print("farmed "..tmpName.." in: "..tostring(os.clock() - startTime).." Avg: "..tostring(totalTime/totalClaimed)) end
+                            totalClaimed = totalClaimed + 1;
+                            totalTime = totalTime + (os.clock() - startTime)
+                            if config.farm.farmPrint then
+                                print("farmed " .. tmpName .. " in: " .. tostring(os.clock() - startTime) .. " Avg: " .. tostring(totalTime / totalClaimed))
+                            end
                         else
                             if not table.find(currentCoins, v.Name) then
                                 table.insert(currentCoins, v.Name)
@@ -233,14 +280,17 @@ farming:CreateToggle({
                                             break
                                         end
 
-                                        task.wait(config.farm.wait*math.random(1,2))
+                                        task.wait(config.farm.wait * math.random(1, 2))
 
                                         Network.Breakables_PlayerDealDamage:FireServer(tmpName)
                                     until not Breakables:FindFirstChild(tmpName)
 
                                     table.remove(currentCoins, table.find(currentCoins, v.Name))
-                                    totalClaimed = totalClaimed + 1; totalTime = totalTime + (os.clock() - startTime)
-                                    if config.farm.farmPrint then print("farmed "..tmpName.." in: "..tostring(os.clock() - startTime).." Avg: "..tostring(totalTime/totalClaimed)) end
+                                    totalClaimed = totalClaimed + 1;
+                                    totalTime = totalTime + (os.clock() - startTime)
+                                    if config.farm.farmPrint then
+                                        print("farmed " .. tmpName .. " in: " .. tostring(os.clock() - startTime) .. " Avg: " .. tostring(totalTime / totalClaimed))
+                                    end
                                 end)
                             end
                         end
@@ -264,24 +314,24 @@ farming:CreateToggle({
     end
 })
 farming:CreateInput({
-    Name = "Radius (Default: 70)",
+    Name = "Radius (Recommended: 70)",
     Callback = function(value)
         if tonumber(value) then
             config.farm.radius = tonumber(value)
         else
             config.farm.radius = 40
-            sendNotification("Radius Error","You need the RADIUS to be a number. It is now 40",50)
+            sendNotification("Radius Error", "You need the RADIUS to be a number. It is now 40", 50)
         end
     end
 })
 farming:CreateInput({
-    Name = "Wait Time (Default: 0.2)",
+    Name = "Wait Time (Recommended: 0.2)",
     Callback = function(value)
         if tonumber(value) then
             config.farm.wait = tonumber(value)
         else
             config.farm.wait = 0.2
-            sendNotification("Wait Time Error","You need the WAIT TIME to be a number. It is now 0.2",50)
+            sendNotification("Wait Time Error", "You need the WAIT TIME to be a number. It is now 0.2", 50)
         end
     end
 })
@@ -335,9 +385,9 @@ for _,eggName in ipairs(eggTable) do
     })
 end
 
-zones:CreateTextLabel("Has zones 1-25")
+teleports:CreateTextLabel("Has zones 1-58")
 for _,zone in ipairs(zoneTable) do
-    zones:CreateButton({
+    teleports:CreateButton({
         Name = tostring(zone[1]),
         Callback = function() 
             u.tween({
@@ -350,7 +400,13 @@ for _,zone in ipairs(zoneTable) do
 end
 
 credits:CreateTextLabel("UI: griffindoescooking")
-credits:CreateTextLabel("Script: griffindoescooking")
+credits:CreateTextLabel("Script: griffindoescooking, project L")
+credits:CreateButton({
+    Name = "project L",
+    Callback = function()
+        setclipboard("https://discord.gg/Mw7rYHDNw4")
+    end
+})
 credits:CreateSection("Support: ")
 credits:CreateButton({
     Name = "Discord",
