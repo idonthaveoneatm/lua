@@ -13,14 +13,18 @@ https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator9
 
 ## Features
 
-farm coins(broken)
-
-collect orbs
-
-collect lootbag
+farm coins
 
 farm eggs(1-71)
 
+farm fishing
+
+collect orbs(broken)
+
+collect lootbag
+
 teleport zones
 
-complete first 4 obbies
+complete obbies
+
+
