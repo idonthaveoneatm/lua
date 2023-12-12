@@ -23,4 +23,4 @@ farm eggs(1-71)
 
 teleport zones
 
-complete first 3 obbies
+complete first 4 obbies
