@@ -33,7 +33,6 @@ local HumanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart"
 local vim = game:GetService("VirtualInputManager")
 local sqrt = math.sqrt
 local pow = math.pow
-local u = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/utilities.lua"))()
 
 local Things = game.workspace['__THINGS']
 local instanceSpawnObby = Things.Instances.SpawnObby
@@ -165,12 +164,8 @@ local function sendNotification(title, text, duration)
         Button1 = "Got It!"
     })
 end
-local function goToPart(cframe, time: number)
-    u.tween({
-        o = HumanoidRootPart,
-        a = {CFrame = cframe},
-        t = time,s = "Sine",d = "In"
-    }):Play()
+local function goToPart(cframe)
+    HumanoidRootPart.CFrame = cframe
 end
 
 local libary = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/Libraries/normal/tmp/src"))()
@@ -360,11 +355,7 @@ farming:CreateToggle({
                 clickPosition(center[1],center[2])
                 task.wait()
             end
-            if tonumber(config.egg.amount) > 1 then
-                task.wait(3)
-            else
-                task.wait(1)
-            end
+            task.wait(1)
         end 
         getCenter(false)
     end
@@ -402,7 +393,7 @@ for _,zone in ipairs(zoneTable) do
     teleports:CreateButton({
         Name = tostring(zone[1]),
         Callback = function() 
-            goToPart(zone[2] + Vector3.new(0,5,0), 0.2)
+            goToPart(zone[2] + Vector3.new(0,5,0))
         end
     })
 end
@@ -410,16 +401,16 @@ end
 obbies:CreateButton({
     Name = 'Complete "Spawn Obby"',
     Callback = function()
-        goToPart(instanceSpawnObby:FindFirstChild("Enter", true).CFrame, 0.2)
+        goToPart(instanceSpawnObby:FindFirstChild("Enter", true).CFrame)
         task.wait(1)
         
         local spawnObby = instanceContainer.Active:WaitForChild("SpawnObby")
         local startLine = spawnObby.StartLine
         local endPad = spawnObby.Goal.Pad
         
-        goToPart(startLine:FindFirstChild("Part").CFrame + Vector3.new(0,5,0), 0.2)
+        goToPart(startLine:FindFirstChild("Part").CFrame + Vector3.new(0,5,0))
         task.wait(0.2)
-        goToPart( endPad.CFrame + Vector3.new(0,5,0), 0.2)
+        goToPart( endPad.CFrame + Vector3.new(0,5,0))
     end
 })
 
