@@ -394,6 +394,7 @@ farming:CreateToggle({
     Callback = function(value)
         config.egg.farm = value
         while config.egg.farm and task.wait() do
+            print("buying")
             local splitName = string.split(config.egg.selectedEgg, " | ")
             local args = {
                 [1] = splitName[2],
@@ -402,11 +403,12 @@ farming:CreateToggle({
             Network.Eggs_RequestPurchase:InvokeServer(unpack(args))
             task.wait(0.4)
             local center = getCenter(true)
-            for i=1,4 do
+            repeat 
+                task.wait()
                 clickPosition(center[1],center[2])
                 task.wait()
-            end
-            task.wait(1)
+            until not game.workspace.Camera:FindFirstChild("Eggs")
+            task.wait(0.5)
         end 
         getCenter(false)
     end
@@ -432,24 +434,21 @@ farming:CreateToggle({
         local center = getCenter(true)
         while config.fishing and task.wait() do
             
-            print("starting fishing")
             clickPosition(center[1],center[2])
             local bobber = waitFor(fishing.Bobbers, "Bobber", true)
             repeat task.wait() until bobber.Position.Y < 75
             clickPosition(center[1],center[2])
-            print("bobber dipped")
             local item = waitFor(LocalPlayer.PlayerGui['_INSTANCES'].FishingGame.GameBar, "Item")
             local fishingBar =  waitFor(LocalPlayer.PlayerGui['_INSTANCES'].FishingGame.GameBar, "FishingBar")
             task.wait(0.2)
             repeat 
                 
                 if not config.fishing then break end
-                local function calcDistance(y1, y2)
+                local function bobberDistance(y1, y2)
                     return y1 - y2
                 end
                 
-                if calcDistance((fishingBar.Position.Y.Scale), item.Position.Y.Scale) > 0.2 then
-                    print("bobber too far: "..tostring(calcDistance((fishingBar.Position.Y.Scale), item.Position.Y.Scale)))
+                if bobberDistance((fishingBar.Position.Y.Scale), item.Position.Y.Scale) > 0.2 then
                     
                     repeat 
                         
@@ -459,10 +458,9 @@ farming:CreateToggle({
                         vim:SendMouseButtonEvent(center[1],center[2], 0, true, griffindoescooking, 1)
                         task.wait()
                         
-                    until (calcDistance((fishingBar.Position.Y.Scale), item.Position.Y.Scale) < 0.2) or (item.Position.Y.Scale >  fishingBar.Position.Y.Scale)
+                    until (bobberDistance((fishingBar.Position.Y.Scale), item.Position.Y.Scale) < 0.2) or (item.Position.Y.Scale >  fishingBar.Position.Y.Scale)
                     
                     vim:SendMouseButtonEvent(center[1],center[2], 0, false, griffindoescooking, 1)
-                    print("bobber released")
                     
                 else
                     task.wait()
@@ -470,7 +468,6 @@ farming:CreateToggle({
                 task.wait()
                 
             until LocalPlayer.PlayerGui['_INSTANCES'].FishingGame.Enabled == false
-            print("caught item")
             task.wait(0.2)
             
         end
@@ -505,7 +502,7 @@ obbies:CreateButton({
         goToPart(instanceSpawnObby:FindFirstChild("Enter", true).CFrame)
         task.wait(1)
         
-        local spawnObby = instanceContainer.Active:WaitForChild("SpawnObby")
+        local spawnObby = waitFor(instanceContainer.Active, "SpawnObby")
         task.wait(1)
         local startLine = spawnObby.StartLine
         local endPad = spawnObby.Goal.Pad
@@ -521,7 +518,7 @@ obbies:CreateButton({
         goToPart(instanceMinefield:FindFirstChild("Enter", true).CFrame)
         task.wait(1)
         
-        local minefield = instanceContainer.Active:WaitForChild("Minefield")
+        local minefield = waitFor(instanceContainer.Active, "Minefield")
         task.wait(3)
         local mines = minefield.Mines
         local finish = minefield.Finish
@@ -571,7 +568,7 @@ obbies:CreateButton({
         goToPart(instanceJungleObby:FindFirstChild("Enter", true).CFrame)
         task.wait(1)
         
-        local jungleObby = instanceContainer.Active:WaitForChild("JungleObby")
+        local jungleObby = waitFor(instanceContainer.Active, "JungleObby")
         task.wait(1)
         local startLine = jungleObby.Interactable.StartLine
         local goalPad = jungleObby.Interactable.Goal.Pad
@@ -587,7 +584,7 @@ obbies:CreateButton({
         goToPart(instanceAtlantis:FindFirstChild("Enter", true).CFrame)
         task.wait(1)
 
-        local atlantis = instanceContainer.Active:WaitForChild("Atlantis")
+        local atlantis = waitFor(instanceContainer.Active, "Atlantis")
         local rings = atlantis.Rings
 
         for i=1,31 do
