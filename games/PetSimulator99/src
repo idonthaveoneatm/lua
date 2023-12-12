@@ -13,7 +13,8 @@ getgenv().config = {
         amount = 0,
         farm = false
     },
-    timeRewards = false
+    timeRewards = false,
+    fishing = false
 }
 --[[
 
@@ -41,6 +42,7 @@ local instanceSpawnObby = Things.Instances.SpawnObby
 local instanceMinefield = Things.Instances.Minefield
 local instanceJungleObby = Things.Instances.JungleObby
 local instanceAtlantis = Things.Instances.Atlantis
+local instanceFishing = Things.Instances.Fishing
 local instanceContainer = Things['__INSTANCE_CONTAINER']
 local Lootbags = Things.Lootbags
 local Orbs = Things.Orbs
@@ -81,7 +83,6 @@ local eggTable = {
     "67 | Garden Egg", "68 | Pixie Egg", "69 | Pedal Egg", 
     "70 | Crowned Egg", "71 | Royal Egg"
 }
-
 local zoneTable = {
     {"1 | Spawn", CFrame.new(212.035538, 20.1876869, -388.115417)}, {"2 | Colorful Forest", CFrame.new(372.539154, 16.6393204, -211.668884)}, 
     {"3 | Castle",  CFrame.new(530.453491, 16.6393204, -196.13797)}, {"4 | Green Forest",  CFrame.new(689.05304, 16.6393204, -205.87149)}, 
@@ -112,6 +113,14 @@ local zoneTable = {
     {"53 | Zen Garden",CFrame.new(482.8709716796875, 16.957433700561523, 2119.866943359375)},{"54 | Flower Field",CFrame.new(318.35394287109375, 16.941783905029297, 2119.868896484375)},
     {"55 | FairyTale Meadows",CFrame.new(257.15765380859375, 16.957441329956055, 2245.4831542968752)},{"56 | FairyTable Castle",CFrame.new(257.15765380859375, 16.957441329956055, 2403.983154296875)},
     {"57 | Royal Kingdom",CFrame.new(318.35394287109375, 16.94178581237793, 2664.445068359375)},{"58 | Fairy Castle",CFrame.new(349.2230224609375, 16.957448959350586, 2664.471435546875)}
+}
+local vendingTable = {
+    "PotionVendingMachine1",
+    --"PotionVendingMachine2",
+    "EnchantVendingMachine1",
+    --"EnchantVendingMachine2",
+    "FruitVendingMachine1",
+    "FruitVendingMachine2",
 }
 
 local function indexPets()
@@ -172,6 +181,38 @@ end
 local function goToPart(cframe)
     HumanoidRootPart.CFrame = cframe
 end
+local function waitFor(path, object, bool)
+    bool = bool or false
+    repeat 
+        task.wait() 
+    until path:FindFirstChild(object, bool)
+    return path:FindFirstChild(object, bool)
+end
+
+local vendingFunctions = {
+    ["PotionVendingMachine1"] = function() 
+        goToPart(zoneTable[6][2])
+        goToPart(Map[zoneTable[6][1]].INTERACT:FindFirstChild("PotionVendingMachine1", true).Pad.CFrame)
+    end,
+    --[[["PotionVendingMachine2"] = function() 
+        
+    end,]]
+    ["EnchantVendingMachine1"] = function() 
+        goToPart(zoneTable[9][2])
+        goToPart(Map[zoneTable[9][1]].INTERACT:FindFirstChild("EnchantVendingMachine1", true).Pad.CFrame)
+    end,
+    --[[["EnchantVendingMachine2"] = function() 
+       
+    end,]]
+    ["FruitVendingMachine1"] = function() 
+        goToPart(zoneTable[14][2])
+        goToPart(Map[zoneTable[14][1]].INTERACT:FindFirstChild("FruitVendingMachine1", true).Pad.CFrame)
+    end,
+    ["FruitVendingMachine2"] = function() 
+        goToPart(zoneTable[26][2])
+        goToPart(Map[zoneTable[26][1]].INTERACT:FindFirstChild("FruitVendingMachine2", true).Pad.CFrame)
+    end,
+}
 
 local libary = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/Libraries/normal/tmp/src"))()
 local main = libary:CreateWindow({
@@ -192,9 +233,13 @@ local rewards = main:CreateTab({
     Name = "Rewards",
     Icon = "rbxassetid://10723396402"
 }) rewards:CreateSection("Rewards")
+local misc = main:CreateTab({
+    Name = "Miscellaneous",
+    Icon = "rbxassetid://10709819149"
+})
 local credits = main:CreateTab({
     Name = "Credits",
-    Icon = "rbxassetid://10709819149"
+    Icon = "rbxassetid://10747373176"
 }) credits:CreateSection("Credits")
 
 farming:CreateToggle({
@@ -366,6 +411,72 @@ farming:CreateToggle({
         getCenter(false)
     end
 })
+farming:CreateSection("Fishing")
+farming:CreateButton({
+    Name = "Go to fishing",
+    Callback = function() 
+        goToPart(instanceFishing:FindFirstChild("Enter", true).CFrame)
+    end
+})
+farming:CreateToggle({
+    Name = "Start fishing",
+    Callback = function(value)
+        config.fishing = value
+        local fishing = waitFor(instanceContainer.Active, "Fishing")
+        if not fishing.Water.Layer1.CanCollide then
+            fishing.Water.Layer1.CanCollide = true
+        end
+        if HumanoidRootPart.CFrame ~= (fishing.Water.Layer1.CFrame + Vector3.new(0,3,0)) then
+            goToPart(fishing.Water.Layer1.CFrame + Vector3.new(0,3,0))
+        end
+        local center = getCenter(true)
+        while config.fishing and task.wait() do
+            
+            print("starting fishing")
+            clickPosition(center[1],center[2])
+            local bobber = waitFor(fishing.Bobbers, "Bobber", true)
+            repeat task.wait() until bobber.Position.Y < 75
+            clickPosition(center[1],center[2])
+            print("bobber dipped")
+            local item = waitFor(LocalPlayer.PlayerGui['_INSTANCES'].FishingGame.GameBar, "Item")
+            local fishingBar =  waitFor(LocalPlayer.PlayerGui['_INSTANCES'].FishingGame.GameBar, "FishingBar")
+            task.wait(0.2)
+            repeat 
+                
+                if not config.fishing then break end
+                local function calcDistance(y1, y2)
+                    return y1 - y2
+                end
+                
+                if calcDistance((fishingBar.Position.Y.Scale), item.Position.Y.Scale) > 0.2 then
+                    print("bobber too far: "..tostring(calcDistance((fishingBar.Position.Y.Scale), item.Position.Y.Scale)))
+                    
+                    repeat 
+                        
+                        if not config.fishing then break end
+                        if LocalPlayer.PlayerGui['_INSTANCES'].FishingGame.Enabled == false then break end
+                        
+                        vim:SendMouseButtonEvent(center[1],center[2], 0, true, griffindoescooking, 1)
+                        task.wait()
+                        
+                    until (calcDistance((fishingBar.Position.Y.Scale), item.Position.Y.Scale) < 0.2) or (item.Position.Y.Scale >  fishingBar.Position.Y.Scale)
+                    
+                    vim:SendMouseButtonEvent(center[1],center[2], 0, false, griffindoescooking, 1)
+                    print("bobber released")
+                    
+                else
+                    task.wait()
+                end
+                task.wait()
+                
+            until LocalPlayer.PlayerGui['_INSTANCES'].FishingGame.Enabled == false
+            print("caught item")
+            task.wait(0.2)
+            
+        end
+        getCenter(false)
+    end
+})
 
 zones:CreateSection("Miscellaneous")
 zones:CreateButton({
@@ -395,12 +506,12 @@ obbies:CreateButton({
         task.wait(1)
         
         local spawnObby = instanceContainer.Active:WaitForChild("SpawnObby")
-        task.wait(2)
+        task.wait(1)
         local startLine = spawnObby.StartLine
         local endPad = spawnObby.Goal.Pad
         
         goToPart(startLine:FindFirstChild("Part").CFrame + Vector3.new(0,3,0))
-        task.wait(0.2)
+        task.wait(0.5)
         goToPart(endPad.CFrame + Vector3.new(0,3,0))
     end
 })
@@ -461,12 +572,12 @@ obbies:CreateButton({
         task.wait(1)
         
         local jungleObby = instanceContainer.Active:WaitForChild("JungleObby")
-        task.wait(2)
+        task.wait(1)
         local startLine = jungleObby.Interactable.StartLine
         local goalPad = jungleObby.Interactable.Goal.Pad
         
         goToPart(startLine.CFrame + Vector3.new(0,3,0))
-        task.wait(0.2)
+        task.wait(0.5)
         goToPart(goalPad.CFrame + Vector3.new(0,3,0))
     end
 })
@@ -482,7 +593,7 @@ obbies:CreateButton({
         for i=1,31 do
             repeat task.wait() until rings:FindFirstChild(tostring(i))
             local ring = rings:FindFirstChild(tostring(i))
-            task.wait(0.5)
+            task.wait(0.4)
             HumanoidRootPart.CFrame = ring.Collision.CFrame
         end
     end
@@ -497,6 +608,21 @@ rewards:CreateToggle({
                 Network:FindFirstChild("Redeem Free Gift"):InvokeServer(i)
             end
         end
+    end
+})
+misc:CreateSection("Vending Machines")
+local vendingName = ""
+misc:CreateDropdown({
+    Name = "Vending Machine",
+    Items = vendingTable,
+    Callback = function(name)
+        vendingName = name
+    end
+})
+misc:CreateButton({
+    Name = "Go to vending Machine",
+    Callback = function() 
+        vendingFunctions[vendingName]()
     end
 })
 
