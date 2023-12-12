@@ -35,9 +35,11 @@ local sqrt = math.sqrt
 local pow = math.pow
 
 local Things = game.workspace['__THINGS']
+local Map = game.workspace.Map
 local instanceSpawnObby = Things.Instances.SpawnObby
 local instanceMinefield = Things.Instances.Minefield
 local instanceJungleObby = Things.Instances.JungleObby
+local instanceAtlantis = Things.Instances.Atlantis
 local instanceContainer = Things['__INSTANCE_CONTAINER']
 local Lootbags = Things.Lootbags
 local Orbs = Things.Orbs
@@ -389,7 +391,17 @@ for _,eggName in ipairs(eggTable) do
         end
     })
 end
-
+teleports:CreateSection("Miscellaneous")
+teleports:CreateButton({
+    Name = "Remove water",
+    Callback = function() 
+        for _, water in ipairs(Map:GetDescendants()) do
+            if water:IsA("Folder") and water.Name == "Water Bounds" then
+                water:Destroy()
+            end
+        end
+    end
+})
 teleports:CreateTextLabel("Has zones 1-25")
 for _,zone in ipairs(zoneTable) do
     teleports:CreateButton({
@@ -407,6 +419,7 @@ obbies:CreateButton({
         task.wait(1)
         
         local spawnObby = instanceContainer.Active:WaitForChild("SpawnObby")
+        task.wait(2)
         local startLine = spawnObby.StartLine
         local endPad = spawnObby.Goal.Pad
         
@@ -422,7 +435,7 @@ obbies:CreateButton({
         task.wait(1)
         
         local minefield = instanceContainer.Active:WaitForChild("Minefield")
-        task.wait(2)
+        task.wait(3)
         local mines = minefield.Mines
         local finish = minefield.Finish
         
@@ -430,23 +443,32 @@ obbies:CreateButton({
         local nextZ = 0
         for _,mine in ipairs(mines:GetChildren()) do
             if nextX == 0 then
-                nextX = mine.Pad.Position.X + 10
+                local oldPos = mine.Pad.CFrame
+                mine.Pad.CanCollide = false
+                nextX = mine.Pad.Position.X
                 nextZ = mine.Pad.Position.Z
-                goToPart(mine.Pad.CFrame)
-                task.wait(0.6)
+                mine.Pad.CFrame = HumanoidRootPart.CFrame
+                task.wait(0.2)
+                mine.Pad.CFrame = oldPos
+                mine.Pad.CanCollide = true
+                
                 if tostring(mine.Pad.BrickColor) == "Really red" then
                     nextZ = nextZ + 10
-                    task.wait(4)
+                    task.wait(3)
                 else
                     nextX = nextX + 10
                 end
             else
                 if mine.Pad.Position.X == nextX and mine.Pad.Position.Z == nextZ then
-                    goToPart(mine.Pad.CFrame)
-                    task.wait(0.6)
+                    local oldPos = mine.Pad.CFrame
+                    mine.Pad.CanCollide = false
+                    mine.Pad.CFrame = HumanoidRootPart.CFrame
+                    task.wait(0.2)
+                    mine.Pad.CFrame = oldPos
+                    mine.Pad.CanCollide = true
                     if tostring(mine.Pad.BrickColor) == "Really red" then
                         nextZ = nextZ + 10
-                        task.wait(4)
+                        task.wait(3)
                     else
                         nextX = nextX + 10
                     end
@@ -471,6 +493,24 @@ obbies:CreateButton({
         goToPart(goalPad.CFrame + Vector3.new(0,3,0))
     end
 })
+obbies:CreateButton({
+    Name = 'Complete "Atlantis"',
+    Callback = function() 
+        goToPart(instanceAtlantis:FindFirstChild("Enter", true).CFrame)
+        task.wait(1)
+
+        local atlantis = instanceContainer.Active:WaitForChild("Atlantis")
+        local rings = atlantis.Rings
+
+        for i=1,31 do
+            repeat task.wait() until rings:FindFirstChild(tostring(i))
+            local ring = rings:FindFirstChild(tostring(i))
+            task.wait(0.5)
+            HumanoidRootPart.CFrame = ring.Collision.CFrame
+        end
+    end
+})
+
 credits:CreateTextLabel("UI: griffindoescooking")
 credits:CreateTextLabel("Script: griffindoescooking, project L")
 credits:CreateButton({
