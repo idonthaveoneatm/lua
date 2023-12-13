@@ -38,7 +38,7 @@ local sqrt = math.sqrt
 local pow = math.pow
 
 local Things = game.workspace['__THINGS']
-local Map = game.workspace.Map
+--local Map = game.workspace.Map
 local instanceSpawnObby = Things.Instances.SpawnObby
 local instanceMinefield = Things.Instances.Minefield
 local instanceJungleObby = Things.Instances.JungleObby
@@ -418,10 +418,10 @@ farming:Toggle({
             Network.Eggs_RequestPurchase:InvokeServer(unpack(args))
             task.wait(0.4)
             local center = getCenter(true)
-            for i=1,4 do
-                clickPosition(center[1],center[2])
+            repeat 
                 task.wait()
-            end
+                clickPosition(center[1],center[2])
+            until not game.workspace.Camera:FindFirstChild("Eggs")
             task.wait(1)
         end 
         getCenter(false)
@@ -449,49 +449,49 @@ farming:Toggle({
         local center = getCenter(true)
         while config.fishing and task.wait() do
             
-            print("starting fishing")
+            clickPosition(center[1],center[2]) -- throws line
+            
+            repeat task.wait() until fishing.Bobbers:FindFirstChild("Bobber", true) -- waits for bobber
+            local bobber = fishing.Bobbers:FindFirstChild("Bobber", true)
+            
+            repeat task.wait() until bobber.Position.Y < 75 -- waits for bobber to dip
             clickPosition(center[1],center[2])
-            local bobber = waitFor(fishing.Bobbers, "Bobber", true)
-            repeat task.wait() until bobber.Position.Y < 75
-            clickPosition(center[1],center[2])
-            print("bobber dipped")
-            local item = waitFor(LocalPlayer.PlayerGui['_INSTANCES'].FishingGame.GameBar, "Item")
-            local fishingBar =  waitFor(LocalPlayer.PlayerGui['_INSTANCES'].FishingGame.GameBar, "FishingBar")
+            
+            local item = waitFor(LocalPlayer.PlayerGui['_INSTANCES'].FishingGame.GameBar, "Item") -- wait for item
+            local fishingBar = waitFor(LocalPlayer.PlayerGui['_INSTANCES'].FishingGame.GameBar, "FishingBar") -- wait for fishingbar
             task.wait(0.2)
+            
             repeat 
                 
-                if not config.fishing then break end
-                local function bobberDistance(y1, y2)
+                if not config.fishing then break end -- breaks if toggled off
+                local function bobberDistance(y1, y2) -- function to get distance
                     return y1 - y2
                 end
                 
-                if bobberDistance((fishingBar.Position.Y.Scale), item.Position.Y.Scale) > 0.2 then
-                    print("bobber too far: "..tostring(bobberDistance((fishingBar.Position.Y.Scale), item.Position.Y.Scale)))
+                if bobberDistance((fishingBar.Position.Y.Scale), item.Position.Y.Scale) > 0.2 then -- if true then its too far from the middle
                     
                     repeat 
                         
                         if not config.fishing then break end
-                        if LocalPlayer.PlayerGui['_INSTANCES'].FishingGame.Enabled == false then break end
+                        if LocalPlayer.PlayerGui['_INSTANCES'].FishingGame.Enabled == false then break end -- breaks if caught
                         
-                        vim:SendMouseButtonEvent(center[1],center[2], 0, true, griffindoescooking, 1)
+                        vim:SendMouseButtonEvent(center[1],center[2], 0, true, griffindoescooking, 1) -- mouse down
                         task.wait()
                         
-                    until (bobberDistance((fishingBar.Position.Y.Scale), item.Position.Y.Scale) < 0.2) or (item.Position.Y.Scale >  fishingBar.Position.Y.Scale)
+                    until (bobberDistance((fishingBar.Position.Y.Scale), item.Position.Y.Scale) < 0.2) or (item.Position.Y.Scale >  fishingBar.Position.Y.Scale) -- breaks if its less than the 0.2 or less than the fishinbars position
                     
-                    vim:SendMouseButtonEvent(center[1],center[2], 0, false, griffindoescooking, 1)
-                    print("bobber released")
+                    vim:SendMouseButtonEvent(center[1],center[2], 0, false, griffindoescooking, 1) -- mouse up
                     
                 else
-                    task.wait()
+                    task.wait() -- tbh idk
                 end
-                task.wait()
+                task.wait() -- tbh idk
                 
-            until LocalPlayer.PlayerGui['_INSTANCES'].FishingGame.Enabled == false
-            print("caught item")
+            until LocalPlayer.PlayerGui['_INSTANCES'].FishingGame.Enabled == false -- finishes when the ui is gone
             task.wait(0.2)
             
         end
-        getCenter(false)
+        getCenter(false) -- if its toggled off the gui for the center is invisible
     end
 })
 
