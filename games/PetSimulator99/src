@@ -1,3 +1,4 @@
+
 getgenv().config = {
     farm = {
         toggle = false,
@@ -214,36 +215,44 @@ local vendingFunctions = {
     end,
 }
 
-local libary = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/Libraries/normal/tmp/src"))()
-local main = libary:CreateWindow({
-    Title = "Pet Simulator 99"
+local project = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/Libraries/normal/quake/src"))()
+local main = project:Window({
+    Title = "Pet Simulator 99",
+    Parent = game.CoreGui
 })
-local farming = main:CreateTab({
+local farming = main:Tab({
     Name = "Farming",
-    Icon = "rbxassetid://10709769841"
-}) farming:CreateSection("Farming")
-local zones = main:CreateTab({
-    Name = "Zones"
-}) zones:CreateSection("Teleport")
-local obbies = main:CreateTab({
-    Name = "Obbies",
-    Icon = "rbxassetid://10723376114"
-}) obbies:CreateSection("Obbies")
-local rewards = main:CreateTab({
-    Name = "Rewards",
-    Icon = "rbxassetid://10723396402"
-}) rewards:CreateSection("Rewards")
-local misc = main:CreateTab({
-    Name = "Miscellaneous",
-    Icon = "rbxassetid://10709819149"
+    tabColor = Color3.fromHex("#71d1f5"),
+    Image = "rbxassetid://10709769841"
 })
-local credits = main:CreateTab({
+local zones = main:Tab({
+    Name = "Zones",
+    tabColor = Color3.fromHex("#9bf038"),
+    Image = "rbxassetid://15555209580"
+})
+local obbies = main:Tab({
+    Name = "Obbies",
+    tabColor = Color3.fromHex("#d19b4a"),
+    Image = "rbxassetid://10723376114"
+})
+local rewards = main:Tab({
+    Name = "Rewards",
+    tabColor = Color3.fromHex("#da0a48"),
+    Image = "rbxassetid://10723396402"
+})
+local misc = main:Tab({
+    Name = "Miscellaneous",
+    tabColor = Color3.fromHex("#34d793"),
+    Image = "rbxassetid://10709819149"
+})
+local credits = main:Tab({
     Name = "Credits",
-    Icon = "rbxassetid://10747373176"
-}) credits:CreateSection("Credits")
+    Image = "rbxassetid://10747373176"
+})
 
-farming:CreateToggle({
+farming:Toggle({
     Name = "Farm Coins",
+    Default = false,
     Callback = function(value)
         config.farm.toggle = value
         while config.farm.toggle and task.wait() do
@@ -302,19 +311,21 @@ farming:CreateToggle({
         end
     end
 })
-farming:CreateToggle({
+farming:Toggle({
     Name = "Single Target",
+    Default = false,
     Callback = function(value)
         config.farm.singleTarget = value
     end
 })
-farming:CreateToggle({
+farming:Toggle({
     Name = "Console Print",
+    Default = false,
     Callback = function(value)
         config.farm.farmPrint = value
     end
 })
-farming:CreateInput({
+farming:TextBox({
     Name = "Radius (Recommended: 70)",
     Callback = function(value)
         if tonumber(value) then
@@ -325,7 +336,7 @@ farming:CreateInput({
         end
     end
 })
-farming:CreateInput({
+farming:TextBox({
     Name = "Wait Time (Recommended: 0.2)",
     Callback = function(value)
         if tonumber(value) then
@@ -336,11 +347,12 @@ farming:CreateInput({
         end
     end
 })
-farming:CreateSection("Collection")
-farming:CreateTextLabel("Auto Collect Orbs is currently broken/patched")
+farming:Section("Collection")
+farming:Label("Auto Collect Orbs is currently broken/patched")
 --[[
-farming:CreateToggle({
+farming:Toggle({
     Name = "Collect Orbs",
+    Default = false,
     Callback = function(value)
         config.autoOrb = value
         while config.autoOrb and task.wait() do
@@ -355,8 +367,9 @@ farming:CreateToggle({
     end
 })
 ]]
-farming:CreateToggle({
+farming:Toggle({
     Name = "Collect Lootbags",
+    Default = false,
     Callback = function(value)
         config.autoLootbag = value
         while config.autoLootbag and task.wait() do
@@ -370,31 +383,33 @@ farming:CreateToggle({
         end
     end
 })
-farming:CreateSection("Egg Farming")
-farming:CreateTextLabel("You must be near eggs to hatch them")
-farming:CreateDropdown({
+farming:Section("Egg Farming")
+farming:Label("You must be near eggs to hatch them")
+farming:Dropdown({
     Name = "Egg to farm",
     Items = eggTable,
+    Multiselect = false,
     Callback = function(eggPicked)
         config.egg.selectedEgg = eggPicked
     end
 })
-farming:CreateSlider({
+farming:Slider({
     Name = "Amount of eggs",
     Step = 1,
-    Maximum = 10,
-    Minimum = 1,
+    Max = 99,
+    Min = 1,
+    InitialValue = 1,
     Callback = function(eggAmount)
         config.egg.amount = eggAmount
         print(tostring(config.egg.amount))
     end
 })
-farming:CreateToggle({
+farming:Toggle({
     Name = "Farm selected egg",
+    Default = false,
     Callback = function(value)
         config.egg.farm = value
         while config.egg.farm and task.wait() do
-            print("buying")
             local splitName = string.split(config.egg.selectedEgg, " | ")
             local args = {
                 [1] = splitName[2],
@@ -403,25 +418,25 @@ farming:CreateToggle({
             Network.Eggs_RequestPurchase:InvokeServer(unpack(args))
             task.wait(0.4)
             local center = getCenter(true)
-            repeat 
-                task.wait()
+            for i=1,4 do
                 clickPosition(center[1],center[2])
                 task.wait()
-            until not game.workspace.Camera:FindFirstChild("Eggs")
-            task.wait(0.5)
+            end
+            task.wait(1)
         end 
         getCenter(false)
     end
 })
-farming:CreateSection("Fishing")
-farming:CreateButton({
+farming:Section("Fishing")
+farming:Button({
     Name = "Go to fishing",
     Callback = function() 
         goToPart(instanceFishing:FindFirstChild("Enter", true).CFrame)
     end
 })
-farming:CreateToggle({
+farming:Toggle({
     Name = "Start fishing",
+    Default = false,
     Callback = function(value)
         config.fishing = value
         local fishing = waitFor(instanceContainer.Active, "Fishing")
@@ -434,10 +449,12 @@ farming:CreateToggle({
         local center = getCenter(true)
         while config.fishing and task.wait() do
             
+            print("starting fishing")
             clickPosition(center[1],center[2])
             local bobber = waitFor(fishing.Bobbers, "Bobber", true)
             repeat task.wait() until bobber.Position.Y < 75
             clickPosition(center[1],center[2])
+            print("bobber dipped")
             local item = waitFor(LocalPlayer.PlayerGui['_INSTANCES'].FishingGame.GameBar, "Item")
             local fishingBar =  waitFor(LocalPlayer.PlayerGui['_INSTANCES'].FishingGame.GameBar, "FishingBar")
             task.wait(0.2)
@@ -449,6 +466,7 @@ farming:CreateToggle({
                 end
                 
                 if bobberDistance((fishingBar.Position.Y.Scale), item.Position.Y.Scale) > 0.2 then
+                    print("bobber too far: "..tostring(bobberDistance((fishingBar.Position.Y.Scale), item.Position.Y.Scale)))
                     
                     repeat 
                         
@@ -461,6 +479,7 @@ farming:CreateToggle({
                     until (bobberDistance((fishingBar.Position.Y.Scale), item.Position.Y.Scale) < 0.2) or (item.Position.Y.Scale >  fishingBar.Position.Y.Scale)
                     
                     vim:SendMouseButtonEvent(center[1],center[2], 0, false, griffindoescooking, 1)
+                    print("bobber released")
                     
                 else
                     task.wait()
@@ -468,6 +487,7 @@ farming:CreateToggle({
                 task.wait()
                 
             until LocalPlayer.PlayerGui['_INSTANCES'].FishingGame.Enabled == false
+            print("caught item")
             task.wait(0.2)
             
         end
@@ -475,8 +495,8 @@ farming:CreateToggle({
     end
 })
 
-zones:CreateSection("Miscellaneous")
-zones:CreateButton({
+zones:Section("Miscellaneous")
+zones:Button({
     Name = "Remove water",
     Callback = function() 
         for _, water in ipairs(Map:GetDescendants()) do
@@ -486,9 +506,9 @@ zones:CreateButton({
         end
     end
 })
-zones:CreateTextLabel("Has zones 1-58")
+zones:Label("Has zones 1-58")
 for _,zone in ipairs(zoneTable) do
-    zones:CreateButton({
+    zones:Button({
         Name = tostring(zone[1]),
         Callback = function() 
             goToPart(zone[2] + Vector3.new(0,5,0))
@@ -496,7 +516,7 @@ for _,zone in ipairs(zoneTable) do
     })
 end
 
-obbies:CreateButton({
+obbies:Button({
     Name = 'Complete "Spawn Obby"',
     Callback = function()
         goToPart(instanceSpawnObby:FindFirstChild("Enter", true).CFrame)
@@ -512,7 +532,7 @@ obbies:CreateButton({
         goToPart(endPad.CFrame + Vector3.new(0,3,0))
     end
 })
-obbies:CreateButton({
+obbies:Button({
     Name = 'Complete "Minefield"',
     Callback = function()
         goToPart(instanceMinefield:FindFirstChild("Enter", true).CFrame)
@@ -562,7 +582,7 @@ obbies:CreateButton({
         goToPart(finish.CFrame)
     end
 })
-obbies:CreateButton({
+obbies:Button({
     Name = 'Complete "Jungle Obby"',
     Callback = function() 
         goToPart(instanceJungleObby:FindFirstChild("Enter", true).CFrame)
@@ -578,7 +598,7 @@ obbies:CreateButton({
         goToPart(goalPad.CFrame + Vector3.new(0,3,0))
     end
 })
-obbies:CreateButton({
+obbies:Button({
     Name = 'Complete "Atlantis"',
     Callback = function() 
         goToPart(instanceAtlantis:FindFirstChild("Enter", true).CFrame)
@@ -596,8 +616,9 @@ obbies:CreateButton({
     end
 })
 
-rewards:CreateToggle({
+rewards:Toggle({
     Name = 'Collect Time Rewards',
+    Default = false,
     Callback = function(value)
         config.timeRewards = value
         while config.timeRewards and task.wait() do
@@ -607,32 +628,34 @@ rewards:CreateToggle({
         end
     end
 })
-misc:CreateSection("Vending Machines")
+misc:Label("These are things that dont fit in a category")
+misc:Section("Vending Machines")
 local vendingName = ""
-misc:CreateDropdown({
+misc:Dropdown({
     Name = "Vending Machine",
     Items = vendingTable,
+    Multiselect = false,
     Callback = function(name)
         vendingName = name
     end
 })
-misc:CreateButton({
+misc:Button({
     Name = "Go to vending Machine",
     Callback = function() 
         vendingFunctions[vendingName]()
     end
 })
 
-credits:CreateTextLabel("UI: griffindoescooking")
-credits:CreateTextLabel("Script: griffindoescooking, project L")
-credits:CreateButton({
+credits:Label("UI: griffindoescooking")
+credits:Label("Script: griffindoescooking, project L")
+credits:Button({
     Name = "project L",
     Callback = function()
         setclipboard("https://discord.gg/Mw7rYHDNw4")
     end
 })
-credits:CreateSection("Support: ")
-credits:CreateButton({
+credits:Section("Support: ")
+credits:Button({
     Name = "Discord",
     Callback = function()
         setclipboard("https://discord.gg/DBPHwFyCVT")
