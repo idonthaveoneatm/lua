@@ -126,6 +126,12 @@ local vendingTable = {
     "FruitVendingMachine1",
     "FruitVendingMachine2",
 }
+local dailyRewardTable = {
+    "DailyEnchants",
+    "DailyPotions",
+    "DailyItems",
+    "SmallDailyDiamonds"
+}
 
 local function indexPets()
     table.clear(equippedPets)
@@ -167,37 +173,19 @@ local function waitFor(path, object, bool)
     return path:FindFirstChild(object, bool)
 end
 
-local vendingFunctions = {
-    ["PotionVendingMachine1"] = function() 
-        goToPart(zoneTable[6][2])
-        local world = waitFor(Map, zoneTable[6][1])
-        local PotionVendingMachine1 = waitFor(world.INTERACT.Machines, "PotionVendingMachine1").Pad.CFrame
-        goToPart(PotionVendingMachine1)
-    end,
-    --[[["PotionVendingMachine2"] = function() 
-        
-    end,]]
-    ["EnchantVendingMachine1"] = function() 
-        goToPart(zoneTable[9][2])
-        local world = waitFor(Map, zoneTable[9][1])
-        local EnchantVendingMachine1 = waitFor(world.INTERACT.Machines, "EnchantVendingMachine1").Pad.CFrame
-        goToPart(EnchantVendingMachine1)
-    end,
-    --[[["EnchantVendingMachine2"] = function() 
-       
-    end,]]
-    ["FruitVendingMachine1"] = function() 
-        goToPart(zoneTable[14][2])
-        local world = waitFor(Map, zoneTable[14][1])
-        local FruitVendingMachine1 = waitFor(world.INTERACT.Machines, "FruitVendingMachine1").Pad.CFrame
-        goToPart(FruitVendingMachine1)
-    end,
-    ["FruitVendingMachine2"] = function() 
-        goToPart(zoneTable[26][2])
-        local world = waitFor(Map, zoneTable[26][1])
-        local FruitVendingMachine2 = waitFor(world.INTERACT.Machines, "FruitVendingMachine2").Pad.CFrame
-        goToPart(FruitVendingMachine2)
-    end,
+local vendingZones = {
+    ["PotionVendingMachine1"] = 6,
+    --[[["PotionVendingMachine2"] = idk,]]
+    ["EnchantVendingMachine1"] = 9,
+    --[[VendingMachine2"] = idk,]]
+    ["FruitVendingMachine1"] = 14,
+    ["FruitVendingMachine2"] = 26
+}
+local dailyRewardZones = {
+    ["DailyEnchants"] = 21,
+    ["DailyPotions"] = 17,
+    ["DailyItems"] = 24,
+    ["SmallDailyDiamonds"] = 3
 }
 
 local project = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/Libraries/normal/quake/src"))()
@@ -530,16 +518,16 @@ obbies:Button({
         local mines = waitFor(minefield, "Mines")
         local finish = waitFor(minefield, "Finish")
         
-        local nextX = 0
-        local nextZ = 0
+        local nextX,nextZ = 0, 0
         for _,mine in ipairs(mines:GetChildren()) do
             if nextX == 0 then
                 local oldPos = mine.Pad.CFrame
                 mine.Pad.CanCollide = false
                 nextX = mine.Pad.Position.X
                 nextZ = mine.Pad.Position.Z
+                
                 mine.Pad.CFrame = HumanoidRootPart.CFrame
-                task.wait()
+                task.wait(0.2)
                 mine.Pad.CFrame = oldPos
                 mine.Pad.CanCollide = true
                 
@@ -554,9 +542,10 @@ obbies:Button({
                     local oldPos = mine.Pad.CFrame
                     mine.Pad.CanCollide = false
                     mine.Pad.CFrame = HumanoidRootPart.CFrame
-                    task.wait()
+                    task.wait(0.2)
                     mine.Pad.CFrame = oldPos
                     mine.Pad.CanCollide = true
+                    
                     if tostring(mine.Pad.BrickColor) == "Really red" then
                         nextZ = nextZ + 10
                         task.wait(3)
@@ -595,8 +584,7 @@ obbies:Button({
         local rings = waitFor(atlantis, "Rings")
 
         for i=1,31 do
-            repeat task.wait() until rings:FindFirstChild(tostring(i))
-            local ring = rings:FindFirstChild(tostring(i))
+            local ring = waitFor(rings, tostring(i))
             task.wait(0.4)
             HumanoidRootPart.CFrame = ring.Collision.CFrame
         end
@@ -615,6 +603,33 @@ rewards:Toggle({
         end
     end
 })
+rewards:Section("Daily Rewards")
+local rewardType = ""
+local getDailyReward
+rewards:Dropdown({
+    Name = "Reward Type",
+    Items = dailyRewardTable,
+    Callback = function(value)
+        rewardType = value
+        getDailyReward:SetText("Get: "..rewardType)
+    end
+})
+getDailyReward = rewards:Button({
+    Name = "Get: ",
+    Callback = function()
+        local oldPos = HumanoidRootPart.CFrame
+        
+        local zone = tonumber(dailyRewardZones[rewardType])
+        goToPart(zoneTable[zone][2])
+        local world = waitFor(Map, zoneTable[zone][1])
+        local rewardPad = waitFor(world.INTERACT.Machines, rewardType).Pad.CFrame
+        goToPart(rewardPad)
+        
+        task.wait(0.2)
+        goToPart(oldPos + Vector3.new(0,3,0))
+    end
+})
+
 misc:Label("These are things that dont fit in a category")
 misc:Section("Vending Machines")
 local vendingName = ""
@@ -631,7 +646,11 @@ misc:Dropdown({
 goToVendingMachine = misc:Button({
     Name = "Go to vending Machine",
     Callback = function()
-        vendingFunctions[vendingName]()
+        local zone = vendingZones[vendingName]
+        goToPart(zoneTable[zone][2])
+        local world = waitFor(Map, zoneTable[zone][1])
+        local vendingPad = waitFor(world.INTERACT.Machines, vendingName).Pad.CFrame
+        goToPart(vendingPad)
     end
 })
 antiAFK = misc:Toggle({
