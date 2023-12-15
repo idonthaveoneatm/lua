@@ -1,5 +1,3 @@
-
-
 getgenv().config = {
     farm = {
         toggle = false,
