@@ -1,4 +1,5 @@
 
+
 getgenv().config = {
     farm = {
         toggle = false,
@@ -15,7 +16,8 @@ getgenv().config = {
         farm = false
     },
     timeRewards = false,
-    fishing = false
+    fishing = false,
+    antiafk = false
 }
 --[[
 
@@ -33,11 +35,12 @@ print("Pet Simulator 99 | griffindoescooking")
 local LocalPlayer = game.Players.LocalPlayer
 local HumanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart", true)
 
-local vim = game:GetService("VirtualInputManager")
+local VirtualUser = game:GetService("VirtualUser")
 local sqrt = math.sqrt
 local pow = math.pow
 
 local Things = game.workspace['__THINGS']
+local Debris = game.workspace['__DEBRIS']
 local Map = game.workspace.Map
 local instanceSpawnObby = Things.Instances.SpawnObby
 local instanceMinefield = Things.Instances.Minefield
@@ -140,34 +143,8 @@ local function calcDistance(obj1, obj2)
     return sqrt(pow(pPosX - hPosX, 2) + pow(pPosZ - hPosZ, 2))
 end
 local function clickPosition(x,y)
-    vim:SendMouseButtonEvent(x, y, 0, true, griffindoescooking, 1)
-    vim:SendMouseButtonEvent(x, y, 0, false, griffindoescooking, 1)
-end
-local function getCenter(visible)
-    local frame
-    if not game.CoreGui:FindFirstChild(LocalPlayer.Name) then
-        local gui = Instance.new("ScreenGui")
-        gui.Name = LocalPlayer.Name
-        gui.Parent = game.CoreGui
-        frame = Instance.new("TextLabel")
-        frame.Parent = gui
-        frame.Name = "warning"
-        frame.AnchorPoint = Vector2.new(0.5,0.5)
-        frame.Position = UDim2.fromScale(0.5,0.5)
-        frame.Size = UDim2.fromOffset(10,10)
-        frame.Visible = visible
-        frame.BackgroundColor3 = Color3.fromRGB(255,0,0)
-        frame.BackgroundTransparency = 0
-        frame.Text = "Make sure nothing is the square"
-    else
-        frame = game.CoreGui:FindFirstChild(LocalPlayer.Name).warning
-        frame.AnchorPoint = Vector2.new(0.5,0.5)
-        frame.Position = UDim2.fromScale(0.5,0.5)
-        frame.Size = UDim2.fromOffset(10,10)
-        frame.Visible = visible
-    end
-
-    return {frame.AbsolutePosition.X, frame.AbsolutePosition.Y}
+    VirtualUser:Button1Down(Vector2.new(x,y))
+    VirtualUser:Button1Up(Vector2.new(x,y))
 end
 local function sendNotification(title, text, duration)
     game:GetService("StarterGui"):SetCore("SendNotification", {
@@ -193,25 +170,29 @@ end
 local vendingFunctions = {
     ["PotionVendingMachine1"] = function() 
         goToPart(zoneTable[6][2])
-        goToPart(Map[zoneTable[6][1]].INTERACT:FindFirstChild("PotionVendingMachine1", true).Pad.CFrame)
+        local PotionVendingMachine1 = waitFor(Map[zoneTable[6][1]].INTERACT, "PotionVendingMachine1", true)
+        goToPart(PotionVendingMachine1.Pad.CFrame)
     end,
     --[[["PotionVendingMachine2"] = function() 
         
     end,]]
     ["EnchantVendingMachine1"] = function() 
         goToPart(zoneTable[9][2])
-        goToPart(Map[zoneTable[9][1]].INTERACT:FindFirstChild("EnchantVendingMachine1", true).Pad.CFrame)
+        local EnchantVendingMachine1 = waitFor(Map[zoneTable[6][1]].INTERACT, "EnchantVendingMachine1", true)
+        goToPart(EnchantVendingMachine1.Pad.CFrame)
     end,
     --[[["EnchantVendingMachine2"] = function() 
        
     end,]]
     ["FruitVendingMachine1"] = function() 
         goToPart(zoneTable[14][2])
-        goToPart(Map[zoneTable[14][1]].INTERACT:FindFirstChild("FruitVendingMachine1", true).Pad.CFrame)
+        local FruitVendingMachine1 = waitFor(Map[zoneTable[6][1]].INTERACT, "FruitVendingMachine1", true)
+        goToPart(FruitVendingMachine1.Pad.CFrame)
     end,
     ["FruitVendingMachine2"] = function() 
         goToPart(zoneTable[26][2])
-        goToPart(Map[zoneTable[26][1]].INTERACT:FindFirstChild("FruitVendingMachine2", true).Pad.CFrame)
+        local FruitVendingMachine2 = waitFor(Map[zoneTable[6][1]].INTERACT, "FruitVendingMachine2", true)
+        goToPart(FruitVendingMachine2.Pad.CFrame)
     end,
 }
 
@@ -249,7 +230,7 @@ local credits = main:Tab({
     Name = "Credits",
     Image = "rbxassetid://10747373176"
 })
-
+local antiAFK
 farming:Toggle({
     Name = "Farm Coins",
     Default = false,
@@ -411,87 +392,90 @@ farming:Toggle({
         config.egg.farm = value
         while config.egg.farm and task.wait() do
             local splitName = string.split(config.egg.selectedEgg, " | ")
-            local args = {
-                [1] = splitName[2],
-                [2] = tonumber(config.egg.amount)
-            }
-            Network.Eggs_RequestPurchase:InvokeServer(unpack(args))
+
+            Network.Eggs_RequestPurchase:InvokeServer(splitName[2],tonumber(config.egg.amount))
             task.wait(0.4)
-            local center = getCenter(true)
+
             repeat 
                 task.wait()
-                clickPosition(center[1],center[2])
+                clickPosition(math.huge,math.huge)
             until not game.workspace.Camera:FindFirstChild("Eggs")
             task.wait(1)
         end 
-        getCenter(false)
     end
 })
 farming:Section("Fishing")
-farming:Button({
-    Name = "Go to fishing",
-    Callback = function() 
-        goToPart(instanceFishing:FindFirstChild("Enter", true).CFrame)
-    end
-})
+local fishingStatus = false
 farming:Toggle({
     Name = "Start fishing",
     Default = false,
     Callback = function(value)
         config.fishing = value
+        
+        if not instanceContainer.Active:FindFirstChild("Fishing") and config.fishing then
+            goToPart(instanceFishing:FindFirstChild("Enter", true).CFrame) 
+        end
+    
+        task.wait(0.2)
+    
         local fishing = waitFor(instanceContainer.Active, "Fishing")
-        if not fishing.Water.Layer1.CanCollide then
-            fishing.Water.Layer1.CanCollide = true
+        local fishingModule = require(fishing.ClientModule.FishingGame)
+        local Layer1 =  waitFor(fishing.Water, "Layer1")
+        local Bobbers = waitFor(fishing, "Bobbers")
+        local L1Position = Layer1.Position
+        
+        if HumanoidRootPart.Position ~= L1Position and config.fishing then
+           goToPart(Layer1.CFrame) 
         end
-        if HumanoidRootPart.CFrame ~= (fishing.Water.Layer1.CFrame + Vector3.new(0,3,0)) then
-            goToPart(fishing.Water.Layer1.CFrame + Vector3.new(0,3,0))
+        
+        local function fishingRemote(arg1, arg2)
+            if arg2 then
+                return Network.Instancing_FireCustomFromClient:FireServer("Fishing",arg1, arg2)
+            end
+            return Network.Instancing_FireCustomFromClient:FireServer("Fishing",arg1)
         end
-        local center = getCenter(true)
+        local function isBubbling()
+            local bubbling = false
+            for _,host in ipairs(Debris:GetChildren()) do
+                if host.Name == "host" and host:FindFirstChild("Attachment") and (host.Attachment:FindFirstChild("Bubbles") or host.Attachment:FindFirstChild("Rare Bubbles")) then
+                    local distance = (HumanoidRootPart.Position.X - host.Position.X)
+                    if distance <= 2 then
+                        bubbling = true
+                    end
+                end
+            end
+            return bubbling
+        end
+        
+        local oldStartGame,oldStopGame,oldIsFishInBar
+        oldStartGame = hookfunction(fishingModule.StartGame, function(...)
+            fishingStatus = true
+            return oldStartGame(...)
+        end)
+        oldStopGame = hookfunction(fishingModule.StopGame, function(...)
+            fishingStatus = false
+            return oldStopGame(...)
+        end)
+        oldIsFishInBar = hookfunction(fishingModule.IsFishInBar, function(...) 
+            if config.fishing then
+                return true
+            else
+                return oldIsFishInBar(...)
+            end
+        end)
+        
         while config.fishing and task.wait() do
             
-            clickPosition(center[1],center[2])
+            fishingRemote("RequestCast", Vector3.new(L1Position.X,L1Position.Y,L1Position.Z))
             
-            repeat task.wait() until fishing.Bobbers:FindFirstChild("Bobber", true)
-            local bobber = fishing.Bobbers:FindFirstChild("Bobber", true)
+            repeat task.wait() until isBubbling() and config.fishing
             
-            repeat task.wait() until bobber.Position.Y < 75
-            clickPosition(center[1],center[2])
+            fishingRemote("RequestReel")
             
-            local item = waitFor(LocalPlayer.PlayerGui['_INSTANCES'].FishingGame.GameBar, "Item")
-            local fishingBar = waitFor(LocalPlayer.PlayerGui['_INSTANCES'].FishingGame.GameBar, "FishingBar")
-            task.wait(0.2)
-            
-            repeat 
-                
-                if not config.fishing then break end
-                local function bobberDistance(y1, y2)
-                    return y1 - y2
-                end
-                
-                if bobberDistance((fishingBar.Position.Y.Scale), item.Position.Y.Scale) > 0.2 then
-                    
-                    repeat 
-                        
-                        if not config.fishing then break end
-                        if LocalPlayer.PlayerGui['_INSTANCES'].FishingGame.Enabled == false then break end
-                        
-                        vim:SendMouseButtonEvent(center[1],center[2], 0, true, griffindoescooking, 1)
-                        task.wait()
-                        
-                    until (bobberDistance((fishingBar.Position.Y.Scale), item.Position.Y.Scale) < 0.2) or (item.Position.Y.Scale >  fishingBar.Position.Y.Scale)
-                    
-                    vim:SendMouseButtonEvent(center[1],center[2], 0, false, griffindoescooking, 1)
-                    
-                else
-                    task.wait()
-                end
-                task.wait()
-                
-            until LocalPlayer.PlayerGui['_INSTANCES'].FishingGame.Enabled == false
-            task.wait(0.2)
+            repeat task.wait() until (not fishingStatus) and config.fishing
             
         end
-        getCenter(false)
+        goToPart(fishing.Interactable:FindFirstChild("Pad", true).CFrame + Vector3.new(0,3,0))
     end
 })
 
@@ -523,12 +507,12 @@ obbies:Button({
         task.wait(1)
         
         local spawnObby = waitFor(instanceContainer.Active, "SpawnObby")
-        task.wait(1)
-        local startLine = spawnObby.StartLine
-        local endPad = spawnObby.Goal.Pad
+        local startLine = waitFor(spawnObby, "StartLine")
+        local endPad = waitFor(spawnObby, "Goal").Pad
+        
         
         goToPart(startLine:FindFirstChild("Part").CFrame + Vector3.new(0,3,0))
-        task.wait(0.5)
+        task.wait(1)
         goToPart(endPad.CFrame + Vector3.new(0,3,0))
     end
 })
@@ -539,9 +523,8 @@ obbies:Button({
         task.wait(1)
         
         local minefield = waitFor(instanceContainer.Active, "Minefield")
-        task.wait(3)
-        local mines = minefield.Mines
-        local finish = minefield.Finish
+        local mines = waitFor(minefield, "Mines")
+        local finish = waitFor(minefield, "Finish")
         
         local nextX = 0
         local nextZ = 0
@@ -552,7 +535,7 @@ obbies:Button({
                 nextX = mine.Pad.Position.X
                 nextZ = mine.Pad.Position.Z
                 mine.Pad.CFrame = HumanoidRootPart.CFrame
-                task.wait(0.2)
+                task.wait()
                 mine.Pad.CFrame = oldPos
                 mine.Pad.CanCollide = true
                 
@@ -567,7 +550,7 @@ obbies:Button({
                     local oldPos = mine.Pad.CFrame
                     mine.Pad.CanCollide = false
                     mine.Pad.CFrame = HumanoidRootPart.CFrame
-                    task.wait(0.2)
+                    task.wait()
                     mine.Pad.CFrame = oldPos
                     mine.Pad.CanCollide = true
                     if tostring(mine.Pad.BrickColor) == "Really red" then
@@ -589,12 +572,12 @@ obbies:Button({
         task.wait(1)
         
         local jungleObby = waitFor(instanceContainer.Active, "JungleObby")
-        task.wait(1)
-        local startLine = jungleObby.Interactable.StartLine
+
+        local startLine = waitFor(jungleObby, "Interactable").StartLine
         local goalPad = jungleObby.Interactable.Goal.Pad
         
         goToPart(startLine.CFrame + Vector3.new(0,3,0))
-        task.wait(0.5)
+        task.wait(1)
         goToPart(goalPad.CFrame + Vector3.new(0,3,0))
     end
 })
@@ -605,7 +588,7 @@ obbies:Button({
         task.wait(1)
 
         local atlantis = waitFor(instanceContainer.Active, "Atlantis")
-        local rings = atlantis.Rings
+        local rings = waitFor(atlantis, "Rings")
 
         for i=1,31 do
             repeat task.wait() until rings:FindFirstChild(tostring(i))
@@ -631,18 +614,31 @@ rewards:Toggle({
 misc:Label("These are things that dont fit in a category")
 misc:Section("Vending Machines")
 local vendingName = ""
+local goToVendingMachine
 misc:Dropdown({
     Name = "Vending Machine",
     Items = vendingTable,
     Multiselect = false,
     Callback = function(name)
         vendingName = name
+        goToVendingMachine:SetText("Go to "..vendingName)
     end
 })
-misc:Button({
+goToVendingMachine = misc:Button({
     Name = "Go to vending Machine",
-    Callback = function() 
+    Callback = function()
         vendingFunctions[vendingName]()
+    end
+})
+antiAFK = misc:Toggle({
+    Name = "Anti AFK",
+    Default = false,
+    Callback = function(value)
+        config.antiafk = value
+        while config.antiafk and task.wait() do
+            LocalPlayer.Character.Humanoid:ChangeState(3)
+            task.wait(math.random(120,180))
+        end
     end
 })
 
