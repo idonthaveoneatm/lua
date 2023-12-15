@@ -1,3 +1,5 @@
+
+
 getgenv().config = {
     farm = {
         toggle = false,
@@ -168,29 +170,33 @@ end
 local vendingFunctions = {
     ["PotionVendingMachine1"] = function() 
         goToPart(zoneTable[6][2])
-        local PotionVendingMachine1 = waitFor(Map[zoneTable[6][1]].INTERACT, "PotionVendingMachine1", true)
-        goToPart(PotionVendingMachine1.Pad.CFrame)
+        local world = waitFor(Map, zoneTable[6][1])
+        local PotionVendingMachine1 = waitFor(world.INTERACT.Machines, "PotionVendingMachine1").Pad.CFrame
+        goToPart(PotionVendingMachine1)
     end,
     --[[["PotionVendingMachine2"] = function() 
         
     end,]]
     ["EnchantVendingMachine1"] = function() 
         goToPart(zoneTable[9][2])
-        local EnchantVendingMachine1 = waitFor(Map[zoneTable[6][1]].INTERACT, "EnchantVendingMachine1", true)
-        goToPart(EnchantVendingMachine1.Pad.CFrame)
+        local world = waitFor(Map, zoneTable[9][1])
+        local EnchantVendingMachine1 = waitFor(world.INTERACT.Machines, "EnchantVendingMachine1").Pad.CFrame
+        goToPart(EnchantVendingMachine1)
     end,
     --[[["EnchantVendingMachine2"] = function() 
        
     end,]]
     ["FruitVendingMachine1"] = function() 
         goToPart(zoneTable[14][2])
-        local FruitVendingMachine1 = waitFor(Map[zoneTable[6][1]].INTERACT, "FruitVendingMachine1", true)
-        goToPart(FruitVendingMachine1.Pad.CFrame)
+        local world = waitFor(Map, zoneTable[14][1])
+        local FruitVendingMachine1 = waitFor(world.INTERACT.Machines, "FruitVendingMachine1").Pad.CFrame
+        goToPart(FruitVendingMachine1)
     end,
     ["FruitVendingMachine2"] = function() 
         goToPart(zoneTable[26][2])
-        local FruitVendingMachine2 = waitFor(Map[zoneTable[6][1]].INTERACT, "FruitVendingMachine2", true)
-        goToPart(FruitVendingMachine2.Pad.CFrame)
+        local world = waitFor(Map, zoneTable[26][1])
+        local FruitVendingMachine2 = waitFor(world.INTERACT.Machines, "FruitVendingMachine2").Pad.CFrame
+        goToPart(FruitVendingMachine2)
     end,
 }
 
