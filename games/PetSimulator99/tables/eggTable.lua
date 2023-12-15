@@ -1,4 +1,4 @@
-return {
+{
     "1 | Cracked Egg", 
     "2 | Spotted Egg", 
     "3 | Paw Egg", 
