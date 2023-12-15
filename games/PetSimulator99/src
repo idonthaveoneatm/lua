@@ -1,5 +1,3 @@
-
-
 getgenv().config = {
     farm = {
         toggle = false,
@@ -61,63 +59,13 @@ getgenv().equippedPets = {}
 getgenv().totalClaimed = 0
 getgenv().totalTime = 0
 
-local eggTable = {
-    "1 | Cracked Egg", "2 | Spotted Egg", "3 | Paw Egg", 
-    "4 | Grass Egg", "5 | Wood Egg", "6 | Pumpkin Egg", 
-    "7 | Hive Egg", "8 | Acorn Egg", "9 | Blossom Egg",
-    "10 | Corgi Egg", "11 | Cat Egg", "12 | Dog Egg", 
-    "13 | Dragon Egg", "14 | Rock Egg", "15 | Geode Egg", 
-    "16 | Hut Egg", "17 | Grave Egg", "18 | Spike Egg", 
-    "19 | Sprout Egg", "20 | Mushroom Egg", "21 | Spirit Egg", 
-    "22 | Crimson Egg", "23 | Overgrown Egg", "24 | Mossy Egg", 
-    "25 | Jungle Egg", "26 | Sandcastle Egg", "27 | Palm Tree Egg", 
-    "28 | Beach Ball Egg", "29 | Coral Egg", "30 | Anchor Egg", 
-    "31 | Atlantis Egg", "32 | Tropical Egg", "33 | Beach Egg", 
-    "34 | Coconut Egg", "35 | Tiki Egg", "36 | Sand Bucket Egg", 
-    "37 | Sunny Egg", "38 | Pirate Egg", "39 | Ship Egg", 
-    "40 | Zebra Egg", "41 | Cheetah Egg", "42 | Cactus Egg", 
-    "43 | Fossil Egg", "44 | Egyptian Egg", "45 | Sandstone Egg", 
-    "46 | Cowboy Egg", "47 | Canyon Egg", "48 | Hyena Egg", 
-    "49 | Melted Egg", "50 | Snow Egg", "51 | Icicle Egg", 
-    "52 | Snowman Egg", "53 | Yeti Egg", "54 | Ice Egg", 
-    "55 | Thawed Egg", "56 | Magma Egg", "57 | Obsidian Egg", 
-    "58 | Volcano Egg", "59 | Bone Egg", "60 | Tentacle Egg", 
-    "61 | Hell Egg",  "62 | Metal Egg", "63 | Sakura Egg", 
-    "64 | Ninja Egg", "65 | Lantern Egg", "66 | Bonsai Egg",
-    "67 | Garden Egg", "68 | Pixie Egg", "69 | Pedal Egg", 
-    "70 | Crowned Egg", "71 | Royal Egg"
-}
-local zoneTable = {
-    {"1 | Spawn", CFrame.new(212.035538, 20.1876869, -388.115417)}, {"2 | Colorful Forest", CFrame.new(372.539154, 16.6393204, -211.668884)}, 
-    {"3 | Castle",  CFrame.new(530.453491, 16.6393204, -196.13797)}, {"4 | Green Forest",  CFrame.new(689.05304, 16.6393204, -205.87149)}, 
-    {"5 | Autumn",  CFrame.new(867.194641, 16.6393204, -189.63826)}, {"6 | Cherry Blossom",  CFrame.new(862.67627, 16.6393204, 11.237937)}, 
-    {"7 | Farm",  CFrame.new(692.400391, 16.6393204, 17.9911346)}, {"8 | Backyard",  CFrame.new(532.868164, 16.639328, 43.6470337)}, 
-    {"9 | Misty Falls",  CFrame.new(376.211975, 16.6393242, 18.0910645)}, {"10 | Mine",  CFrame.new(192.829605, 16.6393204, 45.5758171)}, 
-    {"11 | Crystal Caverns",  CFrame.new(209.164581, 16.6393204, 246.451965)}, {"12 | Dead Forest",  CFrame.new(373.901062, 16.6393204, 272.476379)}, 
-    {"13 | Dark Forest",  CFrame.new(532.400635, 16.639328, 265.901733)}, {"14 | Mushroom Field",  CFrame.new(691.71637, 16.6393204, 274.932434)}, 
-    {"15 | Enchanted Forest",  CFrame.new(875.281921, 16.639328, 267.881653)}, {"16 | Crimson Forest",  CFrame.new(862.621338, 16.639328, 486.007843)},
-    {"17 | Jungle",  CFrame.new(693.105652, 16.6393204, 498.760559)}, {"19 | Oasis",  CFrame.new(372.10672, 16.639328, 499.208069)},
-    {"18 | Jungle Temple",  CFrame.new(532.636536, 16.639328, 497.795471)}, {"20 | Beach",  CFrame.new(190.732224, 16.6393204, 487.357147)}, 
-    {"21 | Coral Reef",  CFrame.new(207.498001, -33.3606873, 768.545471)}, {"22 | Shipwreck",  CFrame.new(372.649658, -33.3606873, 786.346558)}, 
-    {"23 | Atlantis",  CFrame.new(533.234131, -93.8606186, 767.947815)}, {"24 | Palm Beach",  CFrame.new(808.733521, -69.4857025, 785.823608)}, 
-    {"25 | Tiki",  CFrame.new(1014.25232, 16.6393356, 773.097778)},{"26 | Pirate Cove",CFrame.new(970.85302734375, 16.94143295288086, 923.5709838867188)},
-    {"27 | Pirate Tavern",CFrame.new(878.7459716796875, 16.957433700561523, 1018.3610229492188)},{"28 | Shanty Town",CFrame.new(721.1669921875, 16.957433700561523, 1017.6840209960938)},
-    {"29 | Desert Village",CFrame.new(567.2160034179688, 16.957433700561523, 1017.6840209960938)},{"30 | Fossil Digsite",CFrame.new(406.0140075683594, 16.957433700561523, 1017.6840209960938)},
-    {"31 | Desert Pyramids",CFrame.new(360.9360046386719, 16.94143295288086, 1161.2469482421875)},{"32 | Red Desert",CFrame.new(458.25799560546875, 16.957433700561523, 1256.342041015625)},
-    {"33 | Wild West",CFrame.new(607.89697265625, 16.957433700561523, 1256.342041015625)},{"34 | Grand Canyons",CFrame.new(757.2940063476562, 16.957433700561523, 1256.342041015625)},
-    {"35 | Safari",CFrame.new(909.9240112304688, 16.957433700561523, 1256.342041015625)},{"36 | Mountains",CFrame.new(1076.3909912109375, 16.957433700561523, 1256.342041015625)},
-    {"37 | Snow Village",CFrame.new(1121.7769775390625, 16.94143295288086, 1400.458984375)},{"38 | Icy Peaks",CFrame.new(1023.5139770507812, 16.957433700561523, 1494.6949462890625)},
-    {"39 | Ice Rink",CFrame.new(874.1409912109375, 16.957433700561523, 1494.6949462890625)},{"40 | Ski Town",CFrame.new(707.9400024414062, 16.957433700561523, 1494.6949462890625)},
-    {"41 | Hot Springs",CFrame.new(662.7490234375, 16.94143295288086, 1637.83203125)},{"42 | Fire and Ice",CFrame.new(760.2379760742188, 16.957433700561523, 1732.842041015625)},
-    {"43 | Volcano",CFrame.new(909.4849243164062, 16.957433700561523, 1732.842041015625)},{"44 | Obsidian Cave",CFrame.new(1057.867919921875, 16.957433700561523, 1732.842041015625)},
-    {"45 | Lava Forest",CFrame.new(1206.64892578125, 16.957433700561523, 1732.842041015625)},{"46 | Underworld",CFrame.new(1371.876953125, 16.957433700561523, 1732.842041015625)},
-    {"47 | Underworld Bridge",CFrame.new(1416.886962890625, 16.957433700561523, 1873.783935546875)},{"48 | Underworld Castle",CFrame.new(1416.886962890625, 16.957433700561523, 2025.4990234375)},
-    {"49 | Metal Dojo",CFrame.new(1324.8709716796875, 16.957433700561523, 2120.532958984375)},{"50 | Fire Dojo",CFrame.new(1158.8800048828125, 16.957433700561523, 2120.532958984375)},
-    {"51 | Samurai Village",CFrame.new(789.0751953125, 16.957012176513672, 2119.5673828125)},{"52 | Bamboo Forest",CFrame.new(641.6153564453125, 16.957035064697266, 2119.66650390625)},
-    {"53 | Zen Garden",CFrame.new(482.8709716796875, 16.957433700561523, 2119.866943359375)},{"54 | Flower Field",CFrame.new(318.35394287109375, 16.941783905029297, 2119.868896484375)},
-    {"55 | FairyTale Meadows",CFrame.new(257.15765380859375, 16.957441329956055, 2245.4831542968752)},{"56 | FairyTable Castle",CFrame.new(257.15765380859375, 16.957441329956055, 2403.983154296875)},
-    {"57 | Royal Kingdom",CFrame.new(318.35394287109375, 16.94178581237793, 2664.445068359375)},{"58 | Fairy Castle",CFrame.new(349.2230224609375, 16.957448959350586, 2664.471435546875)}
-}
+local function loadTable(tableName)
+    return loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/tables/"..tableName..".lua"))()
+end
+
+local eggTable = loadTable("eggTable")
+local zoneNames = loadTable("zoneNames")
+local zoneTable = loadTable("zoneTable")
 local vendingTable = {
     "PotionVendingMachine1",
     --"PotionVendingMachine2",
@@ -131,6 +79,18 @@ local dailyRewardTable = {
     "DailyPotions",
     "DailyItems",
     "SmallDailyDiamonds"
+}
+local miscThingsTable = {
+    "EquipSlotsMachine",
+    "EggSlotsMachine",
+    "GoldMachine",
+    "UpgradePotionsMachine",
+    "UpgradeEnchantmentsMachine",
+    "RegularMerchant",
+    "DaycareMachine",
+    "RebirthShrine",
+    "FuseMachine",
+    "RainbowMachine"
 }
 
 local function indexPets()
@@ -174,18 +134,28 @@ local function waitFor(path, object, bool)
 end
 
 local vendingZones = {
-    ["PotionVendingMachine1"] = 6,
-    --[[["PotionVendingMachine2"] = idk,]]
-    ["EnchantVendingMachine1"] = 9,
-    --[[VendingMachine2"] = idk,]]
-    ["FruitVendingMachine1"] = 14,
-    ["FruitVendingMachine2"] = 26
+    ["PotionVendingMachine1"] = "6 | Cherry Blossom",
+    ["EnchantVendingMachine1"] = "9 | Misty Falls",
+    ["FruitVendingMachine1"] = "14 | Mushroom Field",
+    ["FruitVendingMachine2"] = "26 | Pirate Cove"
 }
 local dailyRewardZones = {
-    ["DailyEnchants"] = 21,
-    ["DailyPotions"] = 17,
-    ["DailyItems"] = 24,
-    ["SmallDailyDiamonds"] = 3
+    ["DailyEnchants"] = "21 | Coral Reef",
+    ["DailyPotions"] = "17 | Jungle",
+    ["DailyItems"] = "24 | Palm Beach",
+    ["SmallDailyDiamonds"] = "3 | Castle"
+}
+local miscThingsZones = {
+    ["EquipSlotsMachine"] = "4 | Green Forest",
+    ["EggSlotsMachine"] = "8 | Backyard",
+    ["GoldMachine"] = "10 | Mine",
+    ["UpgradePotionsMachine"] = "13 | Dark Forest",
+    ["UpgradeEnchantmentsMachine"] = "16 | Crimson Forest",
+    ["RegularMerchant"] = "19 | Oasis",
+    ["DaycareMachine"] = "20 | Beach",
+    ["RebirthShrine"] = "25 | Tiki",
+    ["FuseMachine"] = "28 | Shanty Town",
+    ["RainbowMachine"] = "31 | Desert Pyramids"
 }
 
 local project = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/Libraries/normal/quake/src"))()
@@ -198,8 +168,8 @@ local farming = main:Tab({
     tabColor = Color3.fromHex("#71d1f5"),
     Image = "rbxassetid://10709769841"
 })
-local zones = main:Tab({
-    Name = "Zones",
+local teleports = main:Tab({
+    Name = "Teleports",
     tabColor = Color3.fromHex("#9bf038"),
     Image = "rbxassetid://15555209580"
 })
@@ -392,7 +362,7 @@ farming:Toggle({
                 task.wait()
                 clickPosition(math.huge,math.huge)
             until not game.workspace.Camera:FindFirstChild("Eggs")
-            task.wait(1)
+            task.wait(0.75)
         end 
     end
 })
@@ -471,8 +441,8 @@ farming:Toggle({
     end
 })
 
-zones:Section("Miscellaneous")
-zones:Button({
+teleports:Label("Miscellaneous")
+teleports:Button({
     Name = "Remove water",
     Callback = function() 
         for _, water in ipairs(Map:GetDescendants()) do
@@ -482,15 +452,68 @@ zones:Button({
         end
     end
 })
-zones:Label("Has zones 1-58")
-for _,zone in ipairs(zoneTable) do
-    zones:Button({
-        Name = tostring(zone[1]),
-        Callback = function() 
-            goToPart(zone[2] + Vector3.new(0,5,0))
-        end
-    })
-end
+teleports:Section("Zones")
+local selectedZone = ""
+local goToZone
+teleports:Dropdown({
+    Name = "Zones",
+    Items = zoneNames,
+    Multiselect = false,
+    Callback = function(name) 
+        selectedZone = name
+        goToZone:SetText("Go to "..selectedZone)
+    end
+})
+goToZone = teleports:Button({
+    Name = "Go to none",
+    Callback = function()
+        goToPart(zoneTable[selectedZone])
+    end
+})
+teleports:Section("Vending Machines")
+local vendingName = ""
+local goToVendingMachine
+teleports:Dropdown({
+    Name = "Vending Machines",
+    Items = vendingTable,
+    Multiselect = false,
+    Callback = function(name)
+        vendingName = name
+        goToVendingMachine:SetText("Go to "..vendingName)
+    end
+})
+goToVendingMachine = teleports:Button({
+    Name = "Go to none",
+    Callback = function()
+        local zone = vendingZones[vendingName]
+        goToPart(zoneTable[zone])
+        local world = waitFor(Map, zone)
+        local vendingPad = waitFor(world.INTERACT.Machines, vendingName).Pad.CFrame
+        goToPart(vendingPad)
+    end
+})
+teleports:Section("Other Machines")
+local miscMachine = ""
+local goToMiscMachine
+teleports:Dropdown({
+    Name = "Other Machines",
+    Items = miscThingsTable,
+    Multiselect = false,
+    Callback = function(name)
+        miscMachine = name
+        goToMiscMachine:SetText("Go to "..miscMachine)
+    end
+})
+goToMiscMachine = teleports:Button({
+    Name = "Go to none",
+    Callback = function()
+        local zone = miscThingsZones[miscMachine]
+        goToPart(zoneTable[zone])
+        local world = waitFor(Map, zone)
+        local machinePad = waitFor(world.INTERACT.Machines, miscMachine).Pad.CFrame
+        goToPart(machinePad)
+    end
+})
 
 obbies:Button({
     Name = 'Complete "Spawn Obby"',
@@ -619,11 +642,11 @@ getDailyReward = rewards:Button({
     Callback = function()
         local oldPos = HumanoidRootPart.CFrame
         
-        local zone = tonumber(dailyRewardZones[rewardType])
-        goToPart(zoneTable[zone][2])
-        local world = waitFor(Map, zoneTable[zone][1])
+        local zone = dailyRewardZones[rewardType]
+        goToPart(zoneTable[zone])
+        local world = waitFor(Map, zone)
         local rewardPad = waitFor(world.INTERACT.Machines, rewardType).Pad.CFrame
-        goToPart(rewardPad)
+        goToPart(rewardPad + Vector3.new(0,3,0))
         
         task.wait(0.2)
         goToPart(oldPos + Vector3.new(0,3,0))
@@ -631,28 +654,6 @@ getDailyReward = rewards:Button({
 })
 
 misc:Label("These are things that dont fit in a category")
-misc:Section("Vending Machines")
-local vendingName = ""
-local goToVendingMachine
-misc:Dropdown({
-    Name = "Vending Machine",
-    Items = vendingTable,
-    Multiselect = false,
-    Callback = function(name)
-        vendingName = name
-        goToVendingMachine:SetText("Go to "..vendingName)
-    end
-})
-goToVendingMachine = misc:Button({
-    Name = "Go to vending Machine",
-    Callback = function()
-        local zone = vendingZones[vendingName]
-        goToPart(zoneTable[zone][2])
-        local world = waitFor(Map, zoneTable[zone][1])
-        local vendingPad = waitFor(world.INTERACT.Machines, vendingName).Pad.CFrame
-        goToPart(vendingPad)
-    end
-})
 antiAFK = misc:Toggle({
     Name = "Anti AFK",
     Default = false,
