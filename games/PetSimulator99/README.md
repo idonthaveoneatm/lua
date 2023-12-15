@@ -25,6 +25,9 @@ collect lootbag
 
 teleport zones
 
+teleport vending machines
+
 complete obbies
 
+collect rewards
 
