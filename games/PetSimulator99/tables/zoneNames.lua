@@ -1,4 +1,4 @@
-return {
+{
     "1 | Spawn",
     "2 | Colorful Forest",
     "3 | Castle",
