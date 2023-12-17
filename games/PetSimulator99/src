@@ -1,3 +1,5 @@
+
+
 getgenv().config = {
     farm = {
         toggle = false,
@@ -15,7 +17,11 @@ getgenv().config = {
     },
     timeRewards = false,
     fishing = false,
-    antiafk = false
+    antiafk = false,
+    event = {
+        farm = false,
+        collect = false
+    }
 }
 --[[
 
@@ -45,6 +51,8 @@ local instanceMinefield = Things.Instances.Minefield
 local instanceJungleObby = Things.Instances.JungleObby
 local instanceAtlantis = Things.Instances.Atlantis
 local instanceFishing = Things.Instances.Fishing
+local instancePyramidObby = Things.Instances.PyramidObby
+local instanceIceObby = Things.Instances.IceObby
 local instanceContainer = Things['__INSTANCE_CONTAINER']
 local Lootbags = Things.Lootbags
 local Orbs = Things.Orbs
@@ -68,9 +76,7 @@ local zoneNames = loadTable("zoneNames")
 local zoneTable = loadTable("zoneTable")
 local vendingTable = {
     "PotionVendingMachine1",
-    --"PotionVendingMachine2",
     "EnchantVendingMachine1",
-    --"EnchantVendingMachine2",
     "FruitVendingMachine1",
     "FruitVendingMachine2",
 }
@@ -91,6 +97,44 @@ local miscThingsTable = {
     "RebirthShrine",
     "FuseMachine",
     "RainbowMachine"
+}
+local minigamesTable = {
+    "Atlantis",
+    "ChestRush",
+    "Digsite",
+    "Fishing",
+    "FlowerGarden",
+    "IceObby",
+    "JungleObby",
+    "Minecart",
+    "Minefield",
+    "PyramidObby",
+    "SledRace",
+    "SpawnObby",
+}
+local vendingZones = {
+    ["PotionVendingMachine1"] = "6 | Cherry Blossom",
+    ["EnchantVendingMachine1"] = "9 | Misty Falls",
+    ["FruitVendingMachine1"] = "14 | Mushroom Field",
+    ["FruitVendingMachine2"] = "26 | Pirate Cove"
+}
+local dailyRewardZones = {
+    ["DailyEnchants"] = "21 | Coral Reef",
+    ["DailyPotions"] = "17 | Jungle",
+    ["DailyItems"] = "24 | Palm Beach",
+    ["SmallDailyDiamonds"] = "3 | Castle"
+}
+local miscThingsZones = {
+    ["EquipSlotsMachine"] = "4 | Green Forest",
+    ["EggSlotsMachine"] = "8 | Backyard",
+    ["GoldMachine"] = "10 | Mine",
+    ["UpgradePotionsMachine"] = "13 | Dark Forest",
+    ["UpgradeEnchantmentsMachine"] = "16 | Crimson Forest",
+    ["RegularMerchant"] = "19 | Oasis",
+    ["DaycareMachine"] = "20 | Beach",
+    ["RebirthShrine"] = "25 | Tiki",
+    ["FuseMachine"] = "28 | Shanty Town",
+    ["RainbowMachine"] = "31 | Desert Pyramids"
 }
 
 local function indexPets()
@@ -133,31 +177,6 @@ local function waitFor(path, object, bool)
     return path:FindFirstChild(object, bool)
 end
 
-local vendingZones = {
-    ["PotionVendingMachine1"] = "6 | Cherry Blossom",
-    ["EnchantVendingMachine1"] = "9 | Misty Falls",
-    ["FruitVendingMachine1"] = "14 | Mushroom Field",
-    ["FruitVendingMachine2"] = "26 | Pirate Cove"
-}
-local dailyRewardZones = {
-    ["DailyEnchants"] = "21 | Coral Reef",
-    ["DailyPotions"] = "17 | Jungle",
-    ["DailyItems"] = "24 | Palm Beach",
-    ["SmallDailyDiamonds"] = "3 | Castle"
-}
-local miscThingsZones = {
-    ["EquipSlotsMachine"] = "4 | Green Forest",
-    ["EggSlotsMachine"] = "8 | Backyard",
-    ["GoldMachine"] = "10 | Mine",
-    ["UpgradePotionsMachine"] = "13 | Dark Forest",
-    ["UpgradeEnchantmentsMachine"] = "16 | Crimson Forest",
-    ["RegularMerchant"] = "19 | Oasis",
-    ["DaycareMachine"] = "20 | Beach",
-    ["RebirthShrine"] = "25 | Tiki",
-    ["FuseMachine"] = "28 | Shanty Town",
-    ["RainbowMachine"] = "31 | Desert Pyramids"
-}
-
 local project = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/Libraries/normal/quake/src"))()
 local main = project:Window({
     Title = "Pet Simulator 99",
@@ -173,8 +192,8 @@ local teleports = main:Tab({
     tabColor = Color3.fromHex("#9bf038"),
     Image = "rbxassetid://15555209580"
 })
-local obbies = main:Tab({
-    Name = "Obbies",
+local minigames = main:Tab({
+    Name = "Minigames",
     tabColor = Color3.fromHex("#d19b4a"),
     Image = "rbxassetid://10723376114"
 })
@@ -188,6 +207,13 @@ local misc = main:Tab({
     tabColor = Color3.fromHex("#34d793"),
     Image = "rbxassetid://10709819149"
 })
+
+local event = main:Tab({
+    Name = "Event",
+    tabColor = Color3.fromHex("#00ff00"),
+    Image = "rbxassetid://10734964600"
+})
+
 local credits = main:Tab({
     Name = "Credits",
     Image = "rbxassetid://10747373176"
@@ -374,6 +400,10 @@ farming:Toggle({
     Callback = function(value)
         config.fishing = value
         
+        task.spawn(function() 
+            antiAFK:SetValue(config.fishing)
+        end)
+        
         if not instanceContainer.Active:FindFirstChild("Fishing") and config.fishing then
             goToPart(instanceFishing:FindFirstChild("Enter", true).CFrame) 
         end
@@ -385,10 +415,6 @@ farming:Toggle({
         local Layer1 =  waitFor(fishing.Water, "Layer1")
         local Bobbers = waitFor(fishing, "Bobbers")
         local L1Position = Layer1.Position
-        
-        if HumanoidRootPart.Position ~= L1Position and config.fishing then
-           goToPart(Layer1.CFrame) 
-        end
         
         local function fishingRemote(arg1, arg2)
             if arg2 then
@@ -427,6 +453,10 @@ farming:Toggle({
         end)
         
         while config.fishing and task.wait() do
+            
+            if HumanoidRootPart.Position ~= L1Position and config.fishing then
+                goToPart(Layer1.CFrame) 
+            end
             
             fishingRemote("RequestCast", Vector3.new(L1Position.X,L1Position.Y,L1Position.Z))
             
@@ -486,7 +516,7 @@ goToVendingMachine = teleports:Button({
     Name = "Go to none",
     Callback = function()
         local zone = vendingZones[vendingName]
-        goToPart(zoneTable[zone])
+        goToPart(zoneTable[zone] + Vector3.new(0,50,0))
         local world = waitFor(Map, zone)
         local vendingPad = waitFor(world.INTERACT.Machines, vendingName).Pad.CFrame
         goToPart(vendingPad)
@@ -508,14 +538,33 @@ goToMiscMachine = teleports:Button({
     Name = "Go to none",
     Callback = function()
         local zone = miscThingsZones[miscMachine]
-        goToPart(zoneTable[zone])
+        goToPart(zoneTable[zone] + Vector3.new(0,50,0))
         local world = waitFor(Map, zone)
         local machinePad = waitFor(world.INTERACT.Machines, miscMachine).Pad.CFrame
         goToPart(machinePad)
     end
 })
 
-obbies:Button({
+
+local selectedMinigame = ""
+local goToMinigame
+minigames:Dropdown({
+    Name = "Select minigame",
+    Items = minigamesTable,
+    Multiselect = false,
+    Callback = function(item)
+        selectedMinigame = item
+        goToMinigame:SetText(selectedMinigame)
+    end
+})
+goToMinigame = minigames:Button({
+    Name = "Go to none",
+    Callback = function()
+        goToPart(Things.Instances[selectedMinigame]:FindFirstChild("Enter", true).CFrame)
+    end
+})
+minigames:Section("Auto Complete")
+minigames:Button({
     Name = 'Complete "Spawn Obby"',
     Callback = function()
         goToPart(instanceSpawnObby:FindFirstChild("Enter", true).CFrame)
@@ -527,11 +576,11 @@ obbies:Button({
         
         
         goToPart(startLine:FindFirstChild("Part").CFrame + Vector3.new(0,3,0))
-        task.wait(1)
+        task.wait(math.random(1.2,2))
         goToPart(endPad.CFrame + Vector3.new(0,3,0))
     end
 })
-obbies:Button({
+minigames:Button({
     Name = 'Complete "Minefield"',
     Callback = function()
         goToPart(instanceMinefield:FindFirstChild("Enter", true).CFrame)
@@ -581,7 +630,7 @@ obbies:Button({
         goToPart(finish.CFrame)
     end
 })
-obbies:Button({
+minigames:Button({
     Name = 'Complete "Jungle Obby"',
     Callback = function() 
         goToPart(instanceJungleObby:FindFirstChild("Enter", true).CFrame)
@@ -593,11 +642,11 @@ obbies:Button({
         local goalPad = jungleObby.Interactable.Goal.Pad
         
         goToPart(startLine.CFrame + Vector3.new(0,3,0))
-        task.wait(1)
+        task.wait(math.random(1.2,2))
         goToPart(goalPad.CFrame + Vector3.new(0,3,0))
     end
 })
-obbies:Button({
+minigames:Button({
     Name = 'Complete "Atlantis"',
     Callback = function() 
         goToPart(instanceAtlantis:FindFirstChild("Enter", true).CFrame)
@@ -611,6 +660,38 @@ obbies:Button({
             task.wait(0.4)
             HumanoidRootPart.CFrame = ring.Collision.CFrame
         end
+    end
+})
+minigames:Button({
+    Name = 'Complete "Pyramid Obby"',
+    Callback = function() 
+        goToPart(instancePyramidObby:FindFirstChild("Enter", true).CFrame)
+        task.wait(1)
+        
+        local PyramidObby = waitFor(instanceContainer.Active, "PyramidObby")
+        
+        local startLine = waitFor(PyramidObby, "Interactable").StartLine
+        local goalPad = PyramidObby.Interactable.Goal.Pad
+        
+        goToPart(startLine.CFrame + Vector3.new(0,3,0))
+        task.wait(math.random(1.2,2))
+        goToPart(goalPad.CFrame + Vector3.new(0,3,0))
+    end
+})
+minigames:Button({
+    Name = 'Complete "Ice Obby"',
+    Callback = function() 
+        goToPart(instanceIceObby:FindFirstChild("Enter", true).CFrame)
+        task.wait(1)
+        
+        local IceObby = waitFor(instanceContainer.Active, "IceObby")
+        
+        local startLine = waitFor(IceObby, "Interactable").StartLine
+        local goalPad = IceObby.Interactable.Goal.Pad
+        
+        goToPart(startLine.CFrame + Vector3.new(0,3,0))
+        task.wait(math.random(1.2,2))
+        goToPart(goalPad.CFrame + Vector3.new(0,3,0))
     end
 })
 
@@ -643,7 +724,7 @@ getDailyReward = rewards:Button({
         local oldPos = HumanoidRootPart.CFrame
         
         local zone = dailyRewardZones[rewardType]
-        goToPart(zoneTable[zone])
+        goToPart(zoneTable[zone] + Vector3.new(0,50,0))
         local world = waitFor(Map, zone)
         local rewardPad = waitFor(world.INTERACT.Machines, rewardType).Pad.CFrame
         goToPart(rewardPad + Vector3.new(0,3,0))
@@ -662,6 +743,65 @@ antiAFK = misc:Toggle({
         while config.antiafk and task.wait() do
             LocalPlayer.Character.Humanoid:ChangeState(3)
             task.wait(math.random(120,180))
+        end
+    end
+})
+local shrineButton
+shrineButton = misc:Button({
+    Name = "Collect Shrines (Maybe)",
+    Callback = function()
+        for i=1,50 do
+            shrineButton:SetText("Progress: "..tostring(i).."/50")
+            Network.Relic_Found:InvokeServer(i)
+            task.wait(0.2)
+        end
+        shrineButton:SetText("Collect Shrines (Maybe)")
+    end
+})
+
+event:Toggle({
+    Name = "Collect Presents (Maybe)",
+    Default = false,
+    Callback = function(value)
+        config.event.collect = value
+        while config.event.collect and task.wait() do
+            for i=1,50 do
+                if not config.event.collect then break end
+                Network.Present_Found:InvokeServer(i)
+            end
+        end
+    end
+})
+event:Toggle({
+    Name = "Farm Candy Canes",
+    Default = false,
+    Callback = function(value)
+        config.event.farm = value
+        while config.event.farm and task.wait() do
+            
+            for _,zone in ipairs(zoneNames) do
+                
+                if not config.event.farm then break end
+                goToPart(zoneTable[zone] + Vector3.new(0,50,0))
+                task.wait(3)
+                
+                for _,cc in ipairs(Breakables:GetDescendants()) do
+                    
+                    if not config.event.farm then break end
+                    if cc:IsA("MeshPart") and cc.MeshId == "rbxassetid://8269538460" then
+                        local name = cc.Parent.Name
+                        local hitbox = cc.Hitbox
+                        goToPart(hitbox.CFrame + Vector3.new(0,5,0))
+                        task.wait(0.2)
+                        repeat
+                            task.wait(0.2)
+                            Network.Breakables_PlayerDealDamage:FireServer(name)
+                        until not Breakables:FindFirstChild(name) or not config.event.farm
+                    end
+                    
+                end
+            end
+            
         end
     end
 })
