@@ -4,8 +4,7 @@ getgenv().config = {
     farm = {
         toggle = false,
         singleTarget = false,
-        farmPrint = false,
-        radius = 40,
+        radius = 70,
         wait = 0.2
     },
     autoLootbag = false,
@@ -74,29 +73,95 @@ end
 local eggTable = loadTable("eggTable")
 local zoneNames = loadTable("zoneNames")
 local zoneTable = loadTable("zoneTable")
-local vendingTable = {
-    "PotionVendingMachine1",
-    "EnchantVendingMachine1",
-    "FruitVendingMachine1",
-    "FruitVendingMachine2",
+
+local vendingMachines = {
+    Names = {
+        "PotionVendingMachine1",
+        "EnchantVendingMachine1",
+        "FruitVendingMachine1",
+        "FruitVendingMachine2",
+        "PotionVendingMachine2",
+        "EnchantVendingMachine2",
+        "RarePotionsVendingMachine1",
+        "RareEnchantVendingMachine1"
+    },
+    Zones = {
+        ["PotionVendingMachine1"] = "6 | Cherry Blossom",
+        ["EnchantVendingMachine1"] = "9 | Misty Falls",
+        ["FruitVendingMachine1"] = "14 | Mushroom Field",
+        ["FruitVendingMachine2"] = "26 | Pirate Cove",
+        ["PotionVendingMachine2"] = "35 | Safari",
+        ["EnchantVendingMachine2"] = "42 | Fire and Ice",
+        ["RarePotionsVendingMachine1"] = "47 | Underworld Bridge",
+        ["RareEnchantVendingMachine1"] = "51 | Samurai Village"
+    }
 }
-local dailyRewardTable = {
-    "DailyEnchants",
-    "DailyPotions",
-    "DailyItems",
-    "SmallDailyDiamonds"
+local dailyRewards = {
+    Names = {
+        "SmallDailyDiamonds",
+        "DailyPotions",
+        "DailyEnchants",
+        "DailyItems",
+        "MediumDailyDiamonds"
+    },
+    Zones = {
+        ["SmallDailyDiamonds"] = "3 | Castle",
+        ["DailyPotions"] = "17 | Jungle",
+        ["DailyEnchants"] = "21 | Coral Reef",
+        ["DailyItems"] = "24 | Palm Beach",
+        ["MediumDailyDiamonds"] = "32 | Red Desert"
+    }
 }
-local miscThingsTable = {
-    "EquipSlotsMachine",
-    "EggSlotsMachine",
-    "GoldMachine",
-    "UpgradePotionsMachine",
-    "UpgradeEnchantmentsMachine",
-    "RegularMerchant",
-    "DaycareMachine",
-    "RebirthShrine",
-    "FuseMachine",
-    "RainbowMachine"
+local otherRewards = {
+    Names = {
+        "GroupRewards",
+        "SocialRewards",
+
+    },
+    Zones = {
+        ["GroupRewards"] = "1 | Spawn",
+        ["SocialRewards"] = "1 | Spawn",
+    }
+}
+local otherMachines = {
+    Names = {
+        "Mailbox",
+        "PetIndexMachine",
+        "TransferMachine",
+        "VIPRewards",
+        "EquipSlotsMachine",
+        "EggSlotsMachine",
+        "GoldMachine",
+        "UpgradePotionsMachine",
+        "UpgradeEnchantmentsMachine",
+        "RegularMerchant",
+        "DaycareMachine",
+        "FuseMachine",
+        "RainbowMachine",
+        "AdvancedMerchant",
+        "CometShower",
+        "UpgradeFruitsMachine",
+        "GardenMerchant"
+    },
+    Zones = {
+        ["Mailbox"] = "1 | Spawn",
+        ["PetIndexMachine"] = "1 | Spawn",
+        ["TransferMachine"] = "1 | Spawn",
+        ["VIPRewards"] = "1 | Spawn",
+        ["EquipSlotsMachine"] = "4 | Green Forest",
+        ["EggSlotsMachine"] = "8 | Backyard",
+        ["GoldMachine"] = "10 | Mine",
+        ["UpgradePotionsMachine"] = "13 | Dark Forest",
+        ["UpgradeEnchantmentsMachine"] = "16 | Crimson Forest",
+        ["RegularMerchant"] = "19 | Oasis",
+        ["DaycareMachine"] = "20 | Beach",
+        ["FuseMachine"] = "28 | Shanty Town",
+        ["RainbowMachine"] = "31 | Desert Pyramids",
+        ["AdvancedMerchant"] = "39 | Ice Rink",
+        ["CometShower"] = "44 | Obsidian Cave",
+        ["UpgradeFruitsMachine"] = "52 | Bamboo Forest",
+        ["GardenMerchant"] = "54 | Flower Field"
+    }
 }
 local minigamesTable = {
     "Atlantis",
@@ -110,31 +175,17 @@ local minigamesTable = {
     "Minefield",
     "PyramidObby",
     "SledRace",
-    "SpawnObby",
+    "SpawnObby"
 }
-local vendingZones = {
-    ["PotionVendingMachine1"] = "6 | Cherry Blossom",
-    ["EnchantVendingMachine1"] = "9 | Misty Falls",
-    ["FruitVendingMachine1"] = "14 | Mushroom Field",
-    ["FruitVendingMachine2"] = "26 | Pirate Cove"
-}
-local dailyRewardZones = {
-    ["DailyEnchants"] = "21 | Coral Reef",
-    ["DailyPotions"] = "17 | Jungle",
-    ["DailyItems"] = "24 | Palm Beach",
-    ["SmallDailyDiamonds"] = "3 | Castle"
-}
-local miscThingsZones = {
-    ["EquipSlotsMachine"] = "4 | Green Forest",
-    ["EggSlotsMachine"] = "8 | Backyard",
-    ["GoldMachine"] = "10 | Mine",
-    ["UpgradePotionsMachine"] = "13 | Dark Forest",
-    ["UpgradeEnchantmentsMachine"] = "16 | Crimson Forest",
-    ["RegularMerchant"] = "19 | Oasis",
-    ["DaycareMachine"] = "20 | Beach",
-    ["RebirthShrine"] = "25 | Tiki",
-    ["FuseMachine"] = "28 | Shanty Town",
-    ["RainbowMachine"] = "31 | Desert Pyramids"
+local eventThings = {
+    Names = {
+        "AdventCalendar",
+        "UpgradePresentsMachine"
+    },
+    Zones = {
+        ["AdventCalendar"] = "1 | Spawn",
+        ["UpgradePresentsMachine"] = "1 | Spawn"
+    }
 }
 
 local function indexPets()
@@ -228,49 +279,24 @@ farming:Toggle({
             for _, v in ipairs(Breakables:GetChildren()) do
                 if v.Name ~= "Highlight" and v:FindFirstChild("Hitbox", true) then
                     local part = v:FindFirstChild("Hitbox", true)
-
                     if calcDistance(part, HumanoidRootPart) <= config.farm.radius then
                         if config.farm.singleTarget then
                             local tmpName = v.Name
-                            local startTime = os.clock()
-
                             repeat
-                                if calcDistance(part, HumanoidRootPart) > config.farm.radius then
-                                    break
-                                end
                                 task.wait(config.farm.wait)
                                 Network.Breakables_PlayerDealDamage:FireServer(v.Name)
-                            until not Breakables:FindFirstChild(v.Name)
-
-                            totalClaimed = totalClaimed + 1;
-                            totalTime = totalTime + (os.clock() - startTime)
-                            if config.farm.farmPrint then
-                                print("farmed " .. tmpName .. " in: " .. tostring(os.clock() - startTime) .. " Avg: " .. tostring(totalTime / totalClaimed))
-                            end
+                            until not Breakables:FindFirstChild(v.Name) or calcDistance(part, HumanoidRootPart) > config.farm.radius
                         else
                             if not table.find(currentCoins, v.Name) then
                                 table.insert(currentCoins, v.Name)
                                 task.spawn(function()
                                     local tmpPart = part
                                     local tmpName = v.Name
-                                    local startTime = os.clock()
                                     repeat
-                                        if calcDistance(tmpPart, HumanoidRootPart) > config.farm.radius then
-                                            table.remove(currentCoins, table.find(currentCoins, v.Name))
-                                            break
-                                        end
-
                                         task.wait(config.farm.wait * math.random(1, 2))
-
                                         Network.Breakables_PlayerDealDamage:FireServer(tmpName)
-                                    until not Breakables:FindFirstChild(tmpName)
-
+                                    until not Breakables:FindFirstChild(tmpName) or calcDistance(tmpPart, HumanoidRootPart) > config.farm.radius
                                     table.remove(currentCoins, table.find(currentCoins, v.Name))
-                                    totalClaimed = totalClaimed + 1;
-                                    totalTime = totalTime + (os.clock() - startTime)
-                                    if config.farm.farmPrint then
-                                        print("farmed " .. tmpName .. " in: " .. tostring(os.clock() - startTime) .. " Avg: " .. tostring(totalTime / totalClaimed))
-                                    end
                                 end)
                             end
                         end
@@ -285,13 +311,6 @@ farming:Toggle({
     Default = false,
     Callback = function(value)
         config.farm.singleTarget = value
-    end
-})
-farming:Toggle({
-    Name = "Console Print",
-    Default = false,
-    Callback = function(value)
-        config.farm.farmPrint = value
     end
 })
 farming:TextBox({
@@ -342,13 +361,12 @@ farming:Toggle({
     Callback = function(value)
         config.autoLootbag = value
         while config.autoLootbag and task.wait() do
-
             for _, lootbag in ipairs(Lootbags:GetDescendants()) do
+                if not config.autoLootbag then break end
                 if lootbag:IsA("MeshPart") then
                     lootbag.CFrame = HumanoidRootPart.CFrame
                 end
             end
-
         end
     end
 })
@@ -370,7 +388,6 @@ farming:Slider({
     InitialValue = 1,
     Callback = function(eggAmount)
         config.egg.amount = eggAmount
-        print(tostring(config.egg.amount))
     end
 })
 farming:Toggle({
@@ -380,10 +397,8 @@ farming:Toggle({
         config.egg.farm = value
         while config.egg.farm and task.wait() do
             local splitName = string.split(config.egg.selectedEgg, " | ")
-
             Network.Eggs_RequestPurchase:InvokeServer(splitName[2],tonumber(config.egg.amount))
             task.wait(0.4)
-
             repeat 
                 task.wait()
                 clickPosition(math.huge,math.huge)
@@ -399,23 +414,16 @@ farming:Toggle({
     Default = false,
     Callback = function(value)
         config.fishing = value
-        
-        task.spawn(function() 
-            antiAFK:SetValue(config.fishing)
-        end)
-        
+        antiAFK:SetValue(config.fishing)
         if not instanceContainer.Active:FindFirstChild("Fishing") and config.fishing then
             goToPart(instanceFishing:FindFirstChild("Enter", true).CFrame) 
         end
-    
         task.wait(0.2)
-    
         local fishing = waitFor(instanceContainer.Active, "Fishing")
         local fishingModule = require(fishing.ClientModule.FishingGame)
         local Layer1 =  waitFor(fishing.Water, "Layer1")
         local Bobbers = waitFor(fishing, "Bobbers")
         local L1Position = Layer1.Position
-        
         local function fishingRemote(arg1, arg2)
             if arg2 then
                 return Network.Instancing_FireCustomFromClient:FireServer("Fishing",arg1, arg2)
@@ -434,7 +442,6 @@ farming:Toggle({
             end
             return bubbling
         end
-        
         local oldStartGame,oldStopGame,oldIsFishInBar
         oldStartGame = hookfunction(fishingModule.StartGame, function(...)
             fishingStatus = true
@@ -451,21 +458,14 @@ farming:Toggle({
                 return oldIsFishInBar(...)
             end
         end)
-        
         while config.fishing and task.wait() do
-            
             if HumanoidRootPart.Position ~= L1Position and config.fishing then
                 goToPart(Layer1.CFrame) 
             end
-            
             fishingRemote("RequestCast", Vector3.new(L1Position.X,L1Position.Y,L1Position.Z))
-            
             repeat task.wait() until isBubbling() and config.fishing
-            
             fishingRemote("RequestReel")
-            
             repeat task.wait() until (not fishingStatus) and config.fishing
-            
         end
         goToPart(fishing.Interactable:FindFirstChild("Pad", true).CFrame + Vector3.new(0,3,0))
     end
@@ -505,7 +505,7 @@ local vendingName = ""
 local goToVendingMachine
 teleports:Dropdown({
     Name = "Vending Machines",
-    Items = vendingTable,
+    Items = vendingMachines.Names,
     Multiselect = false,
     Callback = function(name)
         vendingName = name
@@ -515,7 +515,7 @@ teleports:Dropdown({
 goToVendingMachine = teleports:Button({
     Name = "Go to none",
     Callback = function()
-        local zone = vendingZones[vendingName]
+        local zone = vendingMachines.Zones[vendingName]
         goToPart(zoneTable[zone] + Vector3.new(0,50,0))
         local world = waitFor(Map, zone)
         local vendingPad = waitFor(world.INTERACT.Machines, vendingName).Pad.CFrame
@@ -523,28 +523,27 @@ goToVendingMachine = teleports:Button({
     end
 })
 teleports:Section("Other Machines")
-local miscMachine = ""
-local goToMiscMachine
+local otherMachine = ""
+local goToOtherMachine
 teleports:Dropdown({
     Name = "Other Machines",
-    Items = miscThingsTable,
+    Items = otherMachines.Names,
     Multiselect = false,
     Callback = function(name)
-        miscMachine = name
-        goToMiscMachine:SetText("Go to "..miscMachine)
+        otherMachine = name
+        goToOtherMachine:SetText("Go to "..otherMachine)
     end
 })
-goToMiscMachine = teleports:Button({
+goToOtherMachine = teleports:Button({
     Name = "Go to none",
     Callback = function()
-        local zone = miscThingsZones[miscMachine]
+        local zone = otherMachines.Zones[otherMachine]
         goToPart(zoneTable[zone] + Vector3.new(0,50,0))
         local world = waitFor(Map, zone)
-        local machinePad = waitFor(world.INTERACT.Machines, miscMachine).Pad.CFrame
+        local machinePad = waitFor(world.INTERACT.Machines, otherMachine).Pad.CFrame
         goToPart(machinePad)
     end
 })
-
 
 local selectedMinigame = ""
 local goToMinigame
@@ -569,12 +568,9 @@ minigames:Button({
     Callback = function()
         goToPart(instanceSpawnObby:FindFirstChild("Enter", true).CFrame)
         task.wait(1)
-        
         local spawnObby = waitFor(instanceContainer.Active, "SpawnObby")
         local startLine = waitFor(spawnObby, "StartLine")
         local endPad = waitFor(spawnObby, "Goal").Pad
-        
-        
         goToPart(startLine:FindFirstChild("Part").CFrame + Vector3.new(0,3,0))
         task.wait(math.random(1.2,2))
         goToPart(endPad.CFrame + Vector3.new(0,3,0))
@@ -585,11 +581,9 @@ minigames:Button({
     Callback = function()
         goToPart(instanceMinefield:FindFirstChild("Enter", true).CFrame)
         task.wait(1)
-        
         local minefield = waitFor(instanceContainer.Active, "Minefield")
         local mines = waitFor(minefield, "Mines")
         local finish = waitFor(minefield, "Finish")
-        
         local nextX,nextZ = 0, 0
         for _,mine in ipairs(mines:GetChildren()) do
             if nextX == 0 then
@@ -597,12 +591,10 @@ minigames:Button({
                 mine.Pad.CanCollide = false
                 nextX = mine.Pad.Position.X
                 nextZ = mine.Pad.Position.Z
-                
                 mine.Pad.CFrame = HumanoidRootPart.CFrame
                 task.wait(0.2)
                 mine.Pad.CFrame = oldPos
                 mine.Pad.CanCollide = true
-                
                 if tostring(mine.Pad.BrickColor) == "Really red" then
                     nextZ = nextZ + 10
                     task.wait(3)
@@ -617,7 +609,6 @@ minigames:Button({
                     task.wait(0.2)
                     mine.Pad.CFrame = oldPos
                     mine.Pad.CanCollide = true
-                    
                     if tostring(mine.Pad.BrickColor) == "Really red" then
                         nextZ = nextZ + 10
                         task.wait(3)
@@ -635,12 +626,9 @@ minigames:Button({
     Callback = function() 
         goToPart(instanceJungleObby:FindFirstChild("Enter", true).CFrame)
         task.wait(1)
-        
         local jungleObby = waitFor(instanceContainer.Active, "JungleObby")
-
         local startLine = waitFor(jungleObby, "Interactable").StartLine
         local goalPad = jungleObby.Interactable.Goal.Pad
-        
         goToPart(startLine.CFrame + Vector3.new(0,3,0))
         task.wait(math.random(1.2,2))
         goToPart(goalPad.CFrame + Vector3.new(0,3,0))
@@ -651,10 +639,8 @@ minigames:Button({
     Callback = function() 
         goToPart(instanceAtlantis:FindFirstChild("Enter", true).CFrame)
         task.wait(1)
-
         local atlantis = waitFor(instanceContainer.Active, "Atlantis")
         local rings = waitFor(atlantis, "Rings")
-
         for i=1,31 do
             local ring = waitFor(rings, tostring(i))
             task.wait(0.4)
@@ -667,12 +653,9 @@ minigames:Button({
     Callback = function() 
         goToPart(instancePyramidObby:FindFirstChild("Enter", true).CFrame)
         task.wait(1)
-        
         local PyramidObby = waitFor(instanceContainer.Active, "PyramidObby")
-        
         local startLine = waitFor(PyramidObby, "Interactable").StartLine
         local goalPad = PyramidObby.Interactable.Goal.Pad
-        
         goToPart(startLine.CFrame + Vector3.new(0,3,0))
         task.wait(math.random(1.2,2))
         goToPart(goalPad.CFrame + Vector3.new(0,3,0))
@@ -683,12 +666,9 @@ minigames:Button({
     Callback = function() 
         goToPart(instanceIceObby:FindFirstChild("Enter", true).CFrame)
         task.wait(1)
-        
         local IceObby = waitFor(instanceContainer.Active, "IceObby")
-        
         local startLine = waitFor(IceObby, "Interactable").StartLine
         local goalPad = IceObby.Interactable.Goal.Pad
-        
         goToPart(startLine.CFrame + Vector3.new(0,3,0))
         task.wait(math.random(1.2,2))
         goToPart(goalPad.CFrame + Vector3.new(0,3,0))
@@ -712,7 +692,7 @@ local rewardType = ""
 local getDailyReward
 rewards:Dropdown({
     Name = "Reward Type",
-    Items = dailyRewardTable,
+    Items = dailyRewards.Names,
     Callback = function(value)
         rewardType = value
         getDailyReward:SetText("Get: "..rewardType)
@@ -722,15 +702,13 @@ getDailyReward = rewards:Button({
     Name = "Get: ",
     Callback = function()
         local oldPos = HumanoidRootPart.CFrame
-        
-        local zone = dailyRewardZones[rewardType]
+        local zone = dailyRewards.Zones[rewardType]
         goToPart(zoneTable[zone] + Vector3.new(0,50,0))
         local world = waitFor(Map, zone)
         local rewardPad = waitFor(world.INTERACT.Machines, rewardType).Pad.CFrame
         goToPart(rewardPad + Vector3.new(0,3,0))
-        
         task.wait(0.2)
-        goToPart(oldPos + Vector3.new(0,3,0))
+        goToPart(oldPos)
     end
 })
 
@@ -778,15 +756,11 @@ event:Toggle({
     Callback = function(value)
         config.event.farm = value
         while config.event.farm and task.wait() do
-            
             for _,zone in ipairs(zoneNames) do
-                
                 if not config.event.farm then break end
                 goToPart(zoneTable[zone] + Vector3.new(0,50,0))
                 task.wait(3)
-                
                 for _,cc in ipairs(Breakables:GetDescendants()) do
-                    
                     if not config.event.farm then break end
                     if cc:IsA("MeshPart") and cc.MeshId == "rbxassetid://8269538460" then
                         local name = cc.Parent.Name
@@ -798,11 +772,51 @@ event:Toggle({
                             Network.Breakables_PlayerDealDamage:FireServer(name)
                         until not Breakables:FindFirstChild(name) or not config.event.farm
                     end
-                    
                 end
             end
-            
         end
+    end
+})
+event:Section("Other Machines")
+local eventThing = ""
+local goToEventThing
+event:Dropdown({
+    Name = "Other Machines",
+    Items = eventThings.Names,
+    Multiselect = false,
+    Callback = function(name)
+        eventThing = name
+        goToEventThing:SetText("Go to "..eventThing)
+    end
+})
+goToEventThing = event:Button({
+    Name = "Go to none",
+    Callback = function()
+        local zone = eventThings.Zones[eventThing]
+        goToPart(zoneTable[zone] + Vector3.new(0,50,0))
+        local world = waitFor(Map, zone)
+        local eventPad = waitFor(world.INTERACT.Machines, eventThing).Pad.CFrame
+        goToPart(eventPad)
+    end
+})
+event:Paragraph({
+    Title = "TLDR",
+    Body = "This won't work after collecting presents with the toggle you will need to rejoin the game inorder to see it change"
+})
+local eventStats
+eventStats = event:Button({
+    Name = "Check Stats",
+    Callback = function()
+    local opened = 0
+    local unopened = 0
+    for _,present in ipairs(Things.Presents:GetChildren()) do
+        if present.Name == "Present" and present:FindFirstChild("ClickDetector") then
+           unopened = unopened + 1
+        elseif present.Name == "Present" and not present:FindFirstChild("ClickDetector") then
+            opened = opened + 1
+        end
+    end
+    eventStats:SetText("Opened: "..tostring(opened).." Unopened: "..tostring(unopened).." Total: "..tostring(opened + unopened))
     end
 })
 
