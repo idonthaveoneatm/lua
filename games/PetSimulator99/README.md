@@ -15,7 +15,7 @@ https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator9
 
 farm coins
 
-farm eggs(1-71)
+farm eggs(1-76)
 
 farm fishing
 
@@ -31,3 +31,4 @@ complete obbies
 
 collect rewards
 
+event christmas things
