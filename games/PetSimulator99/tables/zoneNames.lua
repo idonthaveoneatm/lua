@@ -1,3 +1,17 @@
+--[[
+local function loadTable(tableName)
+    return loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/tables/"..tableName..".lua"))()
+end
+local zoneNames = loadTable("zoneNames")
+local Map = game.workspace.Map
+local zonesText = ""
+for _,zone in ipairs(Map:GetChildren()) do
+    if not table.find(zoneNames, zone.Name) and zone.Name ~= "SHOP" then
+        zonesText = zonesText..'"'..zone.Name..'", \n'
+    end
+end
+setclipboard(zonesText)
+]]
 return {
     "1 | Spawn",
     "2 | Colorful Forest",
