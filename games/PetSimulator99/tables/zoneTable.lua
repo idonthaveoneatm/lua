@@ -1,3 +1,17 @@
+--[[
+local function loadTable(tableName)
+    return loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/tables/"..tableName..".lua"))()
+end
+local zoneNames = loadTable("zoneNames")
+local Map = game.workspace.Map
+local zonesText = ""
+for _,zone in ipairs(Map:GetChildren()) do
+    if not table.find(zoneNames, zone.Name) and zone.Name ~= "SHOP" then
+        zonesText = zonesText..'["'..zone.Name..'"] = '..'CFrame.new('..tostring(zone.INTERACT.Teleport.Position)..'), \n'
+    end
+end
+setclipboard(zonesText)
+]]
 return {
     ["1 | Spawn"] = CFrame.new(212.035538, 20.1876869, -388.115417), 
     ["2 | Colorful Forest"] = CFrame.new(372.539154, 16.6393204, -211.668884), 
