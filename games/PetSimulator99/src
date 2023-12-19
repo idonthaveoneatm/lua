@@ -19,7 +19,6 @@ getgenv().config = {
     antiafk = false,
     event = {
         farm = false,
-        collect = false
     }
 }
 --[[
@@ -116,11 +115,14 @@ local otherRewards = {
     Names = {
         "GroupRewards",
         "SocialRewards",
-
+        "SpinnyWheel",
+        "DaycareMachine"
     },
     Zones = {
         ["GroupRewards"] = "1 | Spawn",
         ["SocialRewards"] = "1 | Spawn",
+        ["SpinnyWheel"] = "3 | Castle",
+        ["DaycareMachine"] = "20 | Beach"
     }
 }
 local otherMachines = {
@@ -135,7 +137,6 @@ local otherMachines = {
         "UpgradePotionsMachine",
         "UpgradeEnchantmentsMachine",
         "RegularMerchant",
-        "DaycareMachine",
         "FuseMachine",
         "RainbowMachine",
         "AdvancedMerchant",
@@ -154,7 +155,6 @@ local otherMachines = {
         ["UpgradePotionsMachine"] = "13 | Dark Forest",
         ["UpgradeEnchantmentsMachine"] = "16 | Crimson Forest",
         ["RegularMerchant"] = "19 | Oasis",
-        ["DaycareMachine"] = "20 | Beach",
         ["FuseMachine"] = "28 | Shanty Town",
         ["RainbowMachine"] = "31 | Desert Pyramids",
         ["AdvancedMerchant"] = "39 | Ice Rink",
@@ -355,7 +355,8 @@ farming:Toggle({
     end
 })
 ]]
-farming:Toggle({
+local collectLootbags
+collectLootbags = farming:Toggle({
     Name = "Collect Lootbags",
     Default = false,
     Callback = function(value)
@@ -572,7 +573,7 @@ minigames:Button({
         local startLine = waitFor(spawnObby, "StartLine")
         local endPad = waitFor(spawnObby, "Goal").Pad
         goToPart(startLine:FindFirstChild("Part").CFrame + Vector3.new(0,3,0))
-        task.wait(math.random(1.2,2))
+        task.wait(math.random(2,3))
         goToPart(endPad.CFrame + Vector3.new(0,3,0))
     end
 })
@@ -630,7 +631,7 @@ minigames:Button({
         local startLine = waitFor(jungleObby, "Interactable").StartLine
         local goalPad = jungleObby.Interactable.Goal.Pad
         goToPart(startLine.CFrame + Vector3.new(0,3,0))
-        task.wait(math.random(1.2,2))
+        task.wait(math.random(2,3))
         goToPart(goalPad.CFrame + Vector3.new(0,3,0))
     end
 })
@@ -657,7 +658,7 @@ minigames:Button({
         local startLine = waitFor(PyramidObby, "Interactable").StartLine
         local goalPad = PyramidObby.Interactable.Goal.Pad
         goToPart(startLine.CFrame + Vector3.new(0,3,0))
-        task.wait(math.random(1.2,2))
+        task.wait(math.random(2,3))
         goToPart(goalPad.CFrame + Vector3.new(0,3,0))
     end
 })
@@ -670,7 +671,7 @@ minigames:Button({
         local startLine = waitFor(IceObby, "Interactable").StartLine
         local goalPad = IceObby.Interactable.Goal.Pad
         goToPart(startLine.CFrame + Vector3.new(0,3,0))
-        task.wait(math.random(1.2,2))
+        task.wait(math.random(2,3))
         goToPart(goalPad.CFrame + Vector3.new(0,3,0))
     end
 })
@@ -680,6 +681,7 @@ rewards:Toggle({
     Default = false,
     Callback = function(value)
         config.timeRewards = value
+        collectLootbags:SetValue(config.timeRewards)
         while config.timeRewards and task.wait() do
             for i=1,12 do
                 Network:FindFirstChild("Redeem Free Gift"):InvokeServer(i)
@@ -711,6 +713,37 @@ getDailyReward = rewards:Button({
         goToPart(oldPos)
     end
 })
+rewards:Section("Other Rewards")
+local otherRewardType = ""
+local goToOtherReward
+rewards:Dropdown({
+    Name = "Reward Type",
+    Items = otherRewards.Names,
+    Callback = function(value)
+        otherRewardType = value
+        goToOtherReward:SetText("Go to "..otherRewardType)
+    end
+})
+goToOtherReward = rewards:Button({
+    Name = "Go to none ",
+    Callback = function()
+        local zone = otherRewards.Zones[otherRewardType]
+        goToPart(zoneTable[zone] + Vector3.new(0,50,0))
+        local world = waitFor(Map, zone)
+        local rewardPad = waitFor(world.INTERACT.Machines, otherRewardType).Pad.CFrame
+        goToPart(rewardPad + Vector3.new(0,3,0))
+    end
+})
+rewards:Button({
+    Name = "Go to Crystal Chest",
+    Callback = function() 
+        local zone = "3 | Castle"
+        goToPart(zoneTable[zone] + Vector3.new(0,50,0))
+        local world = waitFor(Map, zone)
+        local rewardPad = waitFor(world.INTERACT, "CrystalChest").Pad.CFrame
+        goToPart(rewardPad + Vector3.new(0,3,0))
+    end
+})
 
 misc:Label("These are things that dont fit in a category")
 antiAFK = misc:Toggle({
@@ -731,23 +764,21 @@ shrineButton = misc:Button({
         for i=1,50 do
             shrineButton:SetText("Progress: "..tostring(i).."/50")
             Network.Relic_Found:InvokeServer(i)
-            task.wait(0.2)
         end
         shrineButton:SetText("Collect Shrines (Maybe)")
     end
 })
 
-event:Toggle({
-    Name = "Collect Presents (Maybe)",
-    Default = false,
-    Callback = function(value)
-        config.event.collect = value
-        while config.event.collect and task.wait() do
-            for i=1,50 do
-                if not config.event.collect then break end
-                Network.Present_Found:InvokeServer(i)
-            end
+event:Label("Presents are found in both normal zones and minigames!")
+local presentsButton
+presentsButton = event:Button({
+    Name = "Collect Presents",
+    Callback = function()
+        for i=1,50 do
+            presentsButton:SetText("Progress: "..tostring(i).."/50")
+            Network.Present_Found:InvokeServer(i)
         end
+        presentsButton:SetText("Collect Presents")
     end
 })
 event:Toggle({
