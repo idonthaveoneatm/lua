@@ -61,5 +61,5 @@ return {
     "60 | Rainbow River", 
     "61 | Colorful Mines", 
     "62 | Colorful Mountains", 
-    "63 | Frost Mountains", 
+    "63 | Frost Mountains"
 }
