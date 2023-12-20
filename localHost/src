@@ -183,7 +183,7 @@ return function(config)
 			}
 		}
 	}
-	u.drag(newHost, 15)
+	u.drag(newHost.Frame, 15)
 	return newHost
 end
 end)() end,
