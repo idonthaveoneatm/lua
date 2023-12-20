@@ -25,7 +25,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/n
 
 if you are on mobile and cannot copy this to replace the loadstring:
 
-https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/OperationsSiege/src
+https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/OperationsSiege/legacy/src
 
 ## Features
 
