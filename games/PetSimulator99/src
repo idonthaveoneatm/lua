@@ -1,5 +1,3 @@
-
-
 getgenv().config = {
     farm = {
         toggle = false,
@@ -44,13 +42,7 @@ local pow = math.pow
 local Things = game.workspace['__THINGS']
 local Debris = game.workspace['__DEBRIS']
 local Map = game.workspace.Map
-local instanceSpawnObby = Things.Instances.SpawnObby
-local instanceMinefield = Things.Instances.Minefield
-local instanceJungleObby = Things.Instances.JungleObby
-local instanceAtlantis = Things.Instances.Atlantis
-local instanceFishing = Things.Instances.Fishing
-local instancePyramidObby = Things.Instances.PyramidObby
-local instanceIceObby = Things.Instances.IceObby
+local Instances = Things.Instances
 local instanceContainer = Things['__INSTANCE_CONTAINER']
 local Lootbags = Things.Lootbags
 local Orbs = Things.Orbs
@@ -227,6 +219,19 @@ local function waitFor(path, object, bool)
     until path:FindFirstChild(object, bool)
     return path:FindFirstChild(object, bool)
 end
+local function checkActive(name, check)
+    check = check or true
+    if not instanceContainer.Active:FindFirstChild(name) and check then
+        goToPart(Instances[name]:FindFirstChild("Enter", true).CFrame) 
+    end
+end
+local function completeObby(path)
+    local startLine = waitFor(path, "StartLine")
+    local endPad = waitFor(path, "Goal").Pad
+    goToPart(startLine:FindFirstChild("Part").CFrame + Vector3.new(0,3,0))
+    task.wait(math.random(2,3))
+    goToPart(endPad.CFrame + Vector3.new(0,3,0))
+end
 
 local project = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/Libraries/normal/quake/src"))()
 local main = project:Window({
@@ -275,9 +280,10 @@ farming:Toggle({
     Default = false,
     Callback = function(value)
         config.farm.toggle = value
+
         while config.farm.toggle and task.wait() do
             for _, v in ipairs(Breakables:GetChildren()) do
-                if v.Name ~= "Highlight" and v:FindFirstChild("Hitbox", true) then
+                if v:FindFirstChild("Hitbox", true) then
                     local part = v:FindFirstChild("Hitbox", true)
                     if calcDistance(part, HumanoidRootPart) <= config.farm.radius then
                         if config.farm.singleTarget then
@@ -285,7 +291,7 @@ farming:Toggle({
                             repeat
                                 task.wait(config.farm.wait)
                                 Network.Breakables_PlayerDealDamage:FireServer(v.Name)
-                            until not Breakables:FindFirstChild(v.Name) or calcDistance(part, HumanoidRootPart) > config.farm.radius
+                            until not Breakables:FindFirstChild(v.Name) or calcDistance(part, HumanoidRootPart) > config.farm.radius or not config.farm.toggle or not config.farm.singleTarget
                         else
                             if not table.find(currentCoins, v.Name) then
                                 table.insert(currentCoins, v.Name)
@@ -295,7 +301,7 @@ farming:Toggle({
                                     repeat
                                         task.wait(config.farm.wait * math.random(1, 2))
                                         Network.Breakables_PlayerDealDamage:FireServer(tmpName)
-                                    until not Breakables:FindFirstChild(tmpName) or calcDistance(tmpPart, HumanoidRootPart) > config.farm.radius
+                                    until not Breakables:FindFirstChild(tmpName) or calcDistance(tmpPart, HumanoidRootPart) > config.farm.radius or config.farm.singleTarget or not config.farm.toggle
                                     table.remove(currentCoins, table.find(currentCoins, v.Name))
                                 end)
                             end
@@ -304,6 +310,7 @@ farming:Toggle({
                 end
             end
         end
+        table.clear(currentCoins)
     end
 })
 farming:Toggle({
@@ -337,24 +344,6 @@ farming:TextBox({
 })
 farming:Section("Collection")
 farming:Label("Auto Collect Orbs is currently broken/patched")
---[[
-farming:Toggle({
-    Name = "Collect Orbs",
-    Default = false,
-    Callback = function(value)
-        config.autoOrb = value
-        while config.autoOrb and task.wait() do
-
-            for _, orb in ipairs(Orbs:GetChildren()) do
-                if orb:IsA("Part") then
-                    orb.CFrame = HumanoidRootPart.CFrame
-                end
-            end
-
-        end
-    end
-})
-]]
 local collectLootbags
 collectLootbags = farming:Toggle({
     Name = "Collect Lootbags",
@@ -403,7 +392,7 @@ farming:Toggle({
             repeat 
                 task.wait()
                 clickPosition(math.huge,math.huge)
-            until not game.workspace.Camera:FindFirstChild("Eggs")
+            until not game.workspace.Camera:FindFirstChild("Eggs") or not config.egg.farm
             task.wait(0.75)
         end 
     end
@@ -416,9 +405,7 @@ farming:Toggle({
     Callback = function(value)
         config.fishing = value
         antiAFK:SetValue(config.fishing)
-        if not instanceContainer.Active:FindFirstChild("Fishing") and config.fishing then
-            goToPart(instanceFishing:FindFirstChild("Enter", true).CFrame) 
-        end
+        checkActive("Fishing", config.fishing)
         task.wait(0.2)
         local fishing = waitFor(instanceContainer.Active, "Fishing")
         local fishingModule = require(fishing.ClientModule.FishingGame)
@@ -461,12 +448,12 @@ farming:Toggle({
         end)
         while config.fishing and task.wait() do
             if HumanoidRootPart.Position ~= L1Position and config.fishing then
-                goToPart(Layer1.CFrame) 
+                goToPart(Layer1.CFrame)
             end
             fishingRemote("RequestCast", Vector3.new(L1Position.X,L1Position.Y,L1Position.Z))
-            repeat task.wait() until isBubbling() and config.fishing
+            repeat task.wait() until isBubbling() or not config.fishing
             fishingRemote("RequestReel")
-            repeat task.wait() until (not fishingStatus) and config.fishing
+            repeat task.wait() until (not fishingStatus) or not config.fishing
         end
         goToPart(fishing.Interactable:FindFirstChild("Pad", true).CFrame + Vector3.new(0,3,0))
     end
@@ -567,14 +554,10 @@ minigames:Section("Auto Complete")
 minigames:Button({
     Name = 'Complete "Spawn Obby"',
     Callback = function()
-        goToPart(instanceSpawnObby:FindFirstChild("Enter", true).CFrame)
+        checkActive("SpawnObby")
         task.wait(1)
         local spawnObby = waitFor(instanceContainer.Active, "SpawnObby")
-        local startLine = waitFor(spawnObby, "StartLine")
-        local endPad = waitFor(spawnObby, "Goal").Pad
-        goToPart(startLine:FindFirstChild("Part").CFrame + Vector3.new(0,3,0))
-        task.wait(math.random(2,3))
-        goToPart(endPad.CFrame + Vector3.new(0,3,0))
+        completeObby(spawnObby)
     end
 })
 minigames:Button({
@@ -625,14 +608,10 @@ minigames:Button({
 minigames:Button({
     Name = 'Complete "Jungle Obby"',
     Callback = function() 
-        goToPart(instanceJungleObby:FindFirstChild("Enter", true).CFrame)
+        checkActive("JungleObby")
         task.wait(1)
         local jungleObby = waitFor(instanceContainer.Active, "JungleObby")
-        local startLine = waitFor(jungleObby, "Interactable").StartLine
-        local goalPad = jungleObby.Interactable.Goal.Pad
-        goToPart(startLine.CFrame + Vector3.new(0,3,0))
-        task.wait(math.random(2,3))
-        goToPart(goalPad.CFrame + Vector3.new(0,3,0))
+        completeObby(jungleObby)
     end
 })
 minigames:Button({
@@ -652,27 +631,19 @@ minigames:Button({
 minigames:Button({
     Name = 'Complete "Pyramid Obby"',
     Callback = function() 
-        goToPart(instancePyramidObby:FindFirstChild("Enter", true).CFrame)
+        checkActive("PyramidObby")
         task.wait(1)
-        local PyramidObby = waitFor(instanceContainer.Active, "PyramidObby")
-        local startLine = waitFor(PyramidObby, "Interactable").StartLine
-        local goalPad = PyramidObby.Interactable.Goal.Pad
-        goToPart(startLine.CFrame + Vector3.new(0,3,0))
-        task.wait(math.random(2,3))
-        goToPart(goalPad.CFrame + Vector3.new(0,3,0))
+        local pyramidObby = waitFor(instanceContainer.Active, "PyramidObby")
+        completeObby(pyramidObby)
     end
 })
 minigames:Button({
     Name = 'Complete "Ice Obby"',
     Callback = function() 
-        goToPart(instanceIceObby:FindFirstChild("Enter", true).CFrame)
+        checkActive("IceObby")
         task.wait(1)
-        local IceObby = waitFor(instanceContainer.Active, "IceObby")
-        local startLine = waitFor(IceObby, "Interactable").StartLine
-        local goalPad = IceObby.Interactable.Goal.Pad
-        goToPart(startLine.CFrame + Vector3.new(0,3,0))
-        task.wait(math.random(2,3))
-        goToPart(goalPad.CFrame + Vector3.new(0,3,0))
+        local iceObby = waitFor(instanceContainer.Active, "IceObby")
+        completeObby(iceObby)
     end
 })
 
@@ -761,8 +732,8 @@ local shrineButton
 shrineButton = misc:Button({
     Name = "Collect Shrines (Maybe)",
     Callback = function()
-        for i=1,50 do
-            shrineButton:SetText("Progress: "..tostring(i).."/50")
+        for i=1,55 do
+            shrineButton:SetText("Progress: "..tostring(i).."/55")
             Network.Relic_Found:InvokeServer(i)
         end
         shrineButton:SetText("Collect Shrines (Maybe)")
@@ -847,7 +818,7 @@ eventStats = event:Button({
             opened = opened + 1
         end
     end
-    eventStats:SetText("Opened: "..tostring(opened).." Unopened: "..tostring(unopened).." Total: "..tostring(opened + unopened))
+    eventStats:SetText("Opened: "..tostring(opened).." Unopened: "..tostring(unopened).." Total: 50")
     end
 })
 
