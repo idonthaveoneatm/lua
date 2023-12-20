@@ -1,0 +1,6 @@
+{
+  "name": "localHost",
+  "tree": {
+    "$path": "src/shared/localHost"
+  }
+}
