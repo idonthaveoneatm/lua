@@ -9,3 +9,8 @@ localHost({
 })
 ```
 it run like that
+
+
+thanks to asyv3n for the idea 
+
+https://github.com/asyv3n/roblox-dev-script-env?tab=readme-ov-file
