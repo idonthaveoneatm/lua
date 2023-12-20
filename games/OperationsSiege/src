@@ -1,15 +1,58 @@
---[[
 
-Made by griffindoescooking
-
-]]--
-print("\nOperations:Siege started | griffindoescooking \n Chams: \n  Players: "..tostring(config.chams.players).."\n  Bombs: "..tostring(config.chams.bombs).."\n  Gadgets: "..tostring(config.chams.gadgets).."\n Transparent Soft Walls: "..tostring(config.transSoftWall).."\n Transparent Barricades: "..tostring(config.transBarricade).."\n Bring Enemies: "..tostring(config.bringEnemies).."\n Bomb Color: ("..tostring(config.colors.bombs)..")\n Attacker Color: ("..tostring(config.colors.attackers)..")\n Defender Color: ("..tostring(config.colors.defenders)..")\n\n")
+getgenv().config = {
+    chams = {
+        players = false,
+        bombs = true,
+        drones = true,
+        gadgets = true
+    },
+    transSoftWall = true,
+    transBarricade = true,
+    bringEnemies = false, -- super buggy cant be undone once toggled?
+    colors = {
+        attackers = Color3.fromHex("#ff0000"), -- red
+        defenders = Color3.fromHex("#0000ff"), -- blue
+        bombs = Color3.fromHex("#ffac00"), -- orange
+        drones = Color3.fromHex("#006500"), -- dark green
+        gadgets = Color3.fromHex("#ffff00") -- yellow
+    }
+}
+local statement = "\nOperations:Siege started | griffindoescooking \n Chams: \n  Players: "
+.. tostring(config.chams.players)
+.. "\n  Bombs: "
+.. tostring(config.chams.bombs)
+.. "\n  Drones: "
+.. tostring(config.chams.drones)
+.. "\n  Gadgets: "
+.. tostring(config.chams.gadgets)
+.. "\n Transparent Soft Walls: "
+.. tostring(config.transSoftWall)
+.. "\n Transparent Barricades: "
+.. tostring(config.transBarricade)
+.. "\n Bring Enemies: "
+.. tostring(config.bringEnemies)
+.. "\n Attacker Color: ("
+.. tostring(config.colors.attackers)
+.. ")\n Defender Color: ("
+.. tostring(config.colors.defenders)
+.. ")\n Bomb Color: ("
+.. tostring(config.colors.bombs)
+.. ")\n Drone Color: ("
+.. tostring(config.colors.drones)
+.. ") Gadget Color: ("
+.. tostring(config.colors.gadgets)
+.. ")\n\n"
+print(statement)
 
 local LocalPlayer = game.Players.LocalPlayer
 local pgui = LocalPlayer.PlayerGui
+
 local context = pgui.GameGui.TimerHUD.Contex.TextLabel
 local Breach = game.workspace["SE_Workspace"].Breach
 local Doors = game.workspace["SE_Workspace"].Doors
+local Drones = game.workspace["SE_Workspace"].Drones
+local Objective = game.workspace.Objective
+local Gadgets = game.workspace.Gadgets
 
 local function addCham(object, tbl)
     if not object:FindFirstChild("cham") then
@@ -25,26 +68,13 @@ local function addCham(object, tbl)
     end
 end
 local function playerIndex(func)
-    for i,v in ipairs(game.Players:GetPlayers()) do
-        func(i,v)
+    for i, v in ipairs(game.Players:GetPlayers()) do
+        func(i, v)
     end
 end
-local function spawnLoop(var,t,f)
-    f = f or function() end
-    task.spawn(function()
-        while var and task.wait() do
-            t()
-        end
-        f()
-    end)
-end
 local function removeCham(object)
-    if object then
-       for _,cham in ipairs(object:GetChildren()) do
-            if cham:IsA("Highlight") and cham.Name == "cham" then
-                cham:Destroy()
-            end
-        end
+    if object and object:FindFirstChild("cham") and object:FindFirstChild("cham"):IsA("Highlight") then
+        object:FindFirstChild("cham"):Destroy()
     end
 end
 local function teamCheck(player)
@@ -55,126 +85,206 @@ local function teamCheck(player)
     end
 end
 
+local project = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/Libraries/normal/quake/src"))()
+local main = project:Window({
+    Title = "Operations:Siege",
+    Parent = game.CoreGui
+})
+local chams = main:Tab({
+    Name = "Chams",
+    tabColor = Color3.fromHex("#d19b4a"),
+    Image = "rbxassetid://10734975486"
+})
+local misc = main:Tab({
+    Name = "Miscellaneous",
+    tabColor = Color3.fromHex("#34d793"),
+    Image = "rbxassetid://10709819149"
+})
+local credits = main:Tab({
+    Name = "Credits",
+    Image = "rbxassetid://10747373176"
+})
 
-playerIndex(function(index,player)
-    removeCham(player.Character)
-end)
-
-spawnLoop(config.chams.players, function()
-    playerIndex(function(index ,player)
-        if player.Name ~= LocalPlayer.Name and player.Character then
-            local playerColor = teamCheck(player) or Color3.fromHex("#ffffff")
-            addCham(player.Character, {
-                color = playerColor,
-                oTransparency = 0,
-                fTransparency = 0.5
-            })
-        elseif not player.Character then
-            removeCham(player.Character)
+chams:Toggle({
+    Name = "Player Chams",
+    Default = false,
+    Callback = function(value)
+        config.chams.players = value
+        while config.chams.players and task.wait() do
+            playerIndex(function(index, player)
+                if player.Name ~= LocalPlayer.Name and player.Character then
+                    local playerColor = teamCheck(player) or Color3.fromHex("#ffffff")
+                    addCham(player.Character, {
+                        color = playerColor,
+                        oTransparency = 0,
+                        fTransparency = 0.5
+                    })
+                elseif not player.Character then
+                    removeCham(player.Character)
+                end
+            end)
         end
-    end)
-end, function()
-    playerIndex(function(index,player)
-        removeCham(player.Character)
-    end)
-end)
-
-spawnLoop(config.chams.bombs, function()
-    for _,bomb in ipairs(game.workspace.Objective:GetChildren()) do
-        if not bomb:FindFirstChild("cham") and bomb.Name ~= "Defuser" then
-            addCham(bomb,{
-                color = config.colors.bombs,
-                oTransparency = 0,
-                fTransparency = 0.5
-            })
-        end
-    end
-end,function()
-    for _,bomb in ipairs(game.workspace.Objective:GetChildren()) do
-        removeCham(bomb)
-    end
-end)
-
-spawnLoop(config.chams.gadgets,function()
-    for _,gadget in ipairs(game.workspace.Gadgets:GetChildren()) do
-        addCham(gadget,{
-            color = config.colors.gadgets,
-            oTransparency = 0,
-            fTransparency = 0.5
-        })
-    end
-end,function()
-    for _,gadget in ipairs(game.workspace.Gadgets:GetChildren()) do
-        removeCham(gadget)
-    end
-end)
-
-spawnLoop(true, function()
-    if context.Text == "Operation" and task.wait(2) then
-        playerIndex(function(index,player)
+        playerIndex(function(index, player)
             removeCham(player.Character)
         end)
-        repeat task.wait() until context.Text ~= "Operation"
-    elseif context.Text == "Setup" and task.wait(2) then
-        playerIndex(function(index,player)
-            removeCham(player.Character)
-        end)
-        repeat task.wait() until context.Text ~= "Setup"
     end
-end)
-
-spawnLoop(config.transSoftWall, function()
-    for _,v in ipairs(Breach:GetDescendants()) do
-        if v:IsA("Part") then
-            if (v.Material == Enum.Material.WoodPlanks and v.Transparency ~= 0.4957) then
-                v.Transparency = 0.4957
-            else
-                if (v.Material ~= Enum.Material.WoodPlanks and v.Transparency ~= 0.1953) then
-                    v.Transparency = 0.1953
+})
+chams:Toggle({
+    Name = "Bomb Chams",
+    Default = false,
+    Callback = function(value)
+        config.chams.bombs = value
+        while config.chams.bombs and task.wait() do
+            for _, bomb in ipairs(game.workspace.Objective:GetChildren()) do
+                if bomb.Name ~= "Defuser" then
+                    addCham(bomb, {
+                        color = config.colors.bombs,
+                        oTransparency = 0,
+                        fTransparency = 0.5
+                    })
+                end
+            end
+        end
+        for _, bomb in ipairs(game.workspace.Objective:GetChildren()) do
+            removeCham(bomb)
+        end
+    end
+})
+chams:Toggle({
+    Name = "Gadget Chams",
+    Default = false,
+    Callback = function(value)
+        config.chams.gadgets = value
+        while config.chams.gadgets and task.wait() do
+            for _, gadget in ipairs(Gadgets:GetChildren()) do
+                addCham(gadget, {
+                    color = config.colors.gadgets,
+                    oTransparency = 0,
+                    fTransparency = 0.5
+                })
+            end
+        end
+        for _, gadget in ipairs(Gadgets:GetChildren()) do
+            removeCham(gadget)
+        end
+    end
+})
+chams:Toggle({
+    Name = "Drone Chams",
+    Default = false,
+    Callback = function(value)
+        config.chams.drones = value
+        while config.chams.drones and task.wait() do
+            for _, drone in ipairs(Drones:GetChildren()) do
+                addCham(drone, {
+                    color = config.colors.drones,
+                    oTransparency = 0,
+                    fTransparency = 0.5
+                })
+            end
+        end
+        for _, drone in ipairs(Drones:GetChildren()) do
+            removeCham(drone)
+        end
+    end
+})
+misc:Toggle({
+    Name = "Transparenct Soft Walls",
+    Default = false,
+    Callback = function(value)
+        config.transSoftWall = value
+        while config.transSoftWall and task.wait() do
+            for _, v in ipairs(Breach:GetDescendants()) do
+                if not config.transSoftWall then break end
+                if v:IsA("Part") then
+                    if (v.Material == Enum.Material.WoodPlanks and v.Transparency ~= 0.4957) then
+                        v.Transparency = 0.4957
+                    else
+                        if (v.Material ~= Enum.Material.WoodPlanks and v.Transparency ~= 0.1953) then
+                            v.Transparency = 0.1953
+                        end
+                    end
+                end
+            end
+        end
+        for _, v in ipairs(Breach:GetDescendants()) do
+            if v:IsA("Part") and (v.Transparency == 0.4957 or v.Transparency == 0.1953) then
+                v.Transparency = 0
+            end
+        end
+    end
+})
+misc:Toggle({
+    Name = "Transparenct Soft Walls",
+    Default = false,
+    Callback = function(value)
+        config.transBarricade = value
+        while config.transBarricade and task.wait() do
+            for _, door in ipairs(Doors:GetChildren()) do
+                if not config.transBarricade then break end
+                for _, doorPart in ipairs(door:FindFirstChild("Door"):GetChildren()) do
+                    if not config.transBarricade then break end
+                    if doorPart:IsA("Part") and doorPart.Transparency ~= 0.74955 then
+                        doorPart.Transparency = 0.74955
+                    end
+                end
+            end
+        end
+        for _, door in ipairs(Doors:GetChildren()) do
+            for _, doorPart in ipairs(door:FindFirstChild("Door"):GetChildren()) do
+                if doorPart:IsA("Part") and doorPart.Transparency == 0.74955 then
+                    doorPart.Transparency = 0
                 end
             end
         end
     end
-end, function()
-    for _,v in ipairs(Breach:GetDescendants()) do
-        if v:IsA("Part") and (v.Transparency == 0.4957 or v.Transparency == 0.1953) then
-            v.Transparency = 0
+})
+misc:Toggle({
+    Name = "Bring Enemies",
+    Default = false,
+    Callback = function(value)
+        config.bringEnemies = value
+        if not LocalPlayer.Character then
+            repeat
+                task.wait()
+            until LocalPlayer.Character
+        end
+        local HumanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        while config.bringEnemies and task.wait() do
+            playerIndex(function(index, player)
+                if player.Name ~= LocalPlayer.Name and player.Team.Name ~= LocalPlayer.Team.Name then
+                    if player.Character then
+                        player.Character.HumanoidRootPart.CFrame = HumanoidRootPart.CFrame + Vector3.new(7, 0, 7)
+                    end
+                end
+            end)
         end
     end
-end)
+})
 
-spawnLoop(config.bringEnemies, function()
-    if not LocalPlayer.Character then
-        repeat task.wait() until LocalPlayer.Character
+credits:Label("UI: griffindoescooking")
+credits:Label("Script: griffindoescooking")
+credits:Section("Support: ")
+credits:Button({
+    Name = "Discord",
+    Callback = function()
+        setclipboard("https://discord.gg/DBPHwFyCVT")
     end
-    local HumanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart", true)
-    playerIndex(function(index, player)
-        if player.Name ~= LocalPlayer.Name and player.Team.Name ~= LocalPlayer.Team.Name then
-            if player.Character then
-                player.Character:FindFirstChild("HumanoidRootPart", true).CFrame = HumanoidRootPart.CFrame + Vector3.new(7,0,7)
-            end
+})
+
+-- fixes player override
+task.spawn(function() 
+    while true and task.wait() do
+        if context.Text == "Operation" and task.wait(2) then
+            playerIndex(function(index,player)
+                removeCham(player.Character)
+            end)
+            repeat task.wait() until context.Text ~= "Operation"
+        elseif context.Text == "Setup" and task.wait(2) then
+            playerIndex(function(index,player)
+                removeCham(player.Character)
+            end)
+            repeat task.wait() until context.Text ~= "Setup"
         end
-    end)
-end)
-
-spawnLoop(config.transBarricade, function()
-    for _, door in ipairs(Doors:GetChildren()) do
-
-        for _,doorPart in ipairs(door:FindFirstChild("Door"):GetChildren()) do
-            if doorPart:IsA("Part") and doorPart.Transparency ~= 0.74955 then
-                doorPart.Transparency = 0.74955
-            end
-        end
-
-    end
-end,function()
-    for _, door in ipairs(Doors:GetChildren()) do
-
-        for _,doorPart in ipairs(door:FindFirstChild("Door"):GetChildren()) do
-            if doorPart:IsA("Part") and doorPart.Transparency == 0.74955 then
-                doorPart.Transparency = 0
-            end
-        end
-
     end
 end)
