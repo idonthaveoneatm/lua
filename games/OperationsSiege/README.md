@@ -18,6 +18,8 @@ bomb chams
 
 gadget chams
 
+drone chams
+
 transparency on soft walls/reinforced walls (buggy on reinforced ones
 
 transparency on barricades
