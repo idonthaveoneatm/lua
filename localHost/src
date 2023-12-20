@@ -1,4 +1,3 @@
--- with root
 -- Will be used later for getting flattened globals
 local ImportGlobals
 
@@ -6,7 +5,6 @@ local ImportGlobals
 local ClosureBindings = {
     function()local wax,script,require=ImportGlobals(1)local ImportGlobals return (function(...)local Fusion = require(script.Bundles.Fusion)
 local get = require(script.utilities.get)
-local lerpColor = require(script.utilities.lerpColor)
 local u = require(script.Bundles["ui-utilities"])
 
 local hex = Color3.fromHex
@@ -20,6 +18,7 @@ return function(config)
 	if not config.root then
 		return error('You need a "root" variable with the url to your host')
 	end
+	config.parent = config.parent or game.CoreGui
 	local textHover = value(false)
 	local executeHover = value(false)
 	local down = value(false)
@@ -184,6 +183,7 @@ return function(config)
 			}
 		}
 	}
+	u.drag(newHost, 15)
 	return newHost
 end
 end)() end,
