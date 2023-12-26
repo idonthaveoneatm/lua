@@ -228,7 +228,11 @@ end
 local function completeObby(path)
     local startLine = waitFor(path, "StartLine")
     local endPad = waitFor(path, "Goal").Pad
-    goToPart(startLine:FindFirstChild("Part").CFrame + Vector3.new(0,3,0))
+    if startLine:FindFirstChild("Part") then
+        goToPart(startLine:FindFirstChild("Part").CFrame + Vector3.new(0,3,0))
+    else
+        goToPart(startLine.CFrame + Vector3.new(0,3,0))
+    end
     task.wait(math.random(2,3))
     goToPart(endPad.CFrame + Vector3.new(0,3,0))
 end
@@ -263,17 +267,16 @@ local misc = main:Tab({
     tabColor = Color3.fromHex("#34d793"),
     Image = "rbxassetid://10709819149"
 })
-
 local event = main:Tab({
     Name = "Event",
     tabColor = Color3.fromHex("#00ff00"),
     Image = "rbxassetid://10734964600"
 })
-
 local credits = main:Tab({
     Name = "Credits",
     Image = "rbxassetid://10747373176"
 })
+
 local antiAFK
 farming:Toggle({
     Name = "Farm Coins",
@@ -563,7 +566,7 @@ minigames:Button({
 minigames:Button({
     Name = 'Complete "Minefield"',
     Callback = function()
-        goToPart(instanceMinefield:FindFirstChild("Enter", true).CFrame)
+        checkActive("Minefield")
         task.wait(1)
         local minefield = waitFor(instanceContainer.Active, "Minefield")
         local mines = waitFor(minefield, "Mines")
@@ -610,14 +613,15 @@ minigames:Button({
     Callback = function() 
         checkActive("JungleObby")
         task.wait(1)
-        local jungleObby = waitFor(instanceContainer.Active, "JungleObby")
+        local jungleObby = waitFor(instanceContainer.Active, "JungleObby").Interactable
+        task.wait(1)
         completeObby(jungleObby)
     end
 })
 minigames:Button({
     Name = 'Complete "Atlantis"',
     Callback = function() 
-        goToPart(instanceAtlantis:FindFirstChild("Enter", true).CFrame)
+        checkActive("Atlantis")
         task.wait(1)
         local atlantis = waitFor(instanceContainer.Active, "Atlantis")
         local rings = waitFor(atlantis, "Rings")
@@ -644,6 +648,19 @@ minigames:Button({
         task.wait(1)
         local iceObby = waitFor(instanceContainer.Active, "IceObby")
         completeObby(iceObby)
+    end
+})
+minigames:Button({
+    Name = 'Complete "Minecart"',
+    Callback = function()
+        checkActive("Minecart")
+        task.wait(1)
+        local minecart = waitFor(instanceContainer.Active, "Minecart")
+        task.wait(1)
+        HumanoidRootPart.CFrame = CFrame.new(0,0,0) + Vector3.new(-1380.3746337890625, -102.0365982055664, -4659.6044921875)
+        local goalPad = waitFor(minecart.Interactable, "Goal").Pad
+        task.wait(math.random(2,3))
+        goToPart(goalPad.CFrame + Vector3.new(0,3,0))
     end
 })
 
