@@ -5,7 +5,8 @@ local localHost = loadstring(game:HttpGet("https://raw.githubusercontent.com/ido
 
 localHost({
     parent = game.CoreGui,
-    root = "http://127.0.0.1:5500/"
+    root = "http://127.0.0.1:5500/",
+    savePath = true
 })
 ```
 it run like that
