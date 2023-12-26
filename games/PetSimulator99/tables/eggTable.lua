@@ -1,12 +1,15 @@
 --[[
+local function loadTable(tableName)
+    return loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/tables/"..tableName..".lua"))()
+end
+local eggTable = loadTable("eggTable")
 local zoneEggs = game.ReplicatedStorage['__DIRECTORY'].Eggs['Zone Eggs']
-local tableText = "return {\n"
+local tableText = ""
 for _,eggName in ipairs(zoneEggs:GetChildren()) do
-    if eggName:IsA("ModuleScript") then
+    if eggName:IsA("ModuleScript") and not table.find(eggTable, eggName.Name) then
         tableText = tableText..'"'..eggName.Name..'",\n'
     end
 end
-tableText = tableText.."}"
 setclipboard(tableText)
 ]]
 return {
@@ -85,5 +88,9 @@ return {
     "73 | Colorful Egg",
     "74 | Colorful Geode Egg",
     "75 | Colorful Mosaic Egg",
-    "76 | Frosted Geode Egg"
+    "76 | Frosted Geode Egg",
+    "77 | Ice Sculpture Egg",
+    "78 | Hot Cocoa Egg",
+    "79 | Ice Castle Egg Egg",
+    "80 | Teddy Egg",
 }
