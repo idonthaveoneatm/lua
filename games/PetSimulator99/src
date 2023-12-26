@@ -74,7 +74,8 @@ local vendingMachines = {
         "PotionVendingMachine2",
         "EnchantVendingMachine2",
         "RarePotionsVendingMachine1",
-        "RareEnchantVendingMachine1"
+        "RareEnchantVendingMachine1",
+        "OPPotionsVendingMachine1"
     },
     Zones = {
         ["PotionVendingMachine1"] = "6 | Cherry Blossom",
@@ -84,7 +85,8 @@ local vendingMachines = {
         ["PotionVendingMachine2"] = "35 | Safari",
         ["EnchantVendingMachine2"] = "42 | Fire and Ice",
         ["RarePotionsVendingMachine1"] = "47 | Underworld Bridge",
-        ["RareEnchantVendingMachine1"] = "51 | Samurai Village"
+        ["RareEnchantVendingMachine1"] = "51 | Samurai Village",
+        ["OPPotionsVendingMachine1"] = "64 | Ice Sculptures"
     }
 }
 local dailyRewards = {
@@ -127,14 +129,15 @@ local otherMachines = {
         "EggSlotsMachine",
         "GoldMachine",
         "UpgradePotionsMachine",
-        "UpgradeEnchantmentsMachine",
+        "UpgradeEnchantsMachine",
         "RegularMerchant",
         "FuseMachine",
         "RainbowMachine",
         "AdvancedMerchant",
         "CometShower",
         "UpgradeFruitsMachine",
-        "GardenMerchant"
+        "GardenMerchant",
+        "SnowMerchant"
     },
     Zones = {
         ["Mailbox"] = "1 | Spawn",
@@ -145,14 +148,15 @@ local otherMachines = {
         ["EggSlotsMachine"] = "8 | Backyard",
         ["GoldMachine"] = "10 | Mine",
         ["UpgradePotionsMachine"] = "13 | Dark Forest",
-        ["UpgradeEnchantmentsMachine"] = "16 | Crimson Forest",
+        ["UpgradeEnchantsMachine"] = "16 | Crimson Forest",
         ["RegularMerchant"] = "19 | Oasis",
         ["FuseMachine"] = "28 | Shanty Town",
         ["RainbowMachine"] = "31 | Desert Pyramids",
         ["AdvancedMerchant"] = "39 | Ice Rink",
         ["CometShower"] = "44 | Obsidian Cave",
         ["UpgradeFruitsMachine"] = "52 | Bamboo Forest",
-        ["GardenMerchant"] = "54 | Flower Field"
+        ["GardenMerchant"] = "54 | Flower Field",
+        ["SnowMerchant"] = "63 | Frost Mountains"
     }
 }
 local minigamesTable = {
@@ -239,8 +243,7 @@ end
 
 local project = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/Libraries/normal/quake/src"))()
 local main = project:Window({
-    Title = "Pet Simulator 99",
-    Parent = game.CoreGui
+    Title = "Pet Simulator 99"
 })
 local farming = main:Tab({
     Name = "Farming",
@@ -637,7 +640,7 @@ minigames:Button({
     Callback = function() 
         checkActive("PyramidObby")
         task.wait(1)
-        local pyramidObby = waitFor(instanceContainer.Active, "PyramidObby")
+        local pyramidObby = waitFor(instanceContainer.Active, "PyramidObby").Interactable
         completeObby(pyramidObby)
     end
 })
@@ -646,7 +649,8 @@ minigames:Button({
     Callback = function() 
         checkActive("IceObby")
         task.wait(1)
-        local iceObby = waitFor(instanceContainer.Active, "IceObby")
+        local iceObby = waitFor(instanceContainer.Active, "IceObby").Interactable
+        task.wait(1)
         completeObby(iceObby)
     end
 })
@@ -656,8 +660,8 @@ minigames:Button({
         checkActive("Minecart")
         task.wait(1)
         local minecart = waitFor(instanceContainer.Active, "Minecart")
-        task.wait(1)
         HumanoidRootPart.CFrame = CFrame.new(0,0,0) + Vector3.new(-1380.3746337890625, -102.0365982055664, -4659.6044921875)
+        task.wait(1)
         local goalPad = waitFor(minecart.Interactable, "Goal").Pad
         task.wait(math.random(2,3))
         goToPart(goalPad.CFrame + Vector3.new(0,3,0))
@@ -749,8 +753,8 @@ local shrineButton
 shrineButton = misc:Button({
     Name = "Collect Shrines (Maybe)",
     Callback = function()
-        for i=1,55 do
-            shrineButton:SetText("Progress: "..tostring(i).."/55")
+        for i=1,65 do
+            shrineButton:SetText("Progress: "..tostring(i).."/65")
             Network.Relic_Found:InvokeServer(i)
         end
         shrineButton:SetText("Collect Shrines (Maybe)")
@@ -762,8 +766,8 @@ local presentsButton
 presentsButton = event:Button({
     Name = "Collect Presents",
     Callback = function()
-        for i=1,50 do
-            presentsButton:SetText("Progress: "..tostring(i).."/50")
+        for i=1,75 do
+            presentsButton:SetText("Progress: "..tostring(i).."/75")
             Network.Present_Found:InvokeServer(i)
         end
         presentsButton:SetText("Collect Presents")
@@ -774,24 +778,47 @@ event:Toggle({
     Default = false,
     Callback = function(value)
         config.event.farm = value
+        local candycanes = {}
+        if config.event.farm then
+            goToPart(zoneTable["1 | Spawn"] + Vector3.new(0,3,0))
+            task.wait(3)
+        end
         while config.event.farm and task.wait() do
+            local count = 0
             for _,zone in ipairs(zoneNames) do
                 if not config.event.farm then break end
-                goToPart(zoneTable[zone] + Vector3.new(0,50,0))
-                task.wait(3)
+                if count > 0 then
+                    goToPart(zoneTable[zone] + Vector3.new(0,3,0))
+                    task.wait(3)
+                else
+                    goToPart(zoneTable[zone] + Vector3.new(0,3,0))
+                    task.wait(1)
+                end
+                count = 0
                 for _,cc in ipairs(Breakables:GetDescendants()) do
                     if not config.event.farm then break end
                     if cc:IsA("MeshPart") and cc.MeshId == "rbxassetid://8269538460" then
-                        local name = cc.Parent.Name
-                        local hitbox = cc.Hitbox
-                        goToPart(hitbox.CFrame + Vector3.new(0,5,0))
-                        task.wait(0.2)
-                        repeat
-                            task.wait(0.2)
-                            Network.Breakables_PlayerDealDamage:FireServer(name)
-                        until not Breakables:FindFirstChild(name) or not config.event.farm
+                        count = count + 1
+                        table.insert(candycanes, cc.Parent)
                     end
                 end
+                for _,v in ipairs(candycanes) do
+                    local hitbox = v:findFirstChild("Hitbox", true)
+                    local s,e = pcall(function() 
+                        goToPart(hitbox.CFrame + Vector3.new(0,5,0))
+                    end)
+                    if e then
+                        table.remove(candycanes, table.find(candycanes, v.Name))
+                        return
+                    end
+                    task.wait(0.2)
+                    repeat
+                        task.wait(0.2)
+                        Network.Breakables_PlayerDealDamage:FireServer(v.Name)
+                    until not Breakables:FindFirstChild(v.Name) or not config.event.farm
+                    table.remove(candycanes, table.find(candycanes, v.Name))
+                end
+                table.clear(candycanes)
             end
         end
     end
@@ -835,7 +862,7 @@ eventStats = event:Button({
             opened = opened + 1
         end
     end
-    eventStats:SetText("Opened: "..tostring(opened).." Unopened: "..tostring(unopened).." Total: 50")
+    eventStats:SetText("Opened: "..tostring(opened).." Unopened: "..tostring(unopened).." Total: 75")
     end
 })
 
