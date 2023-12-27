@@ -28,7 +28,7 @@ Selected.Parent = playersContent
 Selected.Name = "Selected"
 
 local u = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/utilities.lua"))()
-u:drag(body)
+u.drag(body)
 
 local Players = game:GetService("Players")
 
@@ -126,7 +126,7 @@ local function playersContentFunc()
 				stringValue.Name = "Player: "..n[2]
 				stringValue.Value = tostring(n[2])
 				playerSelected.Text = "Selected"
-				u:tween({o = playerSelected,
+				u.tween({o = playerSelected,
 					a = {TextColor3 = Color3.fromRGB(85, 220, 135)},
 					d = "In",s = "Sine",t = 0.1
 				}):Play()
@@ -137,7 +137,7 @@ local function playersContentFunc()
 					end
 				end
 				playerSelected.Text = "Unselected"
-				u:tween({o = playerSelected,
+				u.tween({o = playerSelected,
 					a = {TextColor3 = Color3.fromRGB(190, 100, 105)},
 					d = "In",s = "Sine",t = 0.1
 				}):Play()
@@ -170,19 +170,19 @@ local function buttonsFunc(buttons)
 		for i,v in ipairs(frame:GetDescendants()) do
 			if v:IsA("TextButton") then
 				v.MouseButton1Down:Connect(function()
-					u:tween({o = v.Parent,
+					u.tween({o = v.Parent,
 						a = {BackgroundTransparency = 0.9},
 						d = "In",s = "Sine",t = 0.1
 					}):Play()
 				end)
 				v.MouseButton1Up:Connect(function()
-					u:tween({o = v.Parent,
+					u.tween({o = v.Parent,
 						a = {BackgroundTransparency = 0.8},
 						d = "In",s = "Sine",t = 0.1
 					}):Play()
 				end)
 				v.MouseLeave:Connect(function()
-					u:tween({o = v.Parent,
+					u.tween({o = v.Parent,
 						a = {BackgroundTransparency = 0.8},
 						d = "In",s = "Sine",t = 0.1
 					}):Play()
@@ -198,21 +198,21 @@ for i,v in ipairs(tabs:GetDescendants()) do
 		v.MouseButton1Click:Connect(function()
 			for i2,v2 in ipairs(tabs:GetDescendants()) do
 				if v2:IsA("TextButton") then
-					u:tween({o = v2,
+					u.tween({o = v2,
 						a = {TextTransparency = 0.5},
 						d = "In",s = "Sine",t = 0.2
 					}):Play()
-					u:tween({o = v2.image,
+					u.tween({o = v2.image,
 						a = {ImageTransparency = 0.5},
 						d = "In",s = "Sine",t = 0.2
 					}):Play()
 				end
 			end
-			u:tween({o = v,
+			u.tween({o = v,
 				a = {TextTransparency = 0},
 				d = "In",s = "Sine",t = 0.2
 			}):Play()
-			u:tween({o = v.image,
+			u.tween({o = v.image,
 				a = {ImageTransparency = 0},
 				d = "In",s = "Sine",t = 0.2
 			}):Play()
