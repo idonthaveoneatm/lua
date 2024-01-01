@@ -13,13 +13,13 @@ https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator9
 
 ## Features
 
-farm coins
+farm orbs
 
 farm eggs(1-76)
 
 farm fishing
 
-collect orbs(broken)
+collect orbs
 
 collect lootbag
 
@@ -30,5 +30,3 @@ teleport vending machines
 complete obbies
 
 collect rewards
-
-event christmas things
