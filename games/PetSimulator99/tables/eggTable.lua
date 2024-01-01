@@ -93,4 +93,11 @@ return {
     "78 | Hot Cocoa Egg",
     "79 | Ice Castle Egg Egg",
     "80 | Teddy Egg",
+    "81 | Firefly Egg",
+    "82 | Golden Brick Egg",
+    "83 | Cobblestone Egg",
+    "84 | Ruins Egg",
+    "85 | Runic Egg",
+    "86 | Wizard Egg",
+    "87 | Witch Egg",
 }
