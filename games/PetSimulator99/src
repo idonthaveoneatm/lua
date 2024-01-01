@@ -270,11 +270,6 @@ local misc = main:Tab({
     tabColor = Color3.fromHex("#34d793"),
     Image = "rbxassetid://10709819149"
 })
-local event = main:Tab({
-    Name = "Event",
-    tabColor = Color3.fromHex("#00ff00"),
-    Image = "rbxassetid://10734964600"
-})
 local credits = main:Tab({
     Name = "Credits",
     Image = "rbxassetid://10747373176"
@@ -349,7 +344,19 @@ farming:TextBox({
     end
 })
 farming:Section("Collection")
-farming:Label("Auto Collect Orbs is currently broken/patched")
+farming:Toggle({
+    Name = "Collect Orbs",
+    Default = false,
+    Callback = function(value)
+        config.autoOrb = value
+        local orbModule = require(game.ReplicatedStorage.Library.Client.OrbCmds.Orb)
+        if config.autoOrb then
+            orbModule.DefaultPickupDistance = 9e9
+        else
+            orbModule.DefaultPickupDistance = 20
+        end
+    end
+})
 local collectLootbags
 collectLootbags = farming:Toggle({
     Name = "Collect Lootbags",
@@ -378,10 +385,8 @@ farming:Dropdown({
 })
 farming:Slider({
     Name = "Amount of eggs",
-    Step = 1,
     Max = 99,
     Min = 1,
-    InitialValue = 1,
     Callback = function(eggAmount)
         config.egg.amount = eggAmount
     end
@@ -758,111 +763,6 @@ shrineButton = misc:Button({
             Network.Relic_Found:InvokeServer(i)
         end
         shrineButton:SetText("Collect Shrines (Maybe)")
-    end
-})
-
-event:Label("Presents are found in both normal zones and minigames!")
-local presentsButton
-presentsButton = event:Button({
-    Name = "Collect Presents",
-    Callback = function()
-        for i=1,75 do
-            presentsButton:SetText("Progress: "..tostring(i).."/75")
-            Network.Present_Found:InvokeServer(i)
-        end
-        presentsButton:SetText("Collect Presents")
-    end
-})
-event:Toggle({
-    Name = "Farm Candy Canes",
-    Default = false,
-    Callback = function(value)
-        config.event.farm = value
-        local candycanes = {}
-        if config.event.farm then
-            goToPart(zoneTable["1 | Spawn"] + Vector3.new(0,3,0))
-            task.wait(3)
-        end
-        while config.event.farm and task.wait() do
-            local count = 0
-            for _,zone in ipairs(zoneNames) do
-                if not config.event.farm then break end
-                if count > 0 then
-                    goToPart(zoneTable[zone] + Vector3.new(0,3,0))
-                    task.wait(3)
-                else
-                    goToPart(zoneTable[zone] + Vector3.new(0,3,0))
-                    task.wait(1)
-                end
-                count = 0
-                for _,cc in ipairs(Breakables:GetDescendants()) do
-                    if not config.event.farm then break end
-                    if cc:IsA("MeshPart") and cc.MeshId == "rbxassetid://8269538460" then
-                        count = count + 1
-                        table.insert(candycanes, cc.Parent)
-                    end
-                end
-                for _,v in ipairs(candycanes) do
-                    local hitbox = v:findFirstChild("Hitbox", true)
-                    local s,e = pcall(function() 
-                        goToPart(hitbox.CFrame + Vector3.new(0,5,0))
-                    end)
-                    if e then
-                        table.remove(candycanes, table.find(candycanes, v.Name))
-                        return
-                    end
-                    task.wait(0.2)
-                    repeat
-                        task.wait(0.2)
-                        Network.Breakables_PlayerDealDamage:FireServer(v.Name)
-                    until not Breakables:FindFirstChild(v.Name) or not config.event.farm
-                    table.remove(candycanes, table.find(candycanes, v.Name))
-                end
-                table.clear(candycanes)
-            end
-        end
-    end
-})
-event:Section("Other Machines")
-local eventThing = ""
-local goToEventThing
-event:Dropdown({
-    Name = "Other Machines",
-    Items = eventThings.Names,
-    Multiselect = false,
-    Callback = function(name)
-        eventThing = name
-        goToEventThing:SetText("Go to "..eventThing)
-    end
-})
-goToEventThing = event:Button({
-    Name = "Go to none",
-    Callback = function()
-        local zone = eventThings.Zones[eventThing]
-        goToPart(zoneTable[zone] + Vector3.new(0,50,0))
-        local world = waitFor(Map, zone)
-        local eventPad = waitFor(world.INTERACT.Machines, eventThing).Pad.CFrame
-        goToPart(eventPad)
-    end
-})
-event:Paragraph({
-    Title = "TLDR",
-    Body = "This won't work after collecting presents with the toggle you will need to rejoin the game inorder to see it change"
-})
-local eventStats
-eventStats = event:Button({
-    Name = "Check Stats",
-    Callback = function()
-    local opened = 0
-    local unopened = 0
-    for _,present in ipairs(Things.Presents:GetChildren()) do
-        if present.Name == "Present" and present:FindFirstChild("ClickDetector") then
-           unopened = unopened + 1
-        elseif present.Name == "Present" and not present:FindFirstChild("ClickDetector") then
-            opened = opened + 1
-        end
-    end
-    eventStats:SetText("Opened: "..tostring(opened).." Unopened: "..tostring(unopened).." Total: 75")
     end
 })
 
