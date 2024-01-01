@@ -7,7 +7,7 @@ local Map = game.workspace.Map
 local zonesText = ""
 for _,zone in ipairs(Map:GetChildren()) do
     if not table.find(zoneNames, zone.Name) and zone.Name ~= "SHOP" then
-        zonesText = zonesText..'["'..zone.Name..'"] = '..'CFrame.new('..tostring(zone.INTERACT.Teleport.Position)..'), \n'
+        zonesText = zonesText..'["'..zone.Name..'"] = '..'CFrame.new('..tostring(zone.INTERACT.Teleport.Position)..'),\n'
     end
 end
 setclipboard(zonesText)
