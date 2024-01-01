@@ -7,7 +7,7 @@ local Map = game.workspace.Map
 local zonesText = ""
 for _,zone in ipairs(Map:GetChildren()) do
     if not table.find(zoneNames, zone.Name) and zone.Name ~= "SHOP" then
-        zonesText = zonesText..'"'..zone.Name..'", \n'
+        zonesText = zonesText..'"'..zone.Name..'",\n'
     end
 end
 setclipboard(zonesText)
@@ -79,5 +79,12 @@ return {
     "64 | Ice Sculptures", 
     "65 | Snowman Town", 
     "66 | Ice Castle", 
-    "67 | Polar Express"
+    "67 | Polar Express",
+    "68 | Firefly Cold Forest",
+    "69 | Golden Road",
+    "70 | No Path Forest",
+    "71 | Ancient Ruins",
+    "72 | Runic Altar",
+    "73 | Wizard Tower",
+    "74 | Witch Marsh",
 }
