@@ -49,7 +49,8 @@ local Orbs = Things.Orbs
 local ShinyRelics = Things.ShinyRelics
 local Breakables = Things.Breakables
 local Pets = Things.Pets
-local Network = game:GetService("ReplicatedStorage").Network
+local ReplicatedStorage = game.ReplicatedStorage
+local Network = ReplicatedStorage.Network
 local PetInventory = LocalPlayer.PlayerGui.Inventory.Frame.Main.Pets.EquippedPets
 
 getgenv().currentCoins = {}
@@ -229,7 +230,7 @@ local function checkActive(name, check)
         goToPart(Instances[name]:FindFirstChild("Enter", true).CFrame) 
     end
 end
-local function completeObby(path)
+local function completeObby(path, name)
     local startLine = waitFor(path, "StartLine")
     local endPad = waitFor(path, "Goal").Pad
     if startLine:FindFirstChild("Part") then
@@ -237,7 +238,11 @@ local function completeObby(path)
     else
         goToPart(startLine.CFrame + Vector3.new(0,3,0))
     end
-    task.wait(math.random(2,3))
+    task.wait(0.2)
+
+    local common = require(instanceContainer.Active:FindFirstChild(name):FindFirstChild("Common", true))
+    common.WinTimer = 0
+
     goToPart(endPad.CFrame + Vector3.new(0,3,0))
 end
 
@@ -349,7 +354,8 @@ farming:Toggle({
     Default = false,
     Callback = function(value)
         config.autoOrb = value
-        local orbModule = require(game.ReplicatedStorage.Library.Client.OrbCmds.Orb)
+        local orbModule = require(ReplicatedStorage.Library.Client.OrbCmds.Orb)
+
         if config.autoOrb then
             orbModule.DefaultPickupDistance = 9e9
         else
@@ -568,7 +574,8 @@ minigames:Button({
         checkActive("SpawnObby")
         task.wait(1)
         local spawnObby = waitFor(instanceContainer.Active, "SpawnObby")
-        completeObby(spawnObby)
+        task.wait(1)
+        completeObby(spawnObby, "SpawnObby")
     end
 })
 minigames:Button({
@@ -577,6 +584,13 @@ minigames:Button({
         checkActive("Minefield")
         task.wait(1)
         local minefield = waitFor(instanceContainer.Active, "Minefield")
+        
+        -- this may or may not do anything?
+        local common = require(minefield.Common)
+        for _,v in pairs (common.MinefieldDifficulty) do
+            v.BombChance = 0
+        end
+        
         local mines = waitFor(minefield, "Mines")
         local finish = waitFor(minefield, "Finish")
         local nextX,nextZ = 0, 0
@@ -621,9 +635,9 @@ minigames:Button({
     Callback = function() 
         checkActive("JungleObby")
         task.wait(1)
-        local jungleObby = waitFor(instanceContainer.Active, "JungleObby").Interactable
+        local jungleObby = waitFor(instanceContainer.Active, "JungleObby")
         task.wait(1)
-        completeObby(jungleObby)
+        completeObby(jungleObby.Interactable, "JungleObby")
     end
 })
 minigames:Button({
@@ -645,8 +659,9 @@ minigames:Button({
     Callback = function() 
         checkActive("PyramidObby")
         task.wait(1)
-        local pyramidObby = waitFor(instanceContainer.Active, "PyramidObby").Interactable
-        completeObby(pyramidObby)
+        local pyramidObby = waitFor(instanceContainer.Active, "PyramidObby")
+        task.wait(1)
+        completeObby(pyramidObby.Interactable, "PyramidObby")
     end
 })
 minigames:Button({
@@ -654,9 +669,9 @@ minigames:Button({
     Callback = function() 
         checkActive("IceObby")
         task.wait(1)
-        local iceObby = waitFor(instanceContainer.Active, "IceObby").Interactable
+        local iceObby = waitFor(instanceContainer.Active, "IceObby")
         task.wait(1)
-        completeObby(iceObby)
+        completeObby(iceObby.Interactable, "IceObby")
     end
 })
 minigames:Button({
@@ -665,10 +680,15 @@ minigames:Button({
         checkActive("Minecart")
         task.wait(1)
         local minecart = waitFor(instanceContainer.Active, "Minecart")
-        HumanoidRootPart.CFrame = CFrame.new(0,0,0) + Vector3.new(-1380.3746337890625, -102.0365982055664, -4659.6044921875)
         task.wait(1)
         local goalPad = waitFor(minecart.Interactable, "Goal").Pad
-        task.wait(math.random(2,3))
+
+        HumanoidRootPart.CFrame = CFrame.new(0,0,0) + Vector3.new(-1380.3746337890625, -102.0365982055664, -4659.6044921875)
+        task.wait(0.2)
+
+        local common = require(minecart:FindFirstChild("Common", true))
+        common.WinTimer = 0
+
         goToPart(goalPad.CFrame + Vector3.new(0,3,0))
     end
 })
