@@ -15,7 +15,7 @@ https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator9
 
 farm orbs
 
-farm eggs(1-76)
+farm eggs
 
 farm fishing
 
