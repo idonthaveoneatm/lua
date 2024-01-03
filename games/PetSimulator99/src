@@ -3,7 +3,8 @@ getgenv().config = {
         toggle = false,
         singleTarget = false,
         radius = 70,
-        wait = 0.2
+        wait = 0.2,
+        buyZone = false
     },
     autoLootbag = false,
     autoOrb = false,
@@ -40,23 +41,21 @@ local sqrt = math.sqrt
 local pow = math.pow
 
 local Things = game.workspace['__THINGS']
-local Debris = game.workspace['__DEBRIS']
-local Map = game.workspace.Map
 local Instances = Things.Instances
 local instanceContainer = Things['__INSTANCE_CONTAINER']
 local Lootbags = Things.Lootbags
 local Orbs = Things.Orbs
 local ShinyRelics = Things.ShinyRelics
 local Breakables = Things.Breakables
-local Pets = Things.Pets
+
+local Debris = game.workspace['__DEBRIS']
+local Map = game.workspace.Map
+
 local ReplicatedStorage = game.ReplicatedStorage
 local Network = ReplicatedStorage.Network
-local PetInventory = LocalPlayer.PlayerGui.Inventory.Frame.Main.Pets.EquippedPets
+local ClientNetwork = require(ReplicatedStorage.Library.Client.Network)
 
 getgenv().currentCoins = {}
-getgenv().equippedPets = {}
-getgenv().totalClaimed = 0
-getgenv().totalTime = 0
 
 local function loadTable(tableName)
     return loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/tables/"..tableName..".lua"))()
@@ -185,15 +184,6 @@ local eventThings = {
     }
 }
 
-local function indexPets()
-    table.clear(equippedPets)
-    for _, pet in ipairs(Pets:GetChildren()) do
-        if PetInventory:FindFirstChild(pet.Name) then
-            table.insert(equippedPets, pet.Name)
-        end
-    end
-    return equippedPets
-end
 local function calcDistance(obj1, obj2)
     local pPosX, pPosZ = obj1.CFrame.X, obj1.CFrame.Z
     local hPosX, hPosZ = obj2.CFrame.X, obj2.CFrame.Z
@@ -245,6 +235,12 @@ local function completeObby(path, name)
 
     goToPart(endPad.CFrame + Vector3.new(0,3,0))
 end
+local function Fire(name, args)
+    ClientNetwork.Fire(name, unpack(args))
+end
+local function Invoke(name, args)
+    ClientNetwork.Invoke(name, unpack(args))
+end
 
 local project = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/Libraries/normal/quake/src"))()
 local main = project:Window({
@@ -286,7 +282,6 @@ farming:Toggle({
     Default = false,
     Callback = function(value)
         config.farm.toggle = value
-
         while config.farm.toggle and task.wait() do
             for _, v in ipairs(Breakables:GetChildren()) do
                 if v:FindFirstChild("Hitbox", true) then
@@ -296,7 +291,7 @@ farming:Toggle({
                             local tmpName = v.Name
                             repeat
                                 task.wait(config.farm.wait)
-                                Network.Breakables_PlayerDealDamage:FireServer(v.Name)
+                                Fire("Breakables_PlayerDealDamage", {v.Name})
                             until not Breakables:FindFirstChild(v.Name) or calcDistance(part, HumanoidRootPart) > config.farm.radius or not config.farm.toggle or not config.farm.singleTarget
                         else
                             if not table.find(currentCoins, v.Name) then
@@ -306,7 +301,7 @@ farming:Toggle({
                                     local tmpName = v.Name
                                     repeat
                                         task.wait(config.farm.wait * math.random(1, 2))
-                                        Network.Breakables_PlayerDealDamage:FireServer(tmpName)
+                                        Fire("Breakables_PlayerDealDamage", {tmpName})
                                     until not Breakables:FindFirstChild(tmpName) or calcDistance(tmpPart, HumanoidRootPart) > config.farm.radius or config.farm.singleTarget or not config.farm.toggle
                                     table.remove(currentCoins, table.find(currentCoins, v.Name))
                                 end)
@@ -345,6 +340,22 @@ farming:TextBox({
         else
             config.farm.wait = 0.2
             sendNotification("Wait Time Error", "You need the WAIT TIME to be a number. It is now 0.2", 50)
+        end
+    end
+})
+farming:Toggle({
+    Name = "Buy Next Zone",
+    Default = false,
+    Callback = function(value)
+        config.farm.buyZone = value
+        for _,zoneName in ipairs(zoneNames) do
+            if not config.farm.buyZone then break end
+            task.spawn(function() 
+                while config.farm.buyZone and task.wait() do
+                    local name = string.split(zoneName, " | ")[2]
+                    Invoke("Zones_RequestPurchase", {name})
+                end
+            end)
         end
     end
 })
@@ -404,7 +415,8 @@ farming:Toggle({
         config.egg.farm = value
         while config.egg.farm and task.wait() do
             local splitName = string.split(config.egg.selectedEgg, " | ")
-            Network.Eggs_RequestPurchase:InvokeServer(splitName[2],tonumber(config.egg.amount))
+            Invoke("Eggs_RequestPurchase",{splitName[2], config.egg.amount})
+            --Network.Eggs_RequestPurchase:InvokeServer(splitName[2],tonumber(config.egg.amount))
             task.wait(0.4)
             repeat 
                 task.wait()
@@ -429,11 +441,8 @@ farming:Toggle({
         local Layer1 =  waitFor(fishing.Water, "Layer1")
         local Bobbers = waitFor(fishing, "Bobbers")
         local L1Position = Layer1.Position
-        local function fishingRemote(arg1, arg2)
-            if arg2 then
-                return Network.Instancing_FireCustomFromClient:FireServer("Fishing",arg1, arg2)
-            end
-            return Network.Instancing_FireCustomFromClient:FireServer("Fishing",arg1)
+        local function fishingRemote(args)
+            return Fire("Instancing_FireCustomFromClient", {"Fishing", unpack(args)})
         end
         local function isBubbling()
             local bubbling = false
@@ -467,9 +476,9 @@ farming:Toggle({
             if HumanoidRootPart.Position ~= L1Position and config.fishing then
                 goToPart(Layer1.CFrame)
             end
-            fishingRemote("RequestCast", Vector3.new(L1Position.X,L1Position.Y,L1Position.Z))
+            fishingRemote({"RequestCast", Vector3.new(L1Position.X,L1Position.Y,L1Position.Z)})
             repeat task.wait() until isBubbling() or not config.fishing
-            fishingRemote("RequestReel")
+            fishingRemote({"RequestReel"})
             repeat task.wait() until (not fishingStatus) or not config.fishing
         end
         goToPart(fishing.Interactable:FindFirstChild("Pad", true).CFrame + Vector3.new(0,3,0))
@@ -587,6 +596,8 @@ minigames:Button({
         
         -- this may or may not do anything?
         local common = require(minefield.Common)
+        common.Config.RespawnTimer = 0
+        common.Config.WinTimer = 0
         for _,v in pairs (common.MinefieldDifficulty) do
             v.BombChance = 0
         end
@@ -606,7 +617,7 @@ minigames:Button({
                 mine.Pad.CanCollide = true
                 if tostring(mine.Pad.BrickColor) == "Really red" then
                     nextZ = nextZ + 10
-                    task.wait(3)
+                    task.wait(2)
                 else
                     nextX = nextX + 10
                 end
@@ -620,7 +631,7 @@ minigames:Button({
                     mine.Pad.CanCollide = true
                     if tostring(mine.Pad.BrickColor) == "Really red" then
                         nextZ = nextZ + 10
-                        task.wait(3)
+                        task.wait(2)
                     else
                         nextX = nextX + 10
                     end
@@ -701,7 +712,8 @@ rewards:Toggle({
         collectLootbags:SetValue(config.timeRewards)
         while config.timeRewards and task.wait() do
             for i=1,12 do
-                Network:FindFirstChild("Redeem Free Gift"):InvokeServer(i)
+                Invoke("Redeem Free Gift", {i})
+                --Network:FindFirstChild("Redeem Free Gift"):InvokeServer(i)
             end
         end
     end
@@ -780,7 +792,8 @@ shrineButton = misc:Button({
     Callback = function()
         for i=1,65 do
             shrineButton:SetText("Progress: "..tostring(i).."/65")
-            Network.Relic_Found:InvokeServer(i)
+            Invoke("Relic_Found", {i})
+            --Network.Relic_Found:InvokeServer(i)
         end
         shrineButton:SetText("Collect Shrines (Maybe)")
     end
