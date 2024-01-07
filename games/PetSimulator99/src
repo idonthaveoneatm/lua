@@ -14,11 +14,10 @@ getgenv().config = {
         farm = false
     },
     timeRewards = false,
+    spinnerTicket = false,
     fishing = false,
     antiafk = false,
-    event = {
-        farm = false,
-    }
+    stairwayToHeaven = false
 }
 --[[
 
@@ -55,7 +54,7 @@ local ReplicatedStorage = game.ReplicatedStorage
 local Network = ReplicatedStorage.Network
 local ClientNetwork = require(ReplicatedStorage.Library.Client.Network)
 
-getgenv().currentCoins = {}
+getgenv().coinQueue = {}
 
 local function loadTable(tableName)
     return loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/tables/"..tableName..".lua"))()
@@ -194,16 +193,6 @@ local function clickPosition(x,y)
     VirtualUser:Button1Down(Vector2.new(x,y))
     VirtualUser:Button1Up(Vector2.new(x,y))
 end
-local function sendNotification(title, text, duration)
-    game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = title,
-        Text = text,
-        Duration = tonumber(duration),
-        Callback = function()
-        end,
-        Button1 = "Got It!"
-    })
-end
 local function goToPart(cframe)
     HumanoidRootPart.CFrame = cframe
 end
@@ -282,36 +271,54 @@ farming:Toggle({
     Default = false,
     Callback = function(value)
         config.farm.toggle = value
+
+        local doingQueue = false
+
         while config.farm.toggle and task.wait() do
             for _, v in ipairs(Breakables:GetChildren()) do
+                
                 if v:FindFirstChild("Hitbox", true) then
                     local part = v:FindFirstChild("Hitbox", true)
                     if calcDistance(part, HumanoidRootPart) <= config.farm.radius then
+
                         if config.farm.singleTarget then
-                            local tmpName = v.Name
+                            
                             repeat
                                 task.wait(config.farm.wait)
                                 Fire("Breakables_PlayerDealDamage", {v.Name})
                             until not Breakables:FindFirstChild(v.Name) or calcDistance(part, HumanoidRootPart) > config.farm.radius or not config.farm.toggle or not config.farm.singleTarget
+                        
                         else
-                            if not table.find(currentCoins, v.Name) then
-                                table.insert(currentCoins, v.Name)
+
+                            if not table.find(coinQueue, v.Name) then
+                                table.insert(coinQueue, v.Name)
                                 task.spawn(function()
-                                    local tmpPart = part
-                                    local tmpName = v.Name
+                                    local coinPart = part
+                                    local coinName = v.Name
                                     repeat
-                                        task.wait(config.farm.wait * math.random(1, 2))
-                                        Fire("Breakables_PlayerDealDamage", {tmpName})
-                                    until not Breakables:FindFirstChild(tmpName) or calcDistance(tmpPart, HumanoidRootPart) > config.farm.radius or config.farm.singleTarget or not config.farm.toggle
-                                    table.remove(currentCoins, table.find(currentCoins, v.Name))
+                                        task.wait()
+                                    until not Breakables:FindFirstChild(coinName) or calcDistance(coinPart, HumanoidRootPart) > config.farm.radius or config.farm.singleTarget or not config.farm.toggle
+                                    table.remove(coinQueue, table.find(coinQueue, coinName))
                                 end)
                             end
+                            task.spawn(function()
+                                if not doingQueue then
+                                    doingQueue = true
+                                    for _,currentCoin in ipairs(coinQueue) do
+                                        Fire("Breakables_PlayerDealDamage", {currentCoin})
+                                        task.wait(config.farm.wait)
+                                    end
+                                    doingQueue = false
+                                end
+                            end)
+
                         end
+
                     end
                 end
             end
         end
-        table.clear(currentCoins)
+        table.clear(coinQueue)
     end
 })
 farming:Toggle({
@@ -328,7 +335,11 @@ farming:TextBox({
             config.farm.radius = tonumber(value)
         else
             config.farm.radius = 40
-            sendNotification("Radius Error", "You need the RADIUS to be a number. It is now 40", 50)
+            main:Notify({
+                Title = "Radius Error",
+                Duration = 20,
+                Body = "You need the RADIUS to be a number. It is now 40"
+            })
         end
     end
 })
@@ -339,7 +350,11 @@ farming:TextBox({
             config.farm.wait = tonumber(value)
         else
             config.farm.wait = 0.2
-            sendNotification("Wait Time Error", "You need the WAIT TIME to be a number. It is now 0.2", 50)
+            main:Notify({
+                Title = "Wait Time Error",
+                Duration = 20,
+                Body = "You need the WAIT TIME to be a number. It is now 0.2"
+            })
         end
     end
 })
@@ -416,9 +431,8 @@ farming:Toggle({
         while config.egg.farm and task.wait() do
             local splitName = string.split(config.egg.selectedEgg, " | ")
             Invoke("Eggs_RequestPurchase",{splitName[2], config.egg.amount})
-            --Network.Eggs_RequestPurchase:InvokeServer(splitName[2],tonumber(config.egg.amount))
             task.wait(0.4)
-            repeat 
+            repeat
                 task.wait()
                 clickPosition(math.huge,math.huge)
             until not game.workspace.Camera:FindFirstChild("Eggs") or not config.egg.farm
@@ -598,9 +612,6 @@ minigames:Button({
         local common = require(minefield.Common)
         common.Config.RespawnTimer = 0
         common.Config.WinTimer = 0
-        for _,v in pairs (common.MinefieldDifficulty) do
-            v.BombChance = 0
-        end
         
         local mines = waitFor(minefield, "Mines")
         local finish = waitFor(minefield, "Finish")
@@ -713,8 +724,17 @@ rewards:Toggle({
         while config.timeRewards and task.wait() do
             for i=1,12 do
                 Invoke("Redeem Free Gift", {i})
-                --Network:FindFirstChild("Redeem Free Gift"):InvokeServer(i)
             end
+        end
+    end
+})
+rewards:Toggle({
+    Name = "Collect Spinner Ticket",
+    Default = false,
+    Callback = function(value)
+        config.spinnerTicket = value
+        while config.spinnerTicket and task.wait() do
+            Fire("Spinny Wheel: Request Ticket", {"StarterWheel"})
         end
     end
 })
@@ -788,16 +808,76 @@ antiAFK = misc:Toggle({
 })
 local shrineButton
 shrineButton = misc:Button({
-    Name = "Collect Shrines (Maybe)",
+    Name = "Collect Shrines (maybe)",
     Callback = function()
         for i=1,65 do
             shrineButton:SetText("Progress: "..tostring(i).."/65")
             Invoke("Relic_Found", {i})
-            --Network.Relic_Found:InvokeServer(i)
         end
         shrineButton:SetText("Collect Shrines (Maybe)")
     end
 })
+local completeStairs
+completeStairs = misc:Toggle({
+    Name = "Try and complete stairway to heaven",
+    Default = false,
+    Callback = function(value)
+        config.stairwayToHeaven = value
+        if config.stairwayToHeaven and not instanceContainer.Active:FindFirstChild("StairwayToHeaven") then
+            goToPart(CFrame.new(0,-100,0))
+        end
+        repeat task.wait() until instanceContainer.Active:FindFirstChild("StairwayToHeaven")
+        local stairway = instanceContainer.Active.StairwayToHeaven
+        local highestY = 0
+        local oldHighest = highestY
+        local highestCFrame
+
+        while config.stairwayToHeaven and task.wait() do
+            if stairway:FindFirstChild("Goal", true) then
+                config.stairwayToHeaven = false
+                completeStairs:SetValue(false)
+                local goal = stairway:FindFirstChild("Goal", true)
+                task.wait(0.3)
+                goToPart(goal.Shrine.Pad.CFrame + Vector3.new(0,3,0))
+            end
+            task.spawn(function() 
+                for _,part in ipairs(stairway:GetDescendants()) do
+                    if part.Name == "Goal" then
+                        config.stairwayToHeaven = false
+                        completeStairs:SetValue(false)
+                        local goal = stairway:FindFirstChild("Goal", true)
+                        task.wait(0.3)
+                        goToPart(goal.Shrine.Pad.CFrame + Vector3.new(0,3,0))
+                    end
+                end
+            end)
+            for _,section in ipairs(stairway.Stairs:GetChildren()) do
+                if not config.stairwayToHeaven then break end
+
+                if section.Name == "Section" then
+                    for _,part in ipairs(section:GetChildren()) do
+                        if not config.stairwayToHeaven then break end
+
+                        if part.Name == "Part" and part:IsA("Part") then
+                            if part.Position.Y > highestY then
+                                highestY = part.Position.Y
+                                highestCFrame = part.CFrame
+                            end
+                        end
+                    end
+                end
+            end
+            if oldHighest ~= highestY then
+                oldHighest = highestY
+                pcall(function() 
+                    goToPart(highestCFrame + Vector3.new(0,3,0))
+                end)
+                task.wait(0.2)
+            end
+        end
+    end
+})
+misc:Label("^ This probably doesn't even work ^")
 
 credits:Label("UI: griffindoescooking")
 credits:Label("Script: griffindoescooking, project L")
@@ -813,4 +893,9 @@ credits:Button({
     Callback = function()
         setclipboard("https://discord.gg/DBPHwFyCVT")
     end
+})
+main:Notify({
+    Title = "give me ideas",
+    Duration = 20,
+    Body = "ran out of things to add join the discord and tell me fr please"
 })
