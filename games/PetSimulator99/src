@@ -172,16 +172,6 @@ local minigamesTable = {
     "SledRace",
     "SpawnObby"
 }
-local eventThings = {
-    Names = {
-        "AdventCalendar",
-        "UpgradePresentsMachine"
-    },
-    Zones = {
-        ["AdventCalendar"] = "1 | Spawn",
-        ["UpgradePresentsMachine"] = "1 | Spawn"
-    }
-}
 
 local function calcDistance(obj1, obj2)
     local pPosX, pPosZ = obj1.CFrame.X, obj1.CFrame.Z
