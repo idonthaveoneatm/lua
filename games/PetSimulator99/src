@@ -884,8 +884,3 @@ credits:Button({
         setclipboard("https://discord.gg/DBPHwFyCVT")
     end
 })
-main:Notify({
-    Title = "give me ideas",
-    Duration = 20,
-    Body = "ran out of things to add join the discord and tell me fr please"
-})
