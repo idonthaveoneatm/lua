@@ -17,7 +17,8 @@ getgenv().config = {
     spinnerTicket = false,
     fishing = false,
     antiafk = false,
-    stairwayToHeaven = false
+    stairwayToHeaven = false,
+    relicCount = 65
 }
 --[[
 
@@ -430,64 +431,6 @@ farming:Toggle({
         end 
     end
 })
-farming:Section("Fishing")
-local fishingStatus = false
-farming:Toggle({
-    Name = "Start fishing",
-    Default = false,
-    Callback = function(value)
-        config.fishing = value
-        antiAFK:SetValue(config.fishing)
-        checkActive("Fishing", config.fishing)
-        task.wait(0.2)
-        local fishing = waitFor(instanceContainer.Active, "Fishing")
-        local fishingModule = require(fishing.ClientModule.FishingGame)
-        local Layer1 =  waitFor(fishing.Water, "Layer1")
-        local Bobbers = waitFor(fishing, "Bobbers")
-        local L1Position = Layer1.Position
-        local function fishingRemote(args)
-            return Fire("Instancing_FireCustomFromClient", {"Fishing", unpack(args)})
-        end
-        local function isBubbling()
-            local bubbling = false
-            for _,host in ipairs(Debris:GetChildren()) do
-                if host.Name == "host" and host:FindFirstChild("Attachment") and (host.Attachment:FindFirstChild("Bubbles") or host.Attachment:FindFirstChild("Rare Bubbles")) then
-                    local distance = (HumanoidRootPart.Position.X - host.Position.X)
-                    if distance <= 2 then
-                        bubbling = true
-                    end
-                end
-            end
-            return bubbling
-        end
-        local oldStartGame,oldStopGame,oldIsFishInBar
-        oldStartGame = hookfunction(fishingModule.StartGame, function(...)
-            fishingStatus = true
-            return oldStartGame(...)
-        end)
-        oldStopGame = hookfunction(fishingModule.StopGame, function(...)
-            fishingStatus = false
-            return oldStopGame(...)
-        end)
-        oldIsFishInBar = hookfunction(fishingModule.IsFishInBar, function(...) 
-            if config.fishing then
-                return true
-            else
-                return oldIsFishInBar(...)
-            end
-        end)
-        while config.fishing and task.wait() do
-            if HumanoidRootPart.Position ~= L1Position and config.fishing then
-                goToPart(Layer1.CFrame)
-            end
-            fishingRemote({"RequestCast", Vector3.new(L1Position.X,L1Position.Y,L1Position.Z)})
-            repeat task.wait() until isBubbling() or not config.fishing
-            fishingRemote({"RequestReel"})
-            repeat task.wait() until (not fishingStatus) or not config.fishing
-        end
-        goToPart(fishing.Interactable:FindFirstChild("Pad", true).CFrame + Vector3.new(0,3,0))
-    end
-})
 
 teleports:Label("Miscellaneous")
 teleports:Button({
@@ -800,8 +743,8 @@ local shrineButton
 shrineButton = misc:Button({
     Name = "Collect Shrines (maybe)",
     Callback = function()
-        for i=1,65 do
-            shrineButton:SetText("Progress: "..tostring(i).."/65")
+        for i=1,config.relicCount do
+            shrineButton:SetText("Progress: "..tostring(i).."/"..tostring(config.relicCount))
             Invoke("Relic_Found", {i})
         end
         shrineButton:SetText("Collect Shrines (Maybe)")
