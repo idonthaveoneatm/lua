@@ -18,7 +18,7 @@ getgenv().config = {
     fishing = false,
     antiafk = false,
     stairwayToHeaven = false,
-    relicCount = 75
+    relicCount = 85
 }
 --[[
 
