@@ -759,6 +759,9 @@ return {
                 Location = "63 | Frost Mountains"
             }
         },
+        MiscInfo = {
+            relicCount = 100
+        }
     },
     Map2 = {
         Worlds = {},
@@ -792,6 +795,7 @@ return {
         Minigames = {},
         VendingMachines = {},
         Rewards = {},
-        OtherMachines = {}
+        OtherMachines = {},
+        MiscInfo = {}
     },
 }
