@@ -231,6 +231,7 @@ end
 
 local minigames = PS99Info.Minigames
 local eggs = PS99Info.Eggs
+local miscInfo = PS99Info.MiscInfo
 
 -- Functions
 
@@ -785,10 +786,12 @@ rewardsTab:Button({
 miscTab:Label("These are things that dont fit in a category")
 miscTab:Toggle({
     Name = "Anti AFK",
-    Default = false,
+    Default = config.miscSettings.antiAFK,
     Callback = function(value)
-        config.antiafk = value
-        while config.antiafk and task.wait() do
+        config.miscSettings.antiAFK = value
+        updateConfig()
+
+        while config.miscSettings.antiAFK and task.wait() do
             LocalPlayer.Character.Humanoid:ChangeState(3)
             task.wait(math.random(120,180))
         end
@@ -798,8 +801,8 @@ local shrineButton
 shrineButton = miscTab:Button({
     Name = "Collect Shrines (maybe)",
     Callback = function()
-        for i=1,config.relicCount do
-            shrineButton:SetText("Progress: "..tostring(i).."/"..tostring(config.relicCount))
+        for i=1, miscInfo.relicCount do
+            shrineButton:SetText("Progress: "..tostring(i).."/"..tostring(miscInfo.relicCount))
             Invoke("Relic_Found", {i})
         end
         shrineButton:SetText("Collect Shrines (Maybe)")
