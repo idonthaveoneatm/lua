@@ -438,51 +438,43 @@ return {
             },
             {
                 Name = "92 | Cloud Forest",
-                Number = 92,
-                TeleportPart = CFrame.new(-63.06861114501953, 116.53639221191406, 5099.93359375),
-                FarmPart = CFrame.new(0,0,0)
+                TeleportPart = CFrame.new(-65.6455078125, 113.61824035644531, 5097.96533203125),
+                FarmPart = CFrame.new(-74.51913452148438, 111.38935852050781, 5167.8779296875)
             },
             {
                 Name = "93 | Cloud Houses",
-                Number = 93,
-                TeleportPart = CFrame.new(-62.16192626953125, 116.53639221191406, 5259.67431640625),
-                FarmPart = CFrame.new(0,0,0)
+                TeleportPart = CFrame.new(-65.6455078125, 113.61824035644531, 5258.96533203125),
+                FarmPart = CFrame.new(-63.619140625, 111.38935852050781, 5329.2705078125)
             },
             {
                 Name = "94 | Cloud Palace",
-                Number = 94,
-                TeleportPart = CFrame.new(-64.67742919921875, 116.64027404785156, 5421.21630859375),
-                FarmPart = CFrame.new(0,0,0)
+                TeleportPart = CFrame.new(-65.6455078125, 113.61824035644531, 5419.96533203125),
+                FarmPart = CFrame.new(-63.619140625, 111.38935852050781, 5489.5205078125)
             },
             {
                 Name = "95 | Heaven Gates",
-                Number = 95,
-                TeleportPart = CFrame.new(-64.53607940673828, 116.6662368774414, 5580.35888671875),
-                FarmPart = CFrame.new(0,0,0)
+                TeleportPart = CFrame.new(-65.6455078125, 113.61824035644531, 5579.46533203125),
+                FarmPart = CFrame.new(-63.619140625, 97.13935852050781, 5648.0029296875)
             },
             {
                 Name = "96 | Heaven",
-                Number = 96,
-                TeleportPart = CFrame.new(-66.8004150390625, 116.64027404785156, 5735.2373046875),
-                FarmPart = CFrame.new(0,0,0)
+                TeleportPart = CFrame.new(-65.6455078125, 113.61824035644531, 5736.71533203125),
+                FarmPart = CFrame.new(-63.619140625, 97.13935852050781, 5805.2529296875)
             },
             {
-                Name = "97 | Heaven Gate Castle",
-                Number = 97,
-                TeleportPart = CFrame.new(-62.2087516784668, 116.53639221191406, 5896.79443359375),
-                FarmPart = CFrame.new(0,0,0)
+                Name = "97 | Heaven Golden Castle",
+                TeleportPart = CFrame.new(-65.6455078125, 113.61824035644531, 5893.96533203125),
+                FarmPart = CFrame.new(-79.744140625, 97.13935852050781, 5962.5029296875)
             },
             {
                 Name = "98 | Colorful Clouds",
-                Number = 98,
-                TeleportPart = CFrame.new(-61.02672576904297, 116.53639221191406, 6046.95166015625),
-                FarmPart = CFrame.new(0,0,0)
+                TeleportPart = CFrame.new(-65.6455078125, 113.61824035644531, 6051.21533203125),
+                FarmPart = CFrame.new(-72.41914367675781, 97.13935852050781, 6120.7705078125)
             },
             {
                 Name = "99 | Rainbow Road",
-                Number = 99,
-                TeleportPart = CFrame.new(-49.25831604003906, 160.03631591796875, 6378.50341796875),
-                FarmPart = CFrame.new(0,0,0)
+                TeleportPart = CFrame.new(-64.19175720214844, 157.08837890625, 6354.96923828125),
+                FarmPart = CFrame.new(-138.10446166992188, 112.08992004394531, 6205.22265625)
             }
         },
         Eggs = {
@@ -612,6 +604,9 @@ return {
             "PyramidObby",
             "SledRace",
             "FlowerGarden",
+            "AdvancedDigsite",
+            "LuckyBlocks",
+            "AdvancedFishing"
         },
         VendingMachines = {
             {
@@ -687,11 +682,27 @@ return {
             {
                 Name = "MediumDailyDiamonds",
                 Location = "32 | Red Desert"
-            }
+            },
+            {
+                Name = "LargeDailyDiamonds",
+                Location = "78 | Dungeon Enterance"
+            },
+            {
+                Name = "MediumDailyPotions",
+                Location = "83 | Cotton Candy Forest"
+            },
+            {
+                Name = "MediumDailyEnchants",
+                Location = "88 | Carnival"
+            },
+            {
+                Name = "MediumDailyItems",
+                Location = "90 | Clouds"
+            },
         },
         OtherMachines = {
             {
-                Name = "Mailbox",
+                Name = "IndexMerchant",
                 Location = "1 | Spawn"
             },
             {
@@ -703,8 +714,16 @@ return {
                 Location = "1 | Spawn"
             },
             {
-                Name = "VIPRewards",
+                Name = "MailboxMachine",
                 Location = "1 | Spawn"
+            },
+            {
+                Name = "HugeMachine",
+                Location = "3 | Castle"
+            },
+            {
+                Name = "VotingBooth",
+                Location = "3 | Castle"
             },
             {
                 Name = "EquipSlotsMachine",
@@ -731,8 +750,16 @@ return {
                 Location = "19 | Oasis"
             },
             {
+                Name = "RebirthShrine",
+                Location = "25 | Tiki"
+            },
+            {
                 Name = "FuseMachine",
                 Location = "28 | Shanty Town"
+            },
+            {
+                Name = "DailyQuestMachine",
+                Location = "29 | Desert Village"
             },
             {
                 Name = "RainbowMachine",
@@ -747,6 +774,10 @@ return {
                 Location = "44 | Obsidian Cave"
             },
             {
+                Name = "RebirthShrine",
+                Location = "50 | Fire Dojo"
+            },
+            {
                 Name = "UpgradeFruitsMachine",
                 Location = "52 | Bamboo Forest"
             },
@@ -755,9 +786,33 @@ return {
                 Location = "54 | Flower Field"
             },
             {
+                Name = "DailyQuestMachine",
+                Location = "60 | Rainbow River"
+            },
+            {
                 Name = "SnowMerchant",
                 Location = "63 | Frost Mountains"
-            }
+            },
+            {
+                Name = "NormalReverseMerchant",
+                Location = "72 | Runic Altar"
+            },
+            {
+                Name = "RebirthShrine",
+                Location = "75 | Haunted Forest"
+            },
+            {
+                Name = "IndexMerchant",
+                Location = "76 | Haunted Graveyards"
+            },
+            {
+                Name = "MagicMachine",
+                Location = "77 | Haunted Mansion"
+            },
+            {
+                Name = "RebirthShrine",
+                Location = "99 | Rainbow Road"
+            },
         },
         MiscInfo = {
             relicCount = 100
