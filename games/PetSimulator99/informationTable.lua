@@ -652,6 +652,10 @@ return {
                 Location = "1 | Spawn"
             },
             {
+                Name = "VIPRewards",
+                Location = "1 | Spawn"
+            },
+            {
                 Name = "SocialRewards",
                 Location = "1 | Spawn"
             },
