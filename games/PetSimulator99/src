@@ -79,6 +79,7 @@ local pow = math.pow
 
 local VirtualUser = cloneref(game:GetService("VirtualUser"))
 local HttpService = cloneref(game:GetService("HttpService"))
+local UserInputService = cloneref(game:GetService("UserInputService"))
 
 local ReplicatedStorage = cloneref(game:GetService("ReplicatedStorage"))
 local ClientNetwork = require(ReplicatedStorage.Library.Client.Network)
@@ -294,8 +295,10 @@ end
 
 local quake = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/Libraries/normal/quake/src"))()
 local main = quake:Window({
-    Title = "Pet Simulator 99"
+    Title = "Pet Simulator 99",
+    isMobile = UserInputService.TouchEnabled and not UserInputService.MouseEnabled
 })
+
 local farmingTab = main:Tab({
     Name = "Farming",
     tabColor = Color3.fromHex("#71d1f5"),
@@ -448,7 +451,6 @@ farmingTab:Toggle({
     Callback = function(value)
         config.farmSettings.collectOrbs = value
         updateConfig()
-
 
         if config.farmSettings.collectOrbs then
             orbModule.DefaultPickupDistance = 9e9
