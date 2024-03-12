@@ -45,9 +45,6 @@ local function checkFunctions()
     if not setclipboard then
         functionNames = functionNames.."setclipboard "
     end
-    if not identifyexecutor then
-        functionNames = functionNames.."identifyexecutor "
-    end
     return functionNames
 end
 local function output(text: string, type: string)
@@ -83,10 +80,13 @@ local UserInputService = cloneref(game:GetService("UserInputService"))
 
 local ReplicatedStorage = cloneref(game:GetService("ReplicatedStorage"))
 local ClientNetwork = require(ReplicatedStorage.Library.Client.Network)
-local orbModule = require(ReplicatedStorage.Library.Client.OrbCmds:FindFirstChild("Orb"))
+local orbModule = require(ReplicatedStorage.Library.Client.OrbCmds.Orb)
+
 
 local Workspace = cloneref(game:GetService("Workspace"))
+local Debris = Workspace['__DEBRIS']
 local Things = Workspace["__THINGS"]
+local Pets = Things.Pets
 local Instances = Things.Instances
 local instanceContainer = Things["__INSTANCE_CONTAINER"]
 local Lootbags = Things.Lootbags
@@ -96,7 +96,7 @@ local Map
 if Workspace:FindFirstChild(mapName) then
     Map = Workspace:FindFirstChild(mapName)
 else
-    output("Map/Map2 not found","warn")
+    output(mapName.."not found","warn")
     task.spawn(function()
         repeat
             task.wait()
@@ -123,6 +123,9 @@ local configTemplate = {
         openEggs = false,
         selectedEgg = "",
         openAmount = 1
+    },
+    minigameSettings = {
+        farmFishing = false
     },
     rewardSettings = {
         collectTimeRewards = false,
@@ -277,7 +280,7 @@ local function completeObby(obbyInfo)
     end
 
     goToPart(obbyInfo.StartLine + Vector3.new(0,3,0))
-    task.wait(0.2)
+    task.wait(0.5)
 
     local common = require(instanceContainer.Active:FindFirstChild(obbyInfo.Name):FindFirstChild("Common", true))
     common.WinTimer = 0
@@ -393,13 +396,16 @@ farmingTab:Toggle({
         updateConfig()
     end
 })
-farmingTab:TextBox({
+local radiusSetter
+radiusSetter = farmingTab:TextBox({
     Name = "Radius (Recommended: 70)",
+    Default = config.farmSettings.breakRadius,
     Callback = function(value)
         if tonumber(value) then
             config.farmSettings.breakRadius = tonumber(value)
-        else
+        elseif value ~= "" and not tonumber(value) then
             config.farmSettings.breakRadius = 40
+            radiusSetter:SetInput("40")
             main:Notify({
                 Title = "Radius Error",
                 Duration = 20,
@@ -409,13 +415,15 @@ farmingTab:TextBox({
         updateConfig()
     end
 })
-farmingTab:TextBox({
+local waitSetter
+waitSetter = farmingTab:TextBox({
     Name = "Wait Time (Recommended: 0.2)",
+    Default = config.farmSettings.waitTime,
     Callback = function(value)
         if tonumber(value) then
             config.farmSettings.waitTime = tonumber(value)
-        else
-            config.farm.waitTime = 0.2
+        elseif value ~= "" and not tonumber(value) then
+            waitSetter:SetInput("0.2")
             main:Notify({
                 Title = "Wait Time Error",
                 Duration = 20,
@@ -484,6 +492,7 @@ farmingTab:Dropdown({
     Name = "Egg to farm",
     Items = eggs,
     Multiselect = false,
+    Default = config.eggSettings.selectedEgg,
     Callback = function(eggPicked)
         config.eggSettings.selectedEgg = eggPicked
         updateConfig()
@@ -493,6 +502,7 @@ farmingTab:Slider({
     Name = "Amount of eggs",
     Max = 99,
     Min = 1,
+    Default = config.eggSettings.openAmount,
     Callback = function(amountSelected)
         config.eggSettings.openAmount = amountSelected
         updateConfig()
@@ -590,7 +600,7 @@ goToOtherMachine = teleportsTab:Button({
 
 teleportsTab:Label("Miscellaneous")
 teleportsTab:Button({
-    Name = "Remove water",
+    Name = "Remove Water",
     Callback = function()
         for _, water in ipairs(Map:GetDescendants()) do
             if water:IsA("Folder") and water.Name == "Water Bounds" then
@@ -604,13 +614,15 @@ teleportsTab:Button({
 
 local selectedMG
 local goToMinigame
+local completeMinigame
 minigamesTab:Dropdown({
-    Name = "Select minigame",
+    Name = "Select Minigame",
     Items = minigames,
     Multiselect = false,
     Callback = function(chosenMG)
         selectedMG = chosenMG
         goToMinigame:SetText("Go to "..chosenMG)
+        completeMinigame:SetText("Complete "..chosenMG)
     end
 })
 goToMinigame = minigamesTab:Button({
@@ -620,7 +632,7 @@ goToMinigame = minigamesTab:Button({
     end
 })
 minigamesTab:Section("Auto Complete")
-minigamesTab:Button({
+completeMinigame = minigamesTab:Button({
     Name = 'Complete none',
     Callback = function()
         checkActive(selectedMG)
@@ -628,21 +640,26 @@ minigamesTab:Button({
         local loadedMG = waitFor(instanceContainer.Active, selectedMG)
         task.wait(1)
         if selectedMG ~= "Minefield" and selectedMG ~= "Atlantis" and selectedMG ~= "Minecart" then
-            waitFor(loadedMG, "StartLine")
-            waitFor(loadedMG, "Goal")
+            local StartLine = waitFor(loadedMG, "StartLine", true)
+            local Goal = waitFor(loadedMG, "Goal", true)
             completeObby({
                 Name = selectedMG,
-                StartLine = loadedMG.StartLine,
-                EndPad = loadedMG.Goal.Pad
+                StartLine = StartLine,
+                EndPad = Goal.Pad
             })
         elseif selectedMG == "Minefield" then
 
             -- this may or may not do anything?
 
-            local common = require(loadedMG.Common)
-            task.wait()
-            common.Config.RespawnTimer = 0
-            common.Config.WinTimer = 0
+            local s,e = pcall(function()
+                local common = require(loadedMG.Common)
+                task.wait()
+                common.Config.RespawnTimer = 0
+                common.Config.WinTimer = 0
+            end)
+            if e then
+                output(e, "error")
+            end
 
             local mines = waitFor(loadedMG, "Mines")
             local finish = waitFor(loadedMG, "Finish")
@@ -702,7 +719,125 @@ minigamesTab:Button({
         end
     end
 })
+minigamesTab:Toggle({
+    Name = "Farm Fishing",
+    Default = config.minigameSettings.farmFishing,
+    Callback = function(value)
+        config.minigameSettings.farmFishing = value
+        updateConfig()
 
+        checkActive("Fishing")
+        task.wait(0.2)
+        local fishing = waitFor(instanceContainer.Active, "Fishing")
+        local Layer1 =  waitFor(fishing.Water, "Layer1")
+        local L1Position = Layer1.Position
+        local function fishingRemote(type, args)
+            if type == "Invoke" then
+                return Invoke("Instancing_InvokeCustomFromClient", {"Fishing", unpack(args)})
+            elseif type == "Fire" then
+                return Fire("Instancing_FireCustomFromClient", {"Fishing", unpack(args)})
+            end
+        end
+        local function isBubbling()
+            local bubbling = false
+            for _,host in ipairs(Debris:GetChildren()) do
+                if host.Name == "host" and host:FindFirstChild("Attachment") and (host.Attachment:FindFirstChild("Bubbles") or host.Attachment:FindFirstChild("Rare Bubbles")) then
+                    local distance = (L1Position.X - host.Position.X)
+                    if distance <= 2 then
+                        bubbling = true
+                    end
+                end
+            end
+            return bubbling
+        end
+        while config.minigameSettings.farmFishing and task.wait() do
+            fishingRemote("Fire",{"RequestCast", Vector3.new(L1Position.X,L1Position.Y,L1Position.Z)})
+            repeat task.wait() until isBubbling() or not config.minigameSettings.farmFishing
+            fishingRemote("Fire", {"RequestReel"})
+            repeat
+                task.wait()
+                fishingRemote("Invoke", {"Clicked"})
+            until (not isBubbling()) or not config.minigameSettings.farmFishing
+        end
+        goToPart(fishing.Interactable:FindFirstChild("Pad", true).CFrame + Vector3.new(0,3,0))
+    end
+})
+minigamesTab:Toggle({
+    Name = "Farm Digsite",
+    Default = false,
+    Callback = function(value)
+        config.minigameSettings.farmDigsite = value
+        updateConfig()
+
+        checkActive("Digsite")
+        task.wait(0.2)
+        local digsite = waitFor(instanceContainer.Active, "Digsite")
+        local function digsiteRemote(type, args)
+            if type == "Invoke" then
+                return Invoke("Instancing_InvokeCustomFromClient", {"Digsite", unpack(args)})
+            elseif type == "Fire" then
+                return Fire("Instancing_FireCustomFromClient", {"Digsite", unpack(args)})
+            end
+        end
+        local ActiveChests = digsite.Important.ActiveChests
+        local ActiveBlocks = digsite.Important.ActiveBlocks
+        local starterPos = CFrame.new(-75.44137573242188, 60.91250991821289, -2530.437744140625)
+        local endPos = CFrame.new(-65.44137573242188, 60.91250991821289, -2520.437744140625)
+
+        local function getChests(oldPosition)
+            for _,chest in ipairs(ActiveChests:GetChildren()) do
+                print(chest.Name)
+                if chest.Name == "Animated" then
+                    print("attempting ", chest.Name)
+                    goToPart(chest.Bottom.CFrame)
+                    task.wait(0.2)
+                    digsiteRemote("Fire",{"DigChest",chest:GetAttribute("Coord")})
+                    repeat task.wait() until not ActiveChests:FindFirstChild(chest)
+                    task.wait(1)
+                end
+            end
+            goToPart(oldPosition)
+        end
+        local function checkForChests()
+            local isChest = false
+            for _, chest in ipairs(ActiveChests:GetChildren()) do
+                if chest.Name == "Animated" then
+                    isChest = true
+                end
+            end
+            return isChest
+        end
+        local function getBlockDistance(obj)
+            return (HumanoidRootPart.Position - obj.Position).magnitude
+        end
+        if config.minigameSettings.farmDigsite then
+            goToPart(starterPos)
+            task.wait(0.2)
+            getChests(starterPos)
+        end
+        while config.minigameSettings.farmDigsite and task.wait() do
+            for _,block in ipairs(ActiveBlocks:GetChildren()) do
+                if checkForChests() then
+                    getChests(HumanoidRootPart.CFrame)
+                    break
+                end
+                if block.Name == "Part" then
+                    local distance = getBlockDistance(block)
+
+                    if distance < 8 then
+                        print(distance)
+                        repeat
+                            digsiteRemote("Fire", {"DigBlock", block:GetAttribute("Coord")})
+                            task.wait()
+                        until not ActiveBlocks:FindFirstChild(block) or (getBlockDistance(block) > 8)
+                    end
+                end
+            end
+        end
+
+        goToPart(endPos)
+    end
+})
 -- Rewards
 
 rewardsTab:Toggle({
