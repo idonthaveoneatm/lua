@@ -702,7 +702,7 @@ return {
             {
                 Name = "MediumDailyItems",
                 Location = "90 | Clouds"
-            },
+            }
         },
         OtherMachines = {
             {
@@ -816,14 +816,130 @@ return {
             {
                 Name = "RebirthShrine",
                 Location = "99 | Rainbow Road"
-            },
+            }
         },
         MiscInfo = {
             relicCount = 100
         }
     },
     Map2 = {
-        Worlds = {},
+        Worlds = {
+            {
+                Name = "100 | Tech Spawn",
+                TeleportPart = CFrame.new(-9951.2001953125, 13.621000289916992, -383.564453125),
+                FarmPart = CFrame.new(-9797.3330078125, 20.31739044189453, -713.05078125)
+            },
+            {
+                Name = "101 | Futuristic City",
+                TeleportPart = CFrame.new(-9780.689453125, 13.621000289916992, -383.564453125),
+                FarmPart = CFrame.new(-9726.447265625, 11.639320373535156, -377.12109375)
+            },
+            {
+                Name = "102 | Hologram Forest",
+                TeleportPart = CFrame.new(-9622.689453125, 13.621000289916992, -383.564453125),
+                FarmPart = CFrame.new(-9568.447265625, 11.639320373535156, -384.62109375)
+            },
+            {
+                Name = "103 | Robot Farm",
+                TeleportPart = CFrame.new(-9464.439453125, 13.621000289916992, -383.564453125),
+                FarmPart = CFrame.new(-9472.6923828125, 11.639320373535156, -416.55859375)
+            },
+            {
+                Name = "104 | Bit Stream",
+                TeleportPart = CFrame.new(-9306.189453125, 13.621000289916992, -383.564453125),
+                FarmPart = CFrame.new(-9252.447265625, 11.639320373535156, -384.521484375)
+            },
+            {
+                Name = "105 | Neon Mine",
+                TeleportPart = CFrame.new(-9149.2900390625, 13.621000289916992, -384.064453125),
+                FarmPart = CFrame.new(-9095.046875, 5.264320373535156, -381.771484375)
+            },
+            {
+                Name = "106 | Mushroom Lab",
+                TeleportPart = CFrame.new(-8991.189453125, 13.621000289916992, -383.564453125),
+                FarmPart = CFrame.new(-8936.947265625, 11.639320373535156, -356.896484375)
+            },
+            {
+                Name = "107 | Virtual Garden",
+                TeleportPart = CFrame.new(-8833.2900390625, 13.621000289916992, -383.564453125),
+                FarmPart = CFrame.new(-8779.046875, 11.639320373535156, -418.9716796875)
+            },
+            {
+                Name = "108 | Data Tree Farm",
+                TeleportPart = CFrame.new(-8674.689453125, 13.621000289916992, -383.564453125),
+                FarmPart = CFrame.new(-8620.447265625, 11.639320373535156, -384.521484375)
+            },
+            {
+                Name = "109 | Tech Jungle",
+                TeleportPart = CFrame.new(-8517.3896484375, 13.621000289916992, -383.564453125),
+                FarmPart = CFrame.new(-8463.146484375, 11.639320373535156, -382.521484375)
+            },
+            {
+                Name = "110 | Lava Jungle",
+                TeleportPart = CFrame.new(-8350.01953125, 13.621000289916992, -384.423828125),
+                FarmPart = CFrame.new(-8309.41796875, 11.639328002929688, -381.1181640625)
+            },
+            {
+                Name = "111 | Oasis Ruins",
+                TeleportPart = CFrame.new(-8304.8798828125, 13.621000289916992, -242.814453125),
+                FarmPart = CFrame.new(-8304.6728515625, 5.139320373535156, -188.5712890625)
+            },
+            {
+                Name = "112 | Future Beach",
+                TeleportPart = CFrame.new(-8304.44140625, 13.621000289916992, -99.818359375),
+                FarmPart = CFrame.new(-8299.486328125, 10.889320373535156, -29.890625)
+            },
+            {
+                Name = "113 | Tech Reef",
+                TeleportPart = CFrame.new(-8303.98046875, -36.39099884033203, 172.9091796875),
+                FarmPart = CFrame.new(-8432.1630859375, -12.812356948852539, 276.470703125)
+            },
+            {
+                Name = "114 | Robo Pirates",
+                TeleportPart = CFrame.new(-8521.32421875, 12.371002197265625, 266.5517578125),
+                FarmPart = CFrame.new(-8575.5673828125, 3.8893203735351562, 266.7587890625)
+            },
+            {
+                Name = "115 | Cyber Cove",
+                TeleportPart = CFrame.new(-8680.57421875, 12.371002197265625, 266.5517578125),
+                FarmPart = CFrame.new(-8734.8173828125, 3.8893203735351562, 266.7587890625)
+            },
+            {
+                Name = "116 | Runic Desert",
+                TeleportPart = CFrame.new(-8839.32421875, 12.371002197265625, 266.5517578125),
+                FarmPart = CFrame.new(-8893.5673828125, 3.8893203735351562, 291.1708984375)
+            },
+            {
+                Name = "117 | Charged Pyramids",
+                TeleportPart = CFrame.new(-8998.32421875, 12.371002197265625, 266.5517578125),
+                FarmPart = CFrame.new(-9052.5673828125, 3.8893203735351562, 322.1337890625)
+            },
+            {
+                Name = "118 | Fallout Desert",
+                TeleportPart = CFrame.new(-9157.5703125, 12.371002197265625, 266.5517578125),
+                FarmPart = CFrame.new(-9211.8134765625, 3.8893203735351562, 297.908203125)
+            },
+            {
+                Name = "119 | Tech Wild West",
+                TeleportPart = CFrame.new(-9316.82421875, 12.371002197265625, 266.5517578125),
+                FarmPart = CFrame.new(-9371.0673828125, 3.8893203735351562, 282.6337890625)
+            },
+            {
+                Name = "120 | Cuboid Canyon",
+                TeleportPart = CFrame.new(-9474.724609375, 12.371002197265625, 266.5517578125),
+                FarmPart = CFrame.new(-9528.966796875, -7.110679626464844, 256.5087890625)
+            },
+            {
+                Name = "121 | Frozen Mountains",
+                TeleportPart = CFrame.new(-9727.974609375, 55.371002197265625, 266.5517578125),
+                FarmPart = CFrame.new(-9776.091796875, 35.889320373535156, 266.55859375)
+            },
+            {
+                Name = "122 | Frostbyte Forest",
+                TeleportPart = CFrame.new(-9887.07421875, 55.371002197265625, 266.5517578125),
+                FarmPart = CFrame.new(-10002.642578125, 71.55392456054688, 420.4775390625)
+            }
+        },
         Eggs = {
             "113 | Tech Ciruit Egg",
             "114 | Tech City Egg",
@@ -849,12 +965,100 @@ return {
             "134 | Tech Snow Egg",
             "135 | Tech Mossy Egg",
             "136 | Tech Ice Crystal Egg",
-            "137 | Tech Flurry Egg"
+            "137 | Tech Flurry Egg",
+            "138 | Tech Ice Circuit Egg",
+            "139 | Tech Glacier Egg",
+            "140 | Tech Melted Egg Egg",
+            "141 | Tech Nexus Egg",
+            "142 | Nuclear Crack Egg",
+            "143 | Nuclear Forest Egg",
+            "144 | Nuclear Mine Egg",
+            "145 | Nuclear Egg",
+            "146 | Tech Rocket Egg",
+            "147 | Tech Planets Egg",
+            "148 | Tech Moon Egg",
+            "149 | Tech Mars Egg",
+            "150 | Tech Saturn Egg",
+            "151 | Tech Comet Egg",
+            "152 | Tech Galaxy Egg",
+            "153 | Electric Garden Egg",
+            "154 | Electric City Egg",
+            "155 | Electric Forest Egg",
+            "156 | Electric Egg",
+            "157 | Tech Factory Egg",
+            "158 | Tech Robot Egg",
+            "159 | Tech Hive Egg",
+            "160 | Alien Garden Egg",
+            "161 | Alien Forest Egg",
+            "162 | Alien Lab Egg"
         },
         Minigames = {},
-        VendingMachines = {},
-        Rewards = {},
-        OtherMachines = {},
+        VendingMachines = {
+            {
+                Name = "PotionVendingMachine3",
+                Location = "108 | Data Tree Farm"
+            },
+            {
+                Name = "EnchantVendingMachine3",
+                Location = "115 | Cyber Cove"
+            },
+        },
+        Rewards = {
+            {
+                Name = "VIPRewards",
+                Location = "100 | Tech Spawn"
+            },
+            {
+                Name = "SpinnyWheel",
+                Location = "100 | Tech Spawn"
+            },
+            {
+                Name = "DailyDiamonds4",
+                Location = "101 | Futuristic City"
+            },
+            {
+                Name = "DailyPotions3",
+                Location = "113 | Tech Reef"
+            },
+            {
+                Name = "DailyEnchants3",
+                Location = "122 | Frostbyte Forest"
+            },
+        },
+        OtherMachines = {
+            {
+                Name = "PetIndexMachine",
+                Location = "100 | Tech Spawn"
+            },
+            {
+                Name = "RainbowMachine",
+                Location = "100 | Tech Spawn"
+            },
+            {
+                Name = "MailboxMachine",
+                Location = "100 | Tech Spawn"
+            },
+            {
+                Name = "GoldMachine",
+                Location = "100 | Tech Spawn"
+            },
+            {
+                Name = "IndexMerchant",
+                Location = "100 | Tech Spawn"
+            },
+            {
+                Name = "SuperMachine",
+                Location = "100 | Tech Spawn"
+            },
+            {
+                Name = "DailyQuestMachine",
+                Location = "111 | Oasis Ruins"
+            },
+            {
+                Name = "ItemCreatorMachine",
+                Location = "120 | Cuboid Canyon"
+            },
+        },
         MiscInfo = {}
-    },
+    }
 }
