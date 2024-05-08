@@ -1,4 +1,6 @@
-return function(multiplier)
+return function(multiplier, waitTime, successFunc)
+    waitTime = waitTime or 10
+    successFunc = successFunc or function() end
     repeat task.wait() until game:IsLoaded()
     local HttpService = cloneref(game:GetService("HttpService"))
     local TeleportService = cloneref(game:GetService("TeleportService"))
@@ -35,7 +37,7 @@ return function(multiplier)
     checkActive("Backrooms")
     waitFor(instanceContainer.Active, "Backrooms")
     local path = waitFor(instanceContainer.Active.Backrooms, "GeneratedBackrooms")
-    task.wait(10)
+    task.wait(waitTime)
     
     local checkedrooms = {}
     local eggRoom = nil
@@ -69,7 +71,8 @@ return function(multiplier)
     end
     checkGenteratedBackrooms()
     if multiplier == tostring(eggMultiplier) then
-        goTo(eggRoom.LockedDoors.Door.Lock.CFrame + Vector3.new(0,3,5))
+        goTo(eggRoom.LockedDoors.Door.Lock.CFrame + Vector3.new(0,3,0))
+        successFunc()
     else
         print("not the multiplier you want")
         local request = request or httprequest or http_request
