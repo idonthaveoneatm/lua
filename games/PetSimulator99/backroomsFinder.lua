@@ -80,8 +80,6 @@ return function(multiplier)
                 table.insert(serverIds, server.id)
             end
         end
-        queue_on_teleport(([[
-            loadstring(game:HttpGet("temp"))()
-        ]]))
+        print("ended")
     end
 end
