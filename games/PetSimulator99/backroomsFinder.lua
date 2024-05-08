@@ -1,16 +1,15 @@
-return function(multiplier, waitTime, pageCount, stat)
+return function(multiplier, pageCount, stat)
     local functionStart = tick()
     stat = stat or 0
-    waitTime = tonumber(waitTime) or 0
     local hadPageCount = true
     if not pageCount then
-        hadPageCount = false
+        hadPageCount = false    
     end
     pageCount = tonumber(pageCount) or math.abs(math.random(5,25))
     clear_teleport_queue = clear_teleport_queue or function() print("no clear_teleport_queue") end
     repeat task.wait() until game:IsLoaded()
 
-    print("time spent so far:", tick() - functionStart + stat)
+    print("time spent so far:", (tick() - functionStart) + stat)
 
     local HttpService = cloneref(game:GetService("HttpService"))
     local TeleportService = cloneref(game:GetService("TeleportService"))
@@ -47,7 +46,6 @@ return function(multiplier, waitTime, pageCount, stat)
     checkActive("Backrooms")
     waitFor(instanceContainer.Active, "Backrooms")
     local path = waitFor(instanceContainer.Active.Backrooms, "GeneratedBackrooms")
-    task.wait(waitTime)
     repeat task.wait() until #path:GetChildren() >= 6
     
     local checkedrooms = {}
@@ -112,9 +110,9 @@ return function(multiplier, waitTime, pageCount, stat)
         end
         local teleportString
         if hadPageCount then
-            teleportString = 'repeat task.wait() until game:IsLoaded() loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/backroomsFinder.lua"))()'..('(%s,%s,%s,%s)'):format(multiplier, waitTime, pageCount, tick()-functionStart)
+            teleportString = 'repeat task.wait() until game:IsLoaded() loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/backroomsFinder.lua"))()'..('(%s,%s,%s)'):format(multiplier, pageCount, tick()-functionStart)
         else
-            teleportString = 'repeat task.wait() until game:IsLoaded() loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/backroomsFinder.lua"))()'..('(%s,%s,nil,%s)'):format(multiplier, waitTime, tick()-functionStart)
+            teleportString = 'repeat task.wait() until game:IsLoaded() loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/backroomsFinder.lua"))()'..('(%s,nil,%s)'):format(multiplier, tick()-functionStart)
         end
         clear_teleport_queue()
         queue_on_teleport(teleportString)
