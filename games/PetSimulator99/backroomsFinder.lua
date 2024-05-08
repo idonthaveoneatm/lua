@@ -1,7 +1,17 @@
-return function(multiplier, waitTime, successFunc)
-    waitTime = waitTime or 10
-    successFunc = successFunc or function() end
+return function(multiplier, waitTime, pageCount, stat)
+    local functionStart = tick()
+    stat = stat or 0
+    waitTime = tonumber(waitTime) or 10
+    local hadPageCount = true
+    if not pageCount then
+        hadPageCount = false
+    end
+    pageCount = tonumber(pageCount) or math.abs(math.random(5,25))
+    clear_teleport_queue = clear_teleport_queue or function() print("no clear_teleport_queue") end
     repeat task.wait() until game:IsLoaded()
+
+    print("time spent so far:", tick() - functionStart + stat)
+
     local HttpService = cloneref(game:GetService("HttpService"))
     local TeleportService = cloneref(game:GetService("TeleportService"))
     local LocalPlayer = cloneref(game:GetService("Players")).LocalPlayer
@@ -38,6 +48,7 @@ return function(multiplier, waitTime, successFunc)
     waitFor(instanceContainer.Active, "Backrooms")
     local path = waitFor(instanceContainer.Active.Backrooms, "GeneratedBackrooms")
     task.wait(waitTime)
+    repeat task.wait() until #path:GetChildren() >= 6
     
     local checkedrooms = {}
     local eggRoom = nil
@@ -70,29 +81,48 @@ return function(multiplier, waitTime, successFunc)
         end
     end
     checkGenteratedBackrooms()
-    if multiplier == tostring(eggMultiplier) then
+    if tonumber(multiplier) == tonumber(eggMultiplier) then
         goTo(eggRoom.LockedDoors.Door.Lock.CFrame + Vector3.new(0,3,0))
-        successFunc()
+        print("the multiplier you want")
+        print("total time spent:", tick() - functionStart + stat)
     else
         print("not the multiplier you want")
-        local request = request or httprequest or http_request
-        local robloxURL = ('https://games.roblox.com/v1/games/%s/servers/0?sortOrder=2&excludeFullGames=true&limit=100'):format(game.PlaceId)
-        local repsonse = request({
-            Url = robloxURL,
-            Method = "GET"
-        })
-        local data = HttpService:JSONDecode(repsonse.Body).data
-        local serverIds = {}
-        for _,server in ipairs(data) do
-            if server.id ~= game.JobId  then
-                table.insert(serverIds, server.id)
+        local function generateRandomServer(page)
+            page = page or 1
+            local cursor = ""
+            local response
+            for i=1,page do
+                print("doing page", i)
+                local request = request or httprequest or http_request
+                local robloxURL = ('https://games.roblox.com/v1/games/%s/servers/0?sortOrder=1&excludeFullGames=true&limit=100&cursor=%s'):format(game.PlaceId, cursor)
+                response = request({
+                    Url = robloxURL,
+                    Method = "GET"
+                })
+                cursor = HttpService:JSONDecode(response.Body).nextPageCursor
             end
+            local data = HttpService:JSONDecode(response.Body).data
+            local serverIds = {}
+            for _,server in ipairs(data) do
+                if server.id ~= game.JobId then
+                    table.insert(serverIds, server.id)
+                end
+            end
+            return serverIds[math.abs(math.random(1,#serverIds))]
         end
-        local randomServer = math.abs(math.random(1,#serverIds))
-
-        local teleportString = 'repeat task.wait() until game:IsLoaded() loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/backroomsFinder.lua"))()('..multiplier..')'
-
+        local teleportString
+        if hadPageCount then
+            teleportString = 'repeat task.wait() until game:IsLoaded() loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/backroomsFinder.lua"))()'..('(%s,%s,%s,%s)'):format(multiplier, waitTime, pageCount, tick()-functionStart)
+        else
+            teleportString = 'repeat task.wait() until game:IsLoaded() loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/backroomsFinder.lua"))()'..('(%s,%s,nil,%s)'):format(multiplier, waitTime, tick()-functionStart)
+        end
+        clear_teleport_queue()
         queue_on_teleport(teleportString)
-        TeleportService:TeleportToPlaceInstance(game.PlaceId, serverIds[randomServer], LocalPlayer)
+        local _, e = pcall(function()
+            TeleportService:TeleportToPlaceInstance(game.PlaceId, generateRandomServer(pageCount), LocalPlayer)
+        end)
+        if e then
+            TeleportService:TeleportToPlaceInstance(game.PlaceId, generateRandomServer(pageCount), LocalPlayer)
+        end
     end
 end
