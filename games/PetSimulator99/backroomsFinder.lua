@@ -1,13 +1,23 @@
 return function(multiplier)
+    repeat task.wait() until game:IsLoaded()
     local HttpService = cloneref(game:GetService("HttpService"))
     local TeleportService = cloneref(game:GetService("TeleportService"))
     local LocalPlayer = cloneref(game:GetService("Players")).LocalPlayer
-    local HumanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart", true)
+    local function waitFor(path, object, bool)
+        bool = bool or false
+        repeat
+            task.wait()
+        until path:FindFirstChild(object, bool)
+        return path:FindFirstChild(object, bool)
+    end
+    repeat task.wait() until LocalPlayer.Character
+    
+    local HumanoidRootPart = waitFor(LocalPlayer.Character, "HumanoidRootPart", true)
 
     local Workspace = cloneref(game:GetService("Workspace"))
-    local Things = Workspace["__THINGS"]
-    local Instances = Things.Instances
-    local instanceContainer = Things["__INSTANCE_CONTAINER"]
+    local Things = waitFor(Workspace, "__THINGS")
+    local Instances = waitFor(Things, "Instances")
+    local instanceContainer = waitFor(Things, "__INSTANCE_CONTAINER")
 
     local function goTo(cframe)
         if typeof(cframe) == "CFrame" then
@@ -21,18 +31,11 @@ return function(multiplier)
             goTo(Instances[name]:FindFirstChild("Enter", true).CFrame)
         end
     end
-    local function waitFor(path, object, bool)
-        bool = bool or false
-        repeat
-            task.wait()
-        until path:FindFirstChild(object, bool)
-        return path:FindFirstChild(object, bool)
-    end
 
     checkActive("Backrooms")
     waitFor(instanceContainer.Active, "Backrooms")
     local path = waitFor(instanceContainer.Active.Backrooms, "GeneratedBackrooms")
-    task.wait(5)
+    task.wait(10)
     
     local checkedrooms = {}
     local eggRoom = nil
@@ -68,7 +71,7 @@ return function(multiplier)
     if multiplier == tostring(eggMultiplier) then
         goTo(eggRoom.LockedDoors.Door.Lock.CFrame + Vector3.new(0,3,5))
     else
-        print("not the multiplier you want\n servers:")
+        print("not the multiplier you want")
         local request = request or httprequest or http_request
         local robloxURL = ('https://games.roblox.com/v1/games/%s/servers/0?sortOrder=2&excludeFullGames=true&limit=100'):format(game.PlaceId)
         local repsonse = request({
@@ -83,10 +86,8 @@ return function(multiplier)
             end
         end
         local randomServer = math.abs(math.random(1,#serverIds))
-        print(randomServer, "/", #serverIds)
-        task.wait(5)
 
-        local teleportString = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/backroomsFinder.lua"))()('..multiplier..')'
+        local teleportString = 'repeat task.wait() until game:IsLoaded() loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/backroomsFinder.lua"))()('..multiplier..')'
 
         queue_on_teleport(teleportString)
         TeleportService:TeleportToPlaceInstance(game.PlaceId, serverIds[randomServer], LocalPlayer)
