@@ -1,5 +1,6 @@
 return function(multiplier)
     local HttpService = cloneref(game:GetService("HttpService"))
+    local TeleportService = cloneref(game:GetService("TeleportService"))
     local LocalPlayer = cloneref(game:GetService("Players")).LocalPlayer
     local HumanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart", true)
 
@@ -80,6 +81,15 @@ return function(multiplier)
                 table.insert(serverIds, server.id)
             end
         end
-        print("ended")
+        local randomServer = math.abs(math.random(1,#serverIds))
+        print(randomServer, "/", #serverIds)
+        task.wait(5)
+
+        local teleportString = ([[
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/backroomsFinder.lua"))()(%s)
+        ]]):format(multiplier)
+
+        queue_on_teleport(teleportString)
+        TeleportService:TeleportToPlaceInstance(game.PlaceId, serverIds[randomServer], LocalPlayer)
     end
 end
