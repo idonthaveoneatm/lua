@@ -1,7 +1,7 @@
 return function(multiplier, waitTime, pageCount, stat)
     local functionStart = tick()
     stat = stat or 0
-    waitTime = tonumber(waitTime) or 10
+    waitTime = tonumber(waitTime) or 0
     local hadPageCount = true
     if not pageCount then
         hadPageCount = false
