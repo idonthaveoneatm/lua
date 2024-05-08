@@ -32,7 +32,8 @@ return function(multiplier)
     checkActive("Backrooms")
     waitFor(instanceContainer.Active, "Backrooms")
     local path = waitFor(instanceContainer.Active.Backrooms, "GeneratedBackrooms")
-
+    task.wait(5)
+    
     local checkedrooms = {}
     local eggRoom = nil
     local eggMultiplier = nil
@@ -85,9 +86,7 @@ return function(multiplier)
         print(randomServer, "/", #serverIds)
         task.wait(5)
 
-        local teleportString = ([[
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/backroomsFinder.lua"))()(%s)
-        ]]):format(multiplier)
+        local teleportString = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/backroomsFinder.lua"))()('..multiplier..')'
 
         queue_on_teleport(teleportString)
         TeleportService:TeleportToPlaceInstance(game.PlaceId, serverIds[randomServer], LocalPlayer)
