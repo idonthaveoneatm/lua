@@ -5,7 +5,7 @@ Made by griffindoescooking
 ]]--
 
 return function(multiplier, pageCount, stat)
-    assert(multiplier, "You need the first variable:\n ...)()(multipler[MISSING], pageCount)")
+    assert(multiplier, "You need the first variable:\n ...)()(multiplier[MISSING], pageCount)")
 
     local functionStart = tick()
     stat = stat or 0
