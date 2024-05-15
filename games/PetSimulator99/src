@@ -80,7 +80,6 @@ local UserInputService = cloneref(game:GetService("UserInputService"))
 
 local ReplicatedStorage = cloneref(game:GetService("ReplicatedStorage"))
 local ClientNetwork = require(ReplicatedStorage.Library.Client.Network)
-local orbModule = require(ReplicatedStorage.Library.Client.OrbCmds.Orb)
 
 
 local Workspace = cloneref(game:GetService("Workspace"))
@@ -459,7 +458,8 @@ farmingTab:Toggle({
     Callback = function(value)
         config.farmSettings.collectOrbs = value
         updateConfig()
-
+        print("if an error occurs after this is printed its a require error and collect orbs wont work")
+        local orbModule = require(ReplicatedStorage.Library.Client.OrbCmds.Orb)
         if config.farmSettings.collectOrbs then
             orbModule.DefaultPickupDistance = 9e9
         else
