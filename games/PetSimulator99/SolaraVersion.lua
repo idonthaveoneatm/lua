@@ -68,7 +68,7 @@ local Things = Workspace["__THINGS"]
 local Instances = Things.Instances
 local instanceContainer = Things["__INSTANCE_CONTAINER"]
 local Lootbags = Things.Lootbags
-local Breakables = Things.Brea
+local Breakables = Things.Breakables
 local Map
 repeat
     task.wait()
