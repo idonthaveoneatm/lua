@@ -6,7 +6,7 @@ Made by griffindoescooking
 ]]--
 
 print("Pet Simulator 99 | griffindoescooking")
-warn('This removes require functions and loses the "Collect Orbs" toggle')
+warn('This removes require functions and the "Collect Orbs" toggle')
 
 repeat
     task.wait()
@@ -54,7 +54,7 @@ end
 local VirtualUser = cloneref(game:GetService("VirtualUser"))
 local HttpService = cloneref(game:GetService("HttpService"))
 local UserInputService = cloneref(game:GetService("UserInputService"))
-local RunService = cloneref(game:GetSerivce("RunService"))
+local RunService = cloneref(game:GetService("RunService"))
 local Workspace = cloneref(game:GetService("Workspace"))
 local Players = cloneref(game:GetService("Players"))
 
