@@ -45,6 +45,9 @@ local function checkFunctions()
     if not setclipboard then
         functionNames = functionNames.."setclipboard "
     end
+    if not identifyexecutor then
+        functionNames = functionNames.."identifyexecutor "
+    end
     return functionNames
 end
 local function output(text: string, type: string)
@@ -64,6 +67,11 @@ end
 local missingFunctions = checkFunctions()
 if missingFunctions ~= "" then
     return output("Missing: "..missingFunctions, "error")
+end
+
+if identifyexecutor() == "Solara" then
+    print("loading Solara version instead of normal")
+    return loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/SolaraVersion.lua"))()
 end
 
 -- Variables
