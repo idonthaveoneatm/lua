@@ -10,12 +10,12 @@ warn('This removes require functions and the "Collect Orbs" toggle')
 repeat
     task.wait()
 until game:IsLoaded()
-if game.PlaceId ~= 8737899170 and game.PlaceId ~= 16498369169 then
+if game.PlaceId ~= 8737899170 and game.PlaceId ~= 16498369169 and game.PlaceId ~= 17503543197 then
     game.Players.LocalPlayer:Kick("wrong game")
 end
 
 local mapName = ""
-if game.PlaceId == 8737899170 then
+if game.PlaceId == 8737899170 or game.PlaceId == 17503543197 then
     mapName = "Map"
 elseif game.PlaceId == 16498369169 then
     mapName = "Map2"
