@@ -817,9 +817,6 @@ return {
                 Name = "RebirthShrine",
                 Location = "99 | Rainbow Road"
             }
-        },
-        MiscInfo = {
-            relicCount = 100
         }
     },
     Map2 = {
@@ -938,7 +935,52 @@ return {
                 Name = "122 | Frostbyte Forest",
                 TeleportPart = CFrame.new(-9887.07421875, 55.371002197265625, 266.5517578125),
                 FarmPart = CFrame.new(-10002.642578125, 71.55392456054688, 420.4775390625)
-            }
+            },
+            {
+                Name = "123 | Forcefield Mine",
+                TeleportPart = CFrame.new(-9974.1748046875, 123.12100219726562, 523.1962890625),
+                FarmPart = CFrame.new(-9984.54296875, 103.63932037353516, 570.8359375)
+            },
+            {
+                Name = "124 | Cyber Base Camp",
+                TeleportPart = CFrame.new(-9974.1748046875, 123.12100219726562, 723.146484375),
+                FarmPart = CFrame.new(-9853.896484375, 103.63932037353516, 777.007568359375)
+            },
+            {
+                Name = "125 | Frosted City",
+                TeleportPart = CFrame.new(-9974.0458984375, 123.12100982666016, 915.497802734375),
+                FarmPart = CFrame.new(-9836.365234375, 71.6084213256836, 1001.941162109375)
+            },
+            {
+                Name = "126 | Cracked Iceberg",
+                TeleportPart = CFrame.new(-9623.724609375, 55.371002197265625, 1001.3017578125),
+                FarmPart = CFrame.new(-9671.841796875, 35.889320373535156, 1000.80859375)
+            },
+            {
+                Name = "127 | Melted River",
+                TeleportPart = CFrame.new(-9480.12890625, 12.371002197265625, 1002.435546875),
+                FarmPart = CFrame.new(-9425.8857421875, 3.8893203735351562, 1002.228515625)
+            },
+            {
+                Name = "128 | Nexus",
+                TeleportPart = CFrame.new(-9321.279296875, 12.371002197265625, 1002.435546875),
+                FarmPart = CFrame.new(-9267.0361328125, 3.8893203735351562, 1002.228515625)
+            },
+            {
+                Name = "129 | Secure Coast",
+                TeleportPart = CFrame.new(-9162.529296875, 12.371002197265625, 1002.435546875),
+                FarmPart = CFrame.new(-9108.2861328125, 3.8893203735351562, 1002.228515625)
+            },
+            {
+                Name = "130 | Nuclear Forest",
+                TeleportPart = CFrame.new(-9002.7294921875, 12.371002197265625, 1002.435546875),
+                FarmPart = CFrame.new(-8948.486328125, 3.8893203735351562, 999.5285034179688)
+            },
+            {
+                Name = "131 | Radiation Mine",
+                TeleportPart = CFrame.new(-8843.9296875, 12.371002197265625, 1002.435546875),
+                FarmPart = CFrame.new(-8781.4365234375, 3.8893203735351562, 1008.028564453125)
+            },
         },
         Eggs = {
             "113 | Tech Ciruit Egg",
@@ -1040,11 +1082,7 @@ return {
             "209 | Quantum Galaxy Egg",
             "210 | Void Crystal Egg",
             "211 | Void Fracture Egg",
-            "212 | Void Spiral Egg",
-            "213 | Rusty Egg",
-            "214 | Striped Egg",
-            "215 | Cinderblocks Egg",
-            "216 | Lootbag Egg",
+            "212 | Void Spiral Egg"
         },
         Minigames = {},
         VendingMachines = {
@@ -1055,6 +1093,10 @@ return {
             {
                 Name = "EnchantVendingMachine3",
                 Location = "115 | Cyber Cove"
+            },
+            {
+                Name = "PotionVendingMachine4",
+                Location = "126 | Cracked Iceberg"
             },
         },
         Rewards = {
@@ -1077,6 +1119,10 @@ return {
             {
                 Name = "DailyEnchants3",
                 Location = "122 | Frostbyte Forest"
+            },
+            {
+                Name = "DailyItems3",
+                Location = "130 | Nuclear Forest"
             },
         },
         OtherMachines = {
@@ -1112,7 +1158,26 @@ return {
                 Name = "ItemCreatorMachine",
                 Location = "120 | Cuboid Canyon"
             },
+            {
+                Name = "RebirthShrine",
+                Location = "125 | Frosted City"
+            },
+        }
+    },
+    Map3 = {
+        Worlds = {},
+        Eggs = {
+            "213 | Rusty Egg",
+            "214 | Striped Egg",
+            "215 | Cinderblocks Egg",
+            "216 | Lootbag Egg",
         },
-        MiscInfo = {}
+        Minigames = {},
+        VendingMachines = {},
+        Rewards = {},
+        OtherMachines = {},
     }
 }
+--[[
+
+]]
