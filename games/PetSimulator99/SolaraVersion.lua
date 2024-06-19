@@ -5,17 +5,17 @@ Made by griffindoescooking
 ]]--
 
 print("Pet Simulator 99 | griffindoescooking")
-warn('This removes require functions and the "Collect Orbs" toggle')
+warn('The solara version removes require functions')
 
 repeat
     task.wait()
 until game:IsLoaded()
-if game.PlaceId ~= 8737899170 and game.PlaceId ~= 16498369169 and game.PlaceId ~= 17503543197 then
+if game.PlaceId ~= 8737899170 and game.PlaceId ~= 16498369169 then
     game.Players.LocalPlayer:Kick("wrong game")
 end
 
 local mapName = ""
-if game.PlaceId == 8737899170 or game.PlaceId == 17503543197 then
+if game.PlaceId == 8737899170 then
     mapName = "Map"
 elseif game.PlaceId == 16498369169 then
     mapName = "Map2"
@@ -91,6 +91,7 @@ local Things = Workspace["__THINGS"]
 local Instances = Things.Instances
 local instanceContainer = Things["__INSTANCE_CONTAINER"]
 local Lootbags = Things.Lootbags
+local Orbs = Things.Orbs
 local Breakables = Things.Breakables
 
 local Map
@@ -117,8 +118,7 @@ local configTemplate = {
         breakRadius = 70,
         waitTime = 0.2,
         buyZones = false,
-        collectLootbags = false,
-        collectOrbs = false
+        collectOrbsAndLootbags = false,
     },
     eggSettings = {
         openEggs = false,
@@ -302,11 +302,34 @@ local function Invoke(name, args)
     end
 end
 
+local function collectLootbags()
+    if config.farmSettings.collectOrbsAndLootbags then
+        local lootbags = {}
+        for _, lootbag in ipairs(Lootbags:GetChildren()) do
+            if not config.farmSettings.collectOrbsAndLootbags then break end
+            lootbags[lootbag.Name] = lootbag.Name
+            lootbag:Destroy()
+        end
+        Fire("Lootbags_Claim", {lootbags})
+    end
+end
+local function collectOrbs()
+    if config.farmSettings.collectOrbsAndLootbags then
+        local orbs = {}
+        for _, orb in ipairs(Orbs:GetChildren()) do
+            if not config.farmSettings.collectOrbsAndLootbags then break end
+            table.insert(orbs, tonumber(orb.Name))
+            orb:Destroy()
+        end
+        Fire("Orbs: Collect", {orbs})
+    end
+end
+
 -- Library/Main script
 
 local quake = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/Libraries/normal/quake/src"))()
 local main = quake:Window({
-    Title = "Pet Simulator 99",
+    Title = "Pet Simulator 99 | Solara",
     isMobile = UserInputService.TouchEnabled and not UserInputService.MouseEnabled
 })
 
@@ -461,31 +484,23 @@ farmingTab:Toggle({
 })
 
 farmingTab:Section("Collection")
-local orbToggle = farmingTab:Toggle({
-    Name = "Collect Orbs",
-    Default = config.farmSettings.collectOrbs,
+local collectOrbsAndLootbags
+collectOrbsAndLootbags = farmingTab:Toggle({
+    Name = "Collect Orbs and Lootbags",
+    Default = config.farmSettings.collectOrbsAndLootbags,
     Callback = function(value)
-    end
-})
-orbToggle:Lock("Solara Version")
-local collectLootbags
-collectLootbags = farmingTab:Toggle({
-    Name = "Collect Lootbags",
-    Default = config.farmSettings.collectLootbags,
-    Callback = function(value)
-        config.farmSettings.collectLootbags = value
-        updateConfig()
-
-        while config.farmSettings.collectLootbags and task.wait() do
-            for _, lootbag in ipairs(Lootbags:GetDescendants()) do
-                if not config.farmSettings.collectLootbags then break end
-                if lootbag:IsA("MeshPart") then
-                    lootbag.CFrame = HumanoidRootPart.CFrame
-                end
+        config.farmSettings.collectOrbsAndLootbags = value
+        task.spawn(function()
+            while config.farmSettings.collectOrbsAndLootbags and task.wait() do
+                collectLootbags()
+                collectOrbs()
             end
-        end
+        end)
+        updateConfig()
     end
 })
+
+
 
 farmingTab:Section("Egg Farming")
 farmingTab:Label("You must be near eggs to hatch them")
@@ -539,7 +554,7 @@ teleportsTab:Dropdown({
     Multiselect = false,
     Callback = function(chosenWorld)
         selectedWorld = getWorld(chosenWorld)
-        goToZone:SetText("Go to "..chosenWorld)
+        goToZone:SetName("Go to "..chosenWorld)
     end
 })
 goToZone = teleportsTab:Button({
@@ -558,7 +573,7 @@ teleportsTab:Dropdown({
     Multiselect = false,
     Callback = function(chosenVM)
         selectedVM = getVendingMachine(chosenVM)
-        goToVendingMachine:SetText("Go to "..chosenVM)
+        goToVendingMachine:SetName("Go to "..chosenVM)
     end
 })
 goToVendingMachine = teleportsTab:Button({
@@ -583,7 +598,7 @@ teleportsTab:Dropdown({
     Multiselect = false,
     Callback = function(chosenOM)
         selectedOM = getOtherMachine(chosenOM)
-        goToOtherMachine:SetText("Go to "..chosenOM)
+        goToOtherMachine:SetName("Go to "..chosenOM)
     end
 })
 goToOtherMachine = teleportsTab:Button({
@@ -622,8 +637,8 @@ minigamesTab:Dropdown({
     Multiselect = false,
     Callback = function(chosenMG)
         selectedMG = chosenMG
-        goToMinigame:SetText("Go to "..chosenMG)
-        completeMinigame:SetText("Complete "..chosenMG)
+        goToMinigame:SetName("Go to "..chosenMG)
+        completeMinigame:SetName("Complete "..chosenMG)
     end
 })
 goToMinigame = minigamesTab:Button({
@@ -837,8 +852,8 @@ rewardsTab:Toggle({
     Callback = function(value)
         config.rewardSettings.collectTimeRewards = value
         updateConfig()
-        if not config.farmSettings.collectLootbags then
-            collectLootbags:SetValue(config.rewardSettings.collectTimeRewards)
+        if not config.farmSettings.collectOrbsAndLootbags then
+            collectOrbsAndLootbags:SetValue(config.rewardSettings.collectTimeRewards)
         end
 
         while config.rewardSettings.collectTimeRewards and task.wait() do
@@ -868,7 +883,7 @@ rewardsTab:Dropdown({
     Items = getRewardNames(),
     Callback = function(chosenReward)
         selectedReward = getReward(chosenReward)
-        getDailyReward:SetText("Get: "..chosenReward)
+        getDailyReward:SetName("Get: "..chosenReward)
     end
 })
 rewardsTab:Toggle({
@@ -923,17 +938,6 @@ miscTab:Toggle({
             LocalPlayer.Character.Humanoid:ChangeState(3)
             task.wait(math.random(120,180))
         end
-    end
-})
-local shrineButton
-shrineButton = miscTab:Button({
-    Name = "Collect Shrines (maybe)",
-    Callback = function()
-        for i=1, miscInfo.relicCount do
-            shrineButton:SetText("Progress: "..tostring(i).."/"..tostring(miscInfo.relicCount))
-            Invoke("Relic_Found", {i})
-        end
-        shrineButton:SetText("Collect Shrines (Maybe)")
     end
 })
 local completeStairs
@@ -1015,3 +1019,11 @@ creditsTab:Button({
         setclipboard("https://discord.gg/DBPHwFyCVT")
     end
 })
+
+getgenv().griffinVersion = "2.9.5"
+local gitVersion = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/version"))()
+if getgenv().griffinVersion and getgenv().griffinVersion == gitVersion then
+    print("versions match")
+else
+    warn("versions don't match. either you are on the wrong version or the github raw hasnt updated")
+end
