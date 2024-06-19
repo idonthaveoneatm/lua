@@ -1084,7 +1084,10 @@ return {
             "211 | Void Fracture Egg",
             "212 | Void Spiral Egg"
         },
-        Minigames = {},
+        Minigames = {
+            "HoverboardTechObby",
+            "DiamondWheelInstance",
+        },
         VendingMachines = {
             {
                 Name = "PotionVendingMachine3",
