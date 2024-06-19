@@ -1032,3 +1032,11 @@ creditsTab:Button({
         setclipboard("https://discord.gg/DBPHwFyCVT")
     end
 })
+getgenv().griffinVersion = "2.9.4"
+local gitVersion = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/version"))()
+if griffinVersion and griffinVersion == gitVersion then
+    task.wait()
+    print("versions match")
+else
+    warn(griffinVersion, "isnt", gitVersion, "you aren't on the latest version")
+end
