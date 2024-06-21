@@ -77,7 +77,8 @@ local function checkWorlds()
     Name = "%s",
     TeleportPart = CFrame.new(%s),
     FarmPart = CFrame.new(%s)
-},]]
+},
+]]
     for _,world in ipairs(Map:GetChildren()) do
         if world.Name ~= "SHOP" and world["PARTS_LOD"]:FindFirstChild("GROUND") then
             if not table.find(alreadySent, world.Name) then
@@ -131,7 +132,8 @@ local function checkMachines()
 {
     Name = "%s",
     Location = "%s"
-},]]
+},
+]]
     for _,world in ipairs(Map:GetChildren()) do
         if world:FindFirstChild("INTERACT") and world.INTERACT:FindFirstChild("Machines") then
             for _,machine in ipairs(world.INTERACT.Machines:GetChildren()) do
