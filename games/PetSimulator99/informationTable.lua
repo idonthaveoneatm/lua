@@ -1215,7 +1215,7 @@ return {
             }
         }
     },
-    Map3 = {
+    Map3 = {    
         Worlds = {
             {
                 Name = "200 | Void Spawn",
@@ -1240,23 +1240,23 @@ return {
             },{
                 Name = "205 | Beach Island",
                 TeleportPart = CFrame.new(-2629.7158203125, 231.2174072265625, -12963.6396484375),
-                FarmPart = CFrame.new(nil)
+                FarmPart = CFrame.new(0,0,0)
             },{
                 Name = "206 | Ocean Island",
                 TeleportPart = CFrame.new(-3233.224365234375, 291.1986999511719, -12969.77734375),
-                FarmPart = CFrame.new(nil)
+                FarmPart = CFrame.new(0,0,0)
             },{
                 Name = "207 | Tiki Island",
                 TeleportPart = CFrame.new(-3826.1015625, 411.3309326171875, -12969.77734375),
-                FarmPart = CFrame.new(nil)
+                FarmPart = CFrame.new(0,0,0)
             },{
                 Name = "208 | Jungle Island",
                 TeleportPart = CFrame.new(-4248.77685546875, 592.3612670898438, -12942.4501953125),
-                FarmPart = CFrame.new(nil)
+                FarmPart = CFrame.new(0,0,0)
             },{
                 Name = "209 | Volcano Island",
                 TeleportPart = CFrame.new(-4712.11767578125, 703.6817016601562, -12955.0283203125),
-                FarmPart = CFrame.new(nil)
+                FarmPart = CFrame.new(0,0,0)
             },{
                 Name = "210 | Hacker Matrix",
                 TeleportPart = CFrame.new(-2610.189208984375, 221.7504425048828, -22098.1875),
@@ -1341,6 +1341,6 @@ return {
                 Name = "SpinnyWheel",
                 Location = "200 | Void Spawn"
             }
-        },
+        }
     }
 }
