@@ -6,11 +6,12 @@ Made by griffindoescooking
 
 print("Pet Simulator 99 | griffindoescooking")
 warn('The solara version removes require functions')
+getgenv().griffinVersion = "2.9.7"
 
 repeat
     task.wait()
 until game:IsLoaded()
-if game.PlaceId ~= 8737899170 and game.PlaceId ~= 16498369169 then
+if game.PlaceId ~= 8737899170 and game.PlaceId ~= 16498369169 and game.PlaceId ~= 17503543197 then
     game.Players.LocalPlayer:Kick("wrong game")
 end
 
@@ -1022,7 +1023,6 @@ creditsTab:Button({
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/updateInfo.lua"))()
 
-getgenv().griffinVersion = "2.9.6"
 local gitVersion = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/version"))()
 if getgenv().griffinVersion and getgenv().griffinVersion == gitVersion then
     print("versions match")
