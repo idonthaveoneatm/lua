@@ -981,6 +981,26 @@ return {
                 TeleportPart = CFrame.new(-8843.9296875, 12.371002197265625, 1002.435546875),
                 FarmPart = CFrame.new(-8781.4365234375, 3.8893203735351562, 1008.028564453125)
             },
+            {
+                Name = "132 | Exploded Reactor",
+                TeleportPart = CFrame.new(-8753.50390625, 12.371002197265625, 1105.79296875),
+                FarmPart = CFrame.new(-8753.296875, 3.8893203735351562, 1160.0361328125)
+            },
+                {
+                Name = "133 | Spaceship Dock",
+                TeleportPart = CFrame.new(-8753.50390625, 12.371002197265625, 1265.39306640625),
+                FarmPart = CFrame.new(-8753.296875, 3.8893203735351562, 1319.63623046875)
+            },
+                {
+                Name = "134 | Rocky Planet",
+                TeleportPart = CFrame.new(-8753.50390625, 12.371002197265625, 1424.29296875),
+                FarmPart = CFrame.new(-8753.3115234375, 3.8893203735351562, 1478.5361328125)
+            },
+                {
+                Name = "135 | Lunar Planet",
+                TeleportPart = CFrame.new(-8753.50390625, 12.371002197265625, 1583.04296875),
+                FarmPart = CFrame.new(-8753.671875, 3.8893203735351562, 1636.56884765625)
+            },
         },
         Eggs = {
             "113 | Tech Ciruit Egg",
@@ -1127,6 +1147,10 @@ return {
                 Name = "DailyItems3",
                 Location = "130 | Nuclear Forest"
             },
+            {
+                Name = "DailyDiamonds5",
+                Location = "135 | Lunar Planet"
+            },
         },
         OtherMachines = {
             {
@@ -1164,7 +1188,7 @@ return {
             {
                 Name = "RebirthShrine",
                 Location = "125 | Frosted City"
-            },
+            }
         }
     },
     Map3 = {
@@ -1181,6 +1205,3 @@ return {
         OtherMachines = {},
     }
 }
---[[
-
-]]
