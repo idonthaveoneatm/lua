@@ -163,10 +163,12 @@ for _,v in ipairs(currentMapInfo.OtherMachines) do
     table.insert(alreadySent, v.Name)
 end
 
-while task.wait() do
-    checkWorlds()
-    task.wait(1)
-    checkEggs()
-    task.wait(1)
-    checkMachines()
-end
+task.spawn(function()
+    while task.wait() do
+        checkWorlds()
+        task.wait(2)
+        checkEggs()
+        task.wait(2)
+        checkMachines()
+    end
+end)
