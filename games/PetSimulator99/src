@@ -5,7 +5,7 @@ Made by griffindoescooking
 ]]--
 
 print("Pet Simulator 99 | griffindoescooking")
-getgenv().griffinVersion = "2.9.7"
+getgenv().griffinVersion = "2.9.8"
 
 repeat
     task.wait()
@@ -100,18 +100,22 @@ local instanceContainer = Things["__INSTANCE_CONTAINER"]
 local Lootbags = Things.Lootbags
 local Breakables = Things.Breakables
 
-local Map
-if Workspace:FindFirstChild(mapName) then
-    Map = Workspace:FindFirstChild(mapName)
-else
-    output(mapName.."not found","warn")
-    task.spawn(function()
-        repeat
-            task.wait()
-        until Workspace:FindFirstChild(mapName)
-        Map = Workspace:FindFirstChild(mapName)
-    end)
+local function getMap()
+    local rValue
+    for _,map in ipairs(Workspace:GetChildren()) do
+        if map.Name:find("Map") then
+            rValue = map
+            break
+        end
+    end
+    return rValue
 end
+
+local Map
+repeat
+    task.wait()
+until getMap()
+Map = getMap()
 
 -- Configuration File
 
