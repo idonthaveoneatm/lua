@@ -1032,7 +1032,10 @@ creditsTab:Button({
         setclipboard("https://discord.gg/DBPHwFyCVT")
     end
 })
-getgenv().griffinVersion = "2.9.4"
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/updateInfo.lua"))()
+
+getgenv().griffinVersion = "2.9.6"
 local gitVersion = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/version"))()
 if griffinVersion and griffinVersion == gitVersion then
     task.wait()
