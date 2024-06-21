@@ -1010,21 +1010,176 @@ return {
                 TeleportPart = CFrame.new(-8753.50390625, 12.371002197265625, 1105.79296875),
                 FarmPart = CFrame.new(-8753.296875, 3.8893203735351562, 1160.0361328125)
             },
-                {
+            {
                 Name = "133 | Spaceship Dock",
                 TeleportPart = CFrame.new(-8753.50390625, 12.371002197265625, 1265.39306640625),
                 FarmPart = CFrame.new(-8753.296875, 3.8893203735351562, 1319.63623046875)
             },
-                {
+            {
                 Name = "134 | Rocky Planet",
                 TeleportPart = CFrame.new(-8753.50390625, 12.371002197265625, 1424.29296875),
                 FarmPart = CFrame.new(-8753.3115234375, 3.8893203735351562, 1478.5361328125)
             },
-                {
+            {
                 Name = "135 | Lunar Planet",
                 TeleportPart = CFrame.new(-8753.50390625, 12.371002197265625, 1583.04296875),
                 FarmPart = CFrame.new(-8753.671875, 3.8893203735351562, 1636.56884765625)
             },
+            {
+                Name = "136 | Mars Planet",
+                TeleportPart = CFrame.new(-8753.50390625, 12.371002197265625, 1740.97314453125),
+                FarmPart = CFrame.new(-8753.671875, 3.8893203735351562, 1795.21630859375)
+            },
+            {
+                Name = "137 | Saturn Planet",
+                TeleportPart = CFrame.new(-8753.50390625, 12.371002197265625, 1901.3828125),
+                FarmPart = CFrame.new(-8753.3115234375, 3.8893203735351562, 1954.853515625)
+            },
+            {
+                Name = "138 | Comet Planet",
+                TeleportPart = CFrame.new(-8753.50390625, 12.371002197265625, 2059.84228515625),
+                FarmPart = CFrame.new(-8834.451171875, 3.5143203735351562, 2114.08544921875)
+            },
+            {
+                Name = "139 | Galaxy Port",
+                TeleportPart = CFrame.new(-8752.7294921875, 12.330057144165039, 2226.9189453125),
+                FarmPart = CFrame.new(-8756.28515625, 10.348367691040039, 2277.060546875)
+            },
+            {
+                Name = "140 | Electric Garden",
+                TeleportPart = CFrame.new(-8895.6943359375, 12.371002197265625, 2267.9033203125),
+                FarmPart = CFrame.new(-8949.9375, 3.889319896697998, 2268.8310546875)
+            },
+            {
+                Name = "141 | Mutated Forest",
+                TeleportPart = CFrame.new(-9054.234375, 12.371002197265625, 2267.9033203125),
+                FarmPart = CFrame.new(-9108.4775390625, 3.889319896697998, 2268.8310546875)
+            },
+            {
+                Name = "142 | Neon City",
+                TeleportPart = CFrame.new(-9212.984375, 12.371002197265625, 2267.9033203125),
+                FarmPart = CFrame.new(-9267.2275390625, 3.889319896697998, 2274.8310546875)
+            },
+            {
+                Name = "143 | Arcade Town",
+                TeleportPart = CFrame.new(-9371.583984375, 12.371002197265625, 2267.9033203125),
+                FarmPart = CFrame.new(-9425.8271484375, 3.889319896697998, 2268.8310546875)
+            },
+            {
+                Name = "144 | Robot Factory",
+                TeleportPart = CFrame.new(-9530.2841796875, 12.371002197265625, 2267.9033203125),
+                FarmPart = CFrame.new(-9584.52734375, 3.889319896697998, 2261.4658203125)
+            },
+            {
+                Name = "145 | Egg Incubator",
+                TeleportPart = CFrame.new(-9689.154296875, 12.371002197265625, 2267.9033203125),
+                FarmPart = CFrame.new(-9743.3974609375, 3.889319896697998, 2194.3310546875)
+            },
+            {
+                Name = "146 | Hi-Tech Hive",
+                TeleportPart = CFrame.new(-9847.6044921875, 12.371002197265625, 2267.9033203125),
+                FarmPart = CFrame.new(-9901.84765625, 3.889319896697998, 2268.8310546875)
+            },
+            {
+                Name = "147 | Spore Garden",
+                TeleportPart = CFrame.new(-10005.814453125, 12.371002197265625, 2267.9033203125),
+                FarmPart = CFrame.new(-10060.0576171875, 3.889319896697998, 2268.8310546875)
+            },
+            {
+                Name = "148 | UFO Forest",
+                TeleportPart = CFrame.new(-10164.4150390625, 12.371002197265625, 2267.9033203125),
+                FarmPart = CFrame.new(-10218.658203125, 3.889319896697998, 2267.745849609375)
+            },
+            {
+                Name = "149 | Alien Lab",
+                TeleportPart = CFrame.new(-10323.1552734375, 12.371002197265625, 2267.9033203125),
+                FarmPart = CFrame.new(-10377.3984375, 3.889319896697998, 2267.745849609375)
+            },
+            {
+                Name = "150 | Alien Mothership",
+                TeleportPart = CFrame.new(-10475.8974609375, 12.33005428314209, 2269.767822265625),
+                FarmPart = CFrame.new(-10590.6376953125, 10.348365783691406, 2229.47216796875)
+            },
+            {
+                Name = "151 | Space Forge",
+                TeleportPart = CFrame.new(-10570.67578125, 12.371002197265625, 2373.906982421875),
+                FarmPart = CFrame.new(-10570.5185546875, 3.889319896697998, 2428.563720703125)
+            },
+            {
+                Name = "152 | Space Factory",
+                TeleportPart = CFrame.new(-10570.67578125, 12.371002197265625, 2531.40673828125),
+                FarmPart = CFrame.new(-10570.5185546875, 3.889319896697998, 2587.463623046875)
+            },
+            {
+                Name = "153 | Space Junkyard",
+                TeleportPart = CFrame.new(-10572.7353515625, 12.33005428314209, 2688.481201171875),
+                FarmPart = CFrame.new(-10578.255859375, 10.348365783691406, 2780.366455078125)
+            },
+            {
+                Name = "154 | Steampunk Alley",
+                TeleportPart = CFrame.new(-10483.466796875, 12.371002197265625, 2777.865478515625),
+                FarmPart = CFrame.new(-10427.0908203125, 3.889319896697998, 2777.708251953125)
+            },
+            {
+                Name = "155 | Steampunk Town",
+                TeleportPart = CFrame.new(-10324.8779296875, 12.371002197265625, 2777.865478515625),
+                FarmPart = CFrame.new(-10269.4912109375, 3.889319896697998, 2777.708251953125)
+            },
+            {
+                Name = "156 | Steampunk Clockwork",
+                TeleportPart = CFrame.new(-10166.0576171875, 12.371002197265625, 2777.865478515625),
+                FarmPart = CFrame.new(-10110.791015625, 3.889319896697998, 2777.708251953125)
+            },
+            {
+                Name = "157 | Steampunk Airship",
+                TeleportPart = CFrame.new(-10007.4775390625, 12.371002197265625, 2777.865478515625),
+                FarmPart = CFrame.new(-9952.890625, 3.889319896697998, 2777.708251953125)
+            },
+            {
+                Name = "158 | Circuit Board",
+                TeleportPart = CFrame.new(-9838.9248046875, 12.330055236816406, 2776.31005859375),
+                FarmPart = CFrame.new(-9764.859375, 10.348365783691406, 2753.46435546875)
+            },
+            {
+                Name = "159 | Mothership Circuit Board",
+                TeleportPart = CFrame.new(-9782.8740234375, 12.371002197265625, 2894.696533203125),
+                FarmPart = CFrame.new(-9782.716796875, 3.889319896697998, 2949.75439453125)
+            },
+            {
+                Name = "160 | Wizard Ruins",
+                TeleportPart = CFrame.new(-9782.6728515625, 12.371002197265625, 3054.659423828125),
+                FarmPart = CFrame.new(-9782.5146484375, 3.889319896697998, 3109.80712890625)
+            },
+            {
+                Name = "161 | Wizard Forest",
+                TeleportPart = CFrame.new(-9781.60546875, 12.33005428314209, 3213.169921875),
+                FarmPart = CFrame.new(-9836.0380859375, 5.740631103515625, 3286.7353515625)
+            },
+            --[[info needed
+            {
+                Name = "167 | Cyberpunk City",
+                TeleportPart = CFrame.new(-10673.7958984375, 12.371002197265625, 3282.53076171875),
+                FarmPart = CFrame.new(-10729.583984375, 3.889319896697998, 3282.68798828125)
+            },
+            -- info needed
+            {
+                Name = "171 | Tech Ninja Village",
+                TeleportPart = CFrame.new(-11238.21875, 12.371002197265625, 3364.87646484375),
+                FarmPart = CFrame.new(-11239.6123046875, 3.889319896697998, 3425.88427734375)
+            },
+            -- info needed
+            {
+                Name = "177 | Holographic City",
+                TeleportPart = CFrame.new(-10972.87890625, 12.371002197265625, 4089.435546875),
+                FarmPart = CFrame.new(-10918.6357421875, 3.8893203735351562, 4032.603515625)
+            },
+            -- info needed
+            {
+                Name = "190 | Glitch City",
+                TeleportPart = CFrame.new(-10823.4833984375, 12.371002197265625, 4605.9814453125),
+                FarmPart = CFrame.new(-10878.4970703125, 3.889319896697998, 4604.5888671875)
+            },
+            ]]
         },
         Eggs = {
             "113 | Tech Ciruit Egg",
@@ -1145,6 +1300,30 @@ return {
                 Name = "PotionVendingMachine4",
                 Location = "126 | Cracked Iceberg"
             },
+            {
+                Name = "EnchantVendingMachine4",
+                Location = "138 | Comet Planet"
+            },
+            {
+                Name = "BundleVendingMachine",
+                Location = "142 | Neon City"
+            },
+            {
+                Name = "EnchantVendingMachine5",
+                Location = "155 | Steampunk Town"
+            },
+            {
+                Name = "PotionVendingMachine5",
+                Location = "165 | Cyberpunk Undercity"
+            },
+            {
+                Name = "BundleVendingMachine2",
+                Location = "180 | Dark Tech Cove"
+            },
+            {
+                Name = "FruitVendingMachine3",
+                Location = "190 | Glitch City"
+            },
         },
         Rewards = {
             {
@@ -1174,6 +1353,22 @@ return {
             {
                 Name = "DailyDiamonds5",
                 Location = "135 | Lunar Planet"
+            },
+            {
+                Name = "ExclusiveDaycareMachine",
+                Location = "145 | Egg Incubator"
+            },
+            {
+                Name = "DailyPotions4",
+                Location = "146 | Hi-Tech Hive"
+            },
+            {
+                Name = "DailyPotions5",
+                Location = "185 | Hacker Powerplant"
+            },
+            {
+                Name = "DailyDiamonds6",
+                Location = "195 | Quantum Space Base"
             },
         },
         OtherMachines = {
@@ -1212,7 +1407,23 @@ return {
             {
                 Name = "RebirthShrine",
                 Location = "125 | Frosted City"
-            }
+            },
+            {
+                Name = "AdventurerStore",
+                Location = "140 | Electric Garden"
+            },
+            {
+                Name = "ForgeMachineSelect",
+                Location = "156 | Steampunk Clockwork"
+            },
+            {
+                Name = "XPPotionMachine",
+                Location = "166 | Cyberpunk Industrial"
+            },
+            {
+                Name = "ZoneSurges",
+                Location = "177 | Holographic City"
+            },
         }
     },
     Map3 = {    
@@ -1298,15 +1509,31 @@ return {
         Minigames = {},
         VendingMachines = {
             {
+                Name = "OPPotionsVendingMachine2",
+                Location = "204 | Prison HQ"
+            },
+            {
                 Name = "RareEnchantsVendingMachine2",
                 Location = "208 | Jungle Island"
             },
             {
                 Name = "BundleVendingMachine3",
                 Location = "214 | Hacker Mainframe"
-            },
+            }
         },
         Rewards = {
+            {
+                Name = "DailyEnchants5",
+                Location = "202 | Prison Cafeteria"
+            },
+            {
+                Name = "DailyDiamonds7",
+                Location = "205 | Beach Island"
+            },
+            {
+                Name = "DailyItems5",
+                Location = "206 | Ocean Island"
+            },
             {
                 Name = "DailyPotions6",
                 Location = "212 | Hacker Cave"
