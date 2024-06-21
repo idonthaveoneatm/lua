@@ -1155,24 +1155,112 @@ return {
                 TeleportPart = CFrame.new(-9781.60546875, 12.33005428314209, 3213.169921875),
                 FarmPart = CFrame.new(-9836.0380859375, 5.740631103515625, 3286.7353515625)
             },
-            --[[info needed
+            {
+                Name = "162 | Wizard Tech Forest",
+                TeleportPart = CFrame.new(-9880.5048828125, 12.371002197265625, 3281.947509765625),
+                FarmPart = CFrame.new(-9935.5537109375, 10.389320373535156, 3280.890625)
+            },
+            {
+                Name = "163 | Wizard Tech Tower",
+                TeleportPart = CFrame.new(-10041.076171875, 12.371002197265625, 3282.53076171875),
+                FarmPart = CFrame.new(-10095.7861328125, 10.389320373535156, 3281.47412109375)
+            },
+            {
+                Name = "164 | Wizard Dungeon",
+                TeleportPart = CFrame.new(-10199.38671875, 12.371002197265625, 3282.53076171875),
+                FarmPart = CFrame.new(-10254.7861328125, 10.389320373535156, 3281.47412109375)
+            },
+            {
+                Name = "165 | Cyberpunk Undercity",
+                TeleportPart = CFrame.new(-10356.7861328125, 12.371002197265625, 3282.53076171875),
+                FarmPart = CFrame.new(-10413.8857421875, 10.389320373535156, 3281.47412109375)
+            },
+            {
+                Name = "166 | Cyberpunk Industrial",
+                TeleportPart = CFrame.new(-10515.06640625, 12.371002197265625, 3282.53076171875),
+                FarmPart = CFrame.new(-10570.7861328125, 10.389320373535156, 3281.47412109375)
+            },
             {
                 Name = "167 | Cyberpunk City",
                 TeleportPart = CFrame.new(-10673.7958984375, 12.371002197265625, 3282.53076171875),
                 FarmPart = CFrame.new(-10729.583984375, 3.889319896697998, 3282.68798828125)
             },
-            -- info needed
+            {
+                Name = "168 | Cyberpunk Road",
+                TeleportPart = CFrame.new(-10832.5361328125, 12.371002197265625, 3282.53076171875),
+                FarmPart = CFrame.new(-10888.5859375, 10.389320373535156, 3281.47412109375)
+            },
+            {
+                Name = "169 | Tech Ninja Kyoto",
+                TeleportPart = CFrame.new(-10991.2265625, 12.371002197265625, 3282.53076171875),
+                FarmPart = CFrame.new(-11046.986328125, 10.389320373535156, 3281.47412109375)
+            },
+            {
+                Name = "170 | Tech Samurai",
+                TeleportPart = CFrame.new(-11148.6376953125, 12.33005428314209, 3281.499755859375),
+                FarmPart = CFrame.new(-11240.283203125, 10.348062515258789, 3242.9482421875)
+            },
             {
                 Name = "171 | Tech Ninja Village",
                 TeleportPart = CFrame.new(-11238.21875, 12.371002197265625, 3364.87646484375),
                 FarmPart = CFrame.new(-11239.6123046875, 3.889319896697998, 3425.88427734375)
             },
-            -- info needed
+            {
+                Name = "172 | Tech Ninja City",
+                TeleportPart = CFrame.new(-11239.71875, 12.371002197265625, 3522.926513671875),
+                FarmPart = CFrame.new(-11239.275390625, 10.389320373535156, 3582.686279296875)
+            },
+            {
+                Name = "173 | Dominus Dungeon",
+                TeleportPart = CFrame.new(-11238.21875, 12.371002197265625, 3685.276611328125),
+                FarmPart = CFrame.new(-11239.275390625, 10.389320373535156, 3740.486328125)
+            },
+            {
+                Name = "174 | Dominus Vault",
+                TeleportPart = CFrame.new(-11239.4287109375, 12.371002197265625, 3843.656494140625),
+                FarmPart = CFrame.new(-11239.275390625, 10.389320373535156, 3898.4462890625)
+            },
+            {
+                Name = "175 | Dominus Lair",
+                TeleportPart = CFrame.new(-11223.2353515625, 12.33005428314209, 3998.9814453125),
+                FarmPart = CFrame.new(-11260.4169921875, 10.348062515258789, 4091.115234375)
+            },
+            {
+                Name = "176 | Holographic Powerplant",
+                TeleportPart = CFrame.new(-11131.779296875, 12.371002197265625, 4089.435546875),
+                FarmPart = CFrame.new(-11077.5361328125, 10.389320373535156, 4088.37890625)
+            },
             {
                 Name = "177 | Holographic City",
                 TeleportPart = CFrame.new(-10972.87890625, 12.371002197265625, 4089.435546875),
                 FarmPart = CFrame.new(-10918.6357421875, 3.8893203735351562, 4032.603515625)
             },
+            {
+                Name = "178 | Holographic Forest",
+                TeleportPart = CFrame.new(-10813.779296875, 12.371002197265625, 4089.435546875),
+                FarmPart = CFrame.new(-10759.5361328125, 10.389320373535156, 4088.37890625)
+            },
+            {
+                Name = "179 | Holographic Mine",
+                TeleportPart = CFrame.new(-10654.87890625, 12.371002197265625, 4088.935546875),
+                FarmPart = CFrame.new(-10600.6357421875, 10.389320373535156, 4087.87890625)
+            },
+            {
+                Name = "180 | Dark Tech Cove",
+                TeleportPart = CFrame.new(-10496.1181640625, 12.371002197265625, 4088.293701171875),
+                FarmPart = CFrame.new(-10441.875, 10.389320373535156, 4087.236083984375)
+            },
+            {
+                Name = "181 | Dark Tech Ruins",
+                TeleportPart = CFrame.new(-10337.2177734375, 12.371002197265625, 4087.794677734375),
+                FarmPart = CFrame.new(-10282.9755859375, 10.389320373535156, 4086.737060546875)
+            },
+            {
+                Name = "182 | Dark Tech Castle",
+                TeleportPart = CFrame.new(-10181.7783203125, 12.33005428314209, 4085.67138671875),
+                FarmPart = CFrame.new(-10089.64453125, 10.348062515258789, 4113.052734375)
+            },
+            --[[
             -- info needed
             {
                 Name = "190 | Glitch City",
@@ -1363,6 +1451,10 @@ return {
                 Location = "146 | Hi-Tech Hive"
             },
             {
+                Name = "DailyEnchants4",
+                Location = "172 | Tech Ninja City"
+            },
+            {
                 Name = "DailyPotions5",
                 Location = "185 | Hacker Powerplant"
             },
@@ -1370,6 +1462,7 @@ return {
                 Name = "DailyDiamonds6",
                 Location = "195 | Quantum Space Base"
             },
+            
         },
         OtherMachines = {
             {
@@ -1413,12 +1506,20 @@ return {
                 Location = "140 | Electric Garden"
             },
             {
+                Name = "RebirthShrine",
+                Location = "150 | Alien Mothership"
+            },
+            {
                 Name = "ForgeMachineSelect",
                 Location = "156 | Steampunk Clockwork"
             },
             {
                 Name = "XPPotionMachine",
                 Location = "166 | Cyberpunk Industrial"
+            },
+            {
+                Name = "RebirthShrine",
+                Location = "175 | Dominus Lair"
             },
             {
                 Name = "ZoneSurges",
