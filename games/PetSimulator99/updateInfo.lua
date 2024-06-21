@@ -2,7 +2,7 @@ local Workspace = cloneref(game:GetService("Workspace"))
 local HttpService = cloneref(game:GetService("HttpService"))
 
 local informationTable = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/informationTable.lua"))()
-getgenv().alreadySent = getgenv().alreadySent or {}
+getgenv().alreadySent = {}
 getgenv().updating = false
 getgenv().updating = true
 
@@ -19,50 +19,77 @@ local function getMap()
     return rValue
 end
 
-local function sendWebhook(type, code)
-    if code ~= "" and base64decode then
-        local decoded = base64decode("aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTI1MzUwMjQ4MDI3NzU3MzY5My83VFpvdDFPZUpYcWFyMklhNUNvSHk0Z1JXcnZYQWFWYWNYeEkwMVFlb0hLNHRqcTBaOUoxcU1qVmFKbnNEZ0R2VHByag==")
-        code = ([[```
-%s
-```]]):format(code)
-        local data = {
-            ["username"] = "Update Required",
-            ["content"] = "",
-            ["embeds"] = {
-                {
-                    ["title"] = "New Information",
-                    ["color"] = tonumber(0x58b9ff),
-                    ["fields"] = {
-                        {
-                            ["name"] = "PlaceId",
-                            ["value"] = tostring(game.PlaceId)
-                        },
-                        {
-                            ["name"] = "Map",
-                            ["value"] = tostring(getMap().Name)
-                        },
-                        {
-                            ["name"] = "Type",
-                            ["value"] = type
-                        },
-                        {
-                            ["name"] = "Code",
-                            ["value"] = code
-                        }
-                    }
-                }
-            }
-        }
-        local request = request or httprequest or http_request
-        request({
-            Url = decoded,
-            Method = "POST",
-            Headers = {
-                ["Content-Type"] = "application/json"
-            },
-            Body = HttpService:JSONEncode(data)
-        })
+local function checkIfAlreadySent(type, name, zone)
+    if type == "World" then
+        for _,info in ipairs(alreadySent) do
+            if typeof(info) == "table" and info.Name == name then
+                return true
+            end
+        end
+    elseif type == "Machine" then
+        for _,info in ipairs(alreadySent) do
+            if typeof(info) == "table" and info.Name == name and info.Location == zone then
+                return true
+            end
+        end
+    elseif type == "Egg" then
+        for _,info in ipairs(alreadySent) do
+            if typeof(info) == "string" and info == name then
+                return true
+            end
+        end
     end
+    return false
+end
+
+local webhookLibrary = {}
+
+function webhookLibrary.createMessage(properties)
+    assert(properties.Url, "Url required")
+    assert(properties.username, "username required")
+    local requestTable = {
+        Url = properties.Url,
+        Method = "POST",
+        Headers = {
+            ["Content-Type"] = "application/json"
+        },
+        Body = {
+            ["username"] = properties.username,
+            ["content"] = properties.content or "",
+            ["embeds"] = {}
+        }
+    }
+    local webhookFunctions = {}
+    local EmbedIndex = 0
+    function webhookFunctions.addEmbed(title: string, color: number)
+        assert(title, "title required")
+        assert(color, "color required")
+
+        EmbedIndex += 1
+        local privateIndex = EmbedIndex
+
+        table.insert(requestTable.Body.embeds, {
+            ["title"] = title,
+            ["color"] = tonumber(color),
+            ["fields"] = {}
+        })
+        local embedFunctions = {}
+        function embedFunctions.addField(name, value)
+            assert(name, "name required")
+            assert(value, "value required")
+            table.insert(requestTable.Body.embeds[privateIndex].fields, {
+                ["name"] = name,
+                ["value"] = value
+            })
+        end
+        return embedFunctions
+    end
+    function webhookFunctions.sendMessage()
+        requestTable.Body = HttpService:JSONEncode(requestTable.Body)
+        local response = request(requestTable)
+        return response
+    end
+    return webhookFunctions
 end
 
 local function getNumber(str)
@@ -78,12 +105,13 @@ local function checkWorlds()
     Name = "%s",
     TeleportPart = CFrame.new(%s),
     FarmPart = CFrame.new(%s)
-},]]
+},
+]]
     for _,world in ipairs(Map:GetChildren()) do
         if world.Name ~= "SHOP" and world["PARTS_LOD"]:FindFirstChild("GROUND") then
-            if not table.find(alreadySent, world.Name) then
+            if not checkIfAlreadySent("World", world.Name) then
                 table.insert(worldTable, world.Name)
-                table.insert(alreadySent, world.Name)
+                table.insert(alreadySent, {Name = world.Name})
             end
         end
     end
@@ -95,34 +123,224 @@ local function checkWorlds()
         local name = mapWorld.Name
         local FarmPart
         local TeleportPart = tostring(mapWorld.PERSISTENT.Teleport.Position)
-        for _,v in ipairs(mapWorld["PARTS_LOD"]:FindFirstChild("GROUND"):GetChildren()) do
-            if v:IsA("Part") and v.Name == "Ground" then
-                FarmPart = tostring(v.Position)
-                break
+
+        local GROUND = mapWorld["PARTS_LOD"]:FindFirstChild("GROUND")
+        if mapWorld["PARTS_LOD"]:FindFirstChild("GROUND") then
+            if typeof(GROUND) == "Instance" and GROUND:IsA("Model") then
+                FarmPart = tostring(GROUND.WorldPivot.Position)
+            end
+        end
+        if not FarmPart then
+            for _,v in ipairs(mapWorld["PARTS_LOD"]:FindFirstChild("GROUND"):GetChildren()) do
+                if v:IsA("Part") and v.Name == "Ground" then
+                    FarmPart = tostring(v.Position)
+                    break
+                end
             end
         end
         worldText = worldText..newWorldFormat:format(name, TeleportPart, FarmPart)
     end
-    sendWebhook("New Worlds", worldText)
+
+    local worldWebhook = webhookLibrary.createMessage({
+        Url = base64decode("aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTI1MzUwMjQ4MDI3NzU3MzY5My83VFpvdDFPZUpYcWFyMklhNUNvSHk0Z1JXcnZYQWFWYWNYeEkwMVFlb0hLNHRqcTBaOUoxcU1qVmFKbnNEZ0R2VHByag=="),
+        username = "Update Required",
+        content = tostring([[**Map:** ]]..getMap().Name..[[
+
+**PlaceId:** ]]..tostring(game.PlaceId))
+    })
+    if #worldText >= 6000 then
+        local numberOfEmbeds = 0
+        local counter = #worldText
+        local splitString = string.split(worldText, "")
+        repeat
+            task.wait()
+            numberOfEmbeds += 1
+            counter -= 3000
+        until counter <= 0
+
+        local stringIndex = 0
+        for i=1, numberOfEmbeds do
+            local privEmbed = worldWebhook.addEmbed("New Zones", 0x58b9ff)
+            local partOfString = ""
+            local stopAt = stringIndex + 3000
+            repeat
+                task.wait()
+                stringIndex += 1
+                if splitString[stringIndex] then
+                    partOfString = partOfString..splitString[stringIndex]
+                else
+                    break
+                end
+            until stringIndex >= stopAt
+
+            local splitPartString = string.split(partOfString, "")
+            local counter2 = #partOfString
+            local amountOfFields = 0
+            local zoneStringIndex = 0
+            repeat
+                task.wait()
+                counter2 -= 1018
+                amountOfFields += 1
+            until counter2 <= 0
+            for i2=1, amountOfFields do
+                local valueString = ""
+                local startingIndex = zoneStringIndex + 1018
+                repeat
+                    task.wait()
+                    zoneStringIndex += 1
+                    if splitPartString[zoneStringIndex] then
+                        valueString = valueString..splitPartString[zoneStringIndex]
+                    else
+                        break
+                    end
+                until zoneStringIndex >= startingIndex
+                privEmbed.addField("Code", ([[```%s```]]):format(valueString))
+            end
+
+        end
+    elseif #worldText >= 1018 then
+        local privEmbed = worldWebhook.addEmbed("New Zones", 0x58b9ff)
+
+        local splitPartString = string.split(worldText, "")
+        local counter2 = #worldText
+        local amountOfFields = 0
+        local zoneStringIndex = 0
+        repeat
+            task.wait()
+            counter2 -= 1018
+            amountOfFields += 1
+        until counter2 <= 0
+        for i2=1, amountOfFields do
+            local valueString = ""
+            local startingIndex = zoneStringIndex + 1018
+            repeat
+                task.wait()
+                zoneStringIndex += 1
+                if splitPartString[zoneStringIndex] then
+                    valueString = valueString..splitPartString[zoneStringIndex]
+                else
+                    break
+                end
+            until zoneStringIndex >= startingIndex
+            privEmbed.addField("Code", ([[```%s```]]):format(valueString))
+        end
+    elseif #worldText < 1018 and worldText ~= "" then
+        local privEmbed = worldWebhook.addEmbed("New Zones", 0x58b9ff)
+        privEmbed.addField("Code", ([[```%s```]]):format(worldText))
+    end
+    if worldText ~= "" then
+        worldWebhook.sendMessage()
+    end
 end
 
 local function checkEggs()
     local zoneEggs = game.ReplicatedStorage['__DIRECTORY'].Eggs['Zone Eggs']
     local textTable = {}
-    for _,egg in ipairs(zoneEggs:GetDescendants()) do
-        if egg:IsA("ModuleScript") and not table.find(alreadySent, egg.Name) then
-            table.insert(textTable,egg.Name)
-            table.insert(alreadySent,egg.Name)
+    for _,egg in ipairs(zoneEggs["World "..tostring(getNumber(getMap().Name))]:GetDescendants()) do
+        if egg:IsA("ModuleScript") then
+            if not checkIfAlreadySent("Egg", egg.Name) then
+                table.insert(textTable,egg.Name)
+                table.insert(alreadySent,egg.Name)
+            end
         end
     end
     table.sort(textTable, function(a, b)
         return getNumber(a) < getNumber(b)
     end)
-    local tableText = ""
+    local eggText = ""
     for _,name in ipairs(textTable) do
-        tableText = tableText..'"'..name..'",\n'
+        eggText = eggText..'"'..name..'",\n'
     end
-    sendWebhook("New Eggs", tableText)
+    local eggWebhook = webhookLibrary.createMessage({
+        Url = base64decode("aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTI1MzUwMjQ4MDI3NzU3MzY5My83VFpvdDFPZUpYcWFyMklhNUNvSHk0Z1JXcnZYQWFWYWNYeEkwMVFlb0hLNHRqcTBaOUoxcU1qVmFKbnNEZ0R2VHByag=="),
+        username = "Update Required",
+        content = tostring([[**Map:** ]]..getMap().Name..[[
+
+**PlaceId:** ]]..tostring(game.PlaceId))
+    })
+    if #eggText >= 6000 then
+        local numberOfEmbeds = 0
+        local counter = #eggText
+        local splitString = string.split(eggText, "")
+        repeat
+            task.wait()
+            numberOfEmbeds += 1
+            counter -= 3000
+        until counter <= 0
+    
+        local stringIndex = 0
+        for i=1, numberOfEmbeds do
+            local privEmbed = eggWebhook.addEmbed("New Eggs", 0x58b9ff)
+            local partOfString = ""
+            local stopAt = stringIndex + 3000
+            repeat
+                task.wait()
+                stringIndex += 1
+                if splitString[stringIndex] then
+                    partOfString = partOfString..splitString[stringIndex]
+                else
+                    break
+                end
+            until stringIndex >= stopAt
+    
+            local splitPartString = string.split(partOfString, "")
+            local counter2 = #partOfString
+            local amountOfFields = 0
+            local eggStringIndex = 0
+            repeat
+                task.wait()
+                counter2 -= 1018
+                amountOfFields += 1
+            until counter2 <= 0
+            for i2=1, amountOfFields do
+                local valueString = ""
+                local startingIndex = eggStringIndex + 1018
+                repeat
+                    task.wait()
+                    eggStringIndex += 1
+                    if splitPartString[eggStringIndex] then
+                        valueString = valueString..splitPartString[eggStringIndex]
+                    else
+                        break
+                    end
+                until eggStringIndex >= startingIndex
+                privEmbed.addField("Code", ([[```%s```]]):format(valueString))
+            end
+    
+        end
+    elseif #eggText >= 1018 then
+        local privEmbed = eggWebhook.addEmbed("New Eggs", 0x58b9ff)
+    
+        local splitPartString = string.split(eggText, "")
+        local counter2 = #eggText
+        local amountOfFields = 0
+        local eggStringIndex = 0
+        repeat
+            task.wait()
+            counter2 -= 1018
+            amountOfFields += 1
+        until counter2 <= 0
+        for i2=1, amountOfFields do
+            local valueString = ""
+            local startingIndex = eggStringIndex + 1018
+            repeat
+                task.wait()
+                eggStringIndex += 1
+                if splitPartString[eggStringIndex] then
+                    valueString = valueString..splitPartString[eggStringIndex]
+                else
+                    break
+                end
+            until eggStringIndex >= startingIndex
+            privEmbed.addField("Code", ([[```%s```]]):format(valueString))
+        end
+    elseif #eggText < 1018 and eggText ~= "" then
+        local privEmbed = eggWebhook.addEmbed("New Eggs", 0x58b9ff)
+        privEmbed.addField("Code", ([[```%s```]]):format(eggText))
+    end
+    if eggText ~= "" then
+        eggWebhook.sendMessage()
+    end
 end
 
 local function checkMachines()
@@ -132,12 +350,13 @@ local function checkMachines()
 {
     Name = "%s",
     Location = "%s"
-},]]
+},
+]]
     for _,world in ipairs(Map:GetChildren()) do
         if world:FindFirstChild("INTERACT") and world.INTERACT:FindFirstChild("Machines") then
             for _,machine in ipairs(world.INTERACT.Machines:GetChildren()) do
-                if not table.find(alreadySent, machine.Name) then
-                    table.insert(alreadySent, machine.Name)
+                if not checkIfAlreadySent("Machine", machine.Name, world.Name) then
+                    table.insert(alreadySent, {Name = machine.Name, Location = world.Name})
                     local name = machine.Name
                     local location = world.Name
 
@@ -146,46 +365,109 @@ local function checkMachines()
             end
         end
     end
-    sendWebhook("New Machines", machineText)
+    local machineWebhook = webhookLibrary.createMessage({
+        Url = base64decode("aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTI1MzUwMjQ4MDI3NzU3MzY5My83VFpvdDFPZUpYcWFyMklhNUNvSHk0Z1JXcnZYQWFWYWNYeEkwMVFlb0hLNHRqcTBaOUoxcU1qVmFKbnNEZ0R2VHByag=="),
+        username = "Update Required",
+        content = tostring([[**Map:** ]]..getMap().Name..[[
+
+**PlaceId:** ]]..tostring(game.PlaceId))
+    })
+    if #machineText >= 6000 then
+        local numberOfEmbeds = 0
+        local counter = #machineText
+        local splitString = string.split(machineText, "")
+        repeat
+            task.wait()
+            numberOfEmbeds += 1
+            counter -= 3000
+        until counter <= 0
+    
+        local stringIndex = 0
+        for i=1, numberOfEmbeds do
+            local privEmbed = machineWebhook.addEmbed("New Machines", 0x58b9ff)
+            local partOfString = ""
+            local stopAt = stringIndex + 3000
+            repeat
+                task.wait()
+                stringIndex += 1
+                if splitString[stringIndex] then
+                    partOfString = partOfString..splitString[stringIndex]
+                else
+                    break
+                end
+            until stringIndex >= stopAt
+    
+            local splitPartString = string.split(partOfString, "")
+            local counter2 = #partOfString
+            local amountOfFields = 0
+            local machineStringIndex = 0
+            repeat
+                task.wait()
+                counter2 -= 1018
+                amountOfFields += 1
+            until counter2 <= 0
+            for i2=1, amountOfFields do
+                local valueString = ""
+                local startingIndex = machineStringIndex + 1018
+                repeat
+                    task.wait()
+                    machineStringIndex += 1
+                    if splitPartString[machineStringIndex] then
+                        valueString = valueString..splitPartString[machineStringIndex]
+                    else
+                        break
+                    end
+                until machineStringIndex >= startingIndex
+                privEmbed.addField("Code", ([[```%s```]]):format(valueString))
+            end
+    
+        end
+    elseif #machineText >= 1018 then
+        local privEmbed = machineWebhook.addEmbed("New Machines", 0x58b9ff)
+    
+        local splitPartString = string.split(machineText, "")
+        local counter2 = #machineText
+        local amountOfFields = 0
+        local machineStringIndex = 0
+        repeat
+            task.wait()
+            counter2 -= 1018
+            amountOfFields += 1
+        until counter2 <= 0
+        for i2=1, amountOfFields do
+            local valueString = ""
+            local startingIndex = machineStringIndex + 1018
+            repeat
+                task.wait()
+                machineStringIndex += 1
+                if splitPartString[machineStringIndex] then
+                    valueString = valueString..splitPartString[machineStringIndex]
+                else
+                    break
+                end
+            until machineStringIndex >= startingIndex
+            privEmbed.addField("Code", ([[```%s```]]):format(valueString))
+        end
+    elseif #machineText < 1018 and machineText ~= "" then
+        local privEmbed = machineWebhook.addEmbed("New Machines", 0x58b9ff)
+        privEmbed.addField("Code", ([[```%s```]]):format(machineText))
+    end
+    if machineText ~= "" then
+        machineWebhook.sendMessage()
+    end
 end
 
-local currentMapInfo = informationTable[getMap().Name]
-
-for _,v in ipairs(currentMapInfo.Worlds) do
-    table.insert(alreadySent, v.Name)
+for i,v in informationTable[getMap().Name] do
+    for _,v2 in v do
+        table.insert(alreadySent, v2)
+    end
 end
-for _,v in ipairs(currentMapInfo.Eggs) do
-    table.insert(alreadySent, v)
-end
-for _,v in ipairs(currentMapInfo.VendingMachines) do
-    table.insert(alreadySent, v.Name)
-end
-for _,v in ipairs(currentMapInfo.Rewards) do
-    table.insert(alreadySent, v.Name)
-end
-for _,v in ipairs(currentMapInfo.OtherMachines) do
-    table.insert(alreadySent, v.Name)
-end
+task.wait(2)
 
 task.spawn(function()
-    task.spawn(function()
-        while task.wait() and getgenv().updating do
-            checkWorlds()
-            task.wait(2)
-        end
-    end)
-    task.spawn(function()
-        task.wait(5)
-        while task.wait() and getgenv().updating do
-            checkEggs()
-            task.wait(2)
-        end
-    end)
-    task.spawn(function()
-        task.wait(8)
-        while task.wait() and getgenv().updating do
-            checkMachines()
-            task.wait(2)
-        end
-    end)
+    while task.wait() and updating do
+        checkWorlds()
+        checkEggs()
+        checkMachines()
+    end
 end)
