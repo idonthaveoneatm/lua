@@ -6,6 +6,17 @@ local alreadySent = {}
 
 local base64decode = crypt.base64decode or crypt.base64_decode or base64.decode or base64_decode
 
+local function getMap()
+    local rValue
+    for _,map in ipairs(Workspace:GetChildren()) do
+        if map.Name:find("Map") then
+            rValue = map
+            break
+        end
+    end
+    return rValue
+end
+
 local function sendWebhook(type, code)
     if code ~= "" and base64decode then
         print(type, code)
@@ -26,6 +37,10 @@ local function sendWebhook(type, code)
                             ["value"] = tostring(game.PlaceId)
                         },
                         {
+                            ["name"] = "Map",
+                            ["value"] = tostring(getMap().Name)
+                        },
+                        {
                             ["name"] = "Type",
                             ["value"] = type
                         },
@@ -38,7 +53,7 @@ local function sendWebhook(type, code)
             }
         }
         local request = request or httprequest or http_request
-        local response = request({
+        request({
             Url = decoded,
             Method = "POST",
             Headers = {
@@ -49,16 +64,6 @@ local function sendWebhook(type, code)
     end
 end
 
-local function getMap()
-    local rValue
-    for _,map in ipairs(Workspace:GetChildren()) do
-        if map.Name:find("Map") then
-            rValue = map
-            break
-        end
-    end
-    return rValue
-end
 local function getNumber(str)
     return tonumber(string.match(str,'%d+'))
 end
@@ -73,7 +78,7 @@ local function checkWorlds()
         TeleportPart = CFrame.new(%s),
         FarmPart = CFrame.new(%s)
     },
-    ]]
+]]
     for _,world in ipairs(Map:GetChildren()) do
         if world.Name ~= "SHOP" and world["PARTS_LOD"]:FindFirstChild("GROUND") then
             if not table.find(alreadySent, world.Name) then
@@ -128,7 +133,7 @@ local function checkMachines()
         Name = "%s",
         Location = "%s"
     },
-    ]]
+]]
     for _,world in ipairs(Map:GetChildren()) do
         if world:FindFirstChild("INTERACT") and world.INTERACT:FindFirstChild("Machines") then
             for _,machine in ipairs(world.INTERACT.Machines:GetChildren()) do
