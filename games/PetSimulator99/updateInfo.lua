@@ -16,7 +16,12 @@ local function getMap()
             break
         end
     end
-    return rValue
+    if rValue then
+        return rValue
+    else
+        task.wait()
+        return getMap()
+    end
 end
 
 local function checkIfAlreadySent(type, name, zone)
