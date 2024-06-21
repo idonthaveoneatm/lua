@@ -227,6 +227,26 @@ return {
                 FarmPart = CFrame.new(1202.9462890625, -2.8606719970703125, 1667.1942138671875)
             },
             {
+                Name = "46 | Underworld",
+                TeleportPart = CFrame.new(1371.876953125, 13.625, 1732.842041015625),
+                FarmPart = CFrame.new(1408.0086669921875, 7.139320373535156, 1763.508544921875)
+            },
+            {
+                Name = "47 | Underworld Bridge",
+                TeleportPart = CFrame.new(1416.886962890625, 13.625, 1873.783935546875),
+                FarmPart = CFrame.new(1417.47119140625, 9.514328002929688, 1928.73779296875)
+            },
+            {
+                Name = "48 | Underworld Castle",
+                TeleportPart = CFrame.new(1416.886962890625, 13.625, 2025.4990234375),
+                FarmPart = CFrame.new(1405.5086669921875, 7.139320373535156, 2092.259765625)
+            },
+            {
+                Name = "49 | Metal Dojo",
+                TeleportPart = CFrame.new(1324.8709716796875, 13.625, 2120.532958984375),
+                FarmPart = CFrame.new(1257.565185546875, -2.8606719970703125, 2120.643798828125)
+            },
+            {
                 Name = "50 | Fire Dojo",
                 TeleportPart = CFrame.new(1158.8800048828125, 13.625, 2120.532958984375),
                 FarmPart = CFrame.new(1063.285400390625, -1.8356819152832031, 2171.34326171875)
@@ -638,7 +658,7 @@ return {
                 Location = "47 | Underworld Bridge"
             },
             {
-                Name = "RareEnchantVendingMachine1",
+                Name = "RareEnchantsVendingMachine1",
                 Location = "51 | Samurai Village"
             },
             {
