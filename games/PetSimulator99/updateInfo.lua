@@ -73,12 +73,11 @@ local function checkWorlds()
     local worldText = ""
     local worldTable = {}
     local newWorldFormat = [[
-    {
-        Name = "%s",
-        TeleportPart = CFrame.new(%s),
-        FarmPart = CFrame.new(%s)
-    },
-]]
+{
+    Name = "%s",
+    TeleportPart = CFrame.new(%s),
+    FarmPart = CFrame.new(%s)
+},]]
     for _,world in ipairs(Map:GetChildren()) do
         if world.Name ~= "SHOP" and world["PARTS_LOD"]:FindFirstChild("GROUND") then
             if not table.find(alreadySent, world.Name) then
@@ -129,11 +128,10 @@ local function checkMachines()
     local Map = getMap()
     local machineText = ""
     local newMachineFormat = [[
-    {
-        Name = "%s",
-        Location = "%s"
-    },
-]]
+{
+    Name = "%s",
+    Location = "%s"
+},]]
     for _,world in ipairs(Map:GetChildren()) do
         if world:FindFirstChild("INTERACT") and world.INTERACT:FindFirstChild("Machines") then
             for _,machine in ipairs(world.INTERACT.Machines:GetChildren()) do
