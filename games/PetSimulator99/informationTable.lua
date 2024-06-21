@@ -1216,7 +1216,69 @@ return {
         }
     },
     Map3 = {
-        Worlds = {},
+        Worlds = {
+            {
+                Name = "200 | Void Spawn",
+                TeleportPart = CFrame.new(-2850.572998046875, 14.056390762329102, -8504.443359375),
+                FarmPart = CFrame.new(-10180.25390625, -23.852493286132812, -7418.61376953125)
+            },{
+                Name = "201 | Prison Block",
+                TeleportPart = CFrame.new(-2698.324951171875, 14.385641098022461, -8507.1904296875),
+                FarmPart = CFrame.new(-2633.586669921875, 10.241466522216797, -8504.119140625)
+            },{
+                Name = "202 | Prison Cafeteria",
+                TeleportPart = CFrame.new(-2535.024169921875, 14.353550910949707, -8507.630859375),
+                FarmPart = CFrame.new(-2469.085693359375, 10.241005897521973, -8504.1181640625)
+            },{
+                Name = "203 | Prison Yard",
+                TeleportPart = CFrame.new(-2372.123779296875, 14.317835807800293, -8506.9921875),
+                FarmPart = CFrame.new(-2305.835693359375, 10.991466522216797, -8504.119140625)
+            },{
+                Name = "204 | Prison HQ",
+                TeleportPart = CFrame.new(-2208.323974609375, 13.62100601196289, -8504.15625),
+                FarmPart = CFrame.new(-2211.044921875, 185.7250213623047, -9586.62890625)
+            },{
+                Name = "205 | Beach Island",
+                TeleportPart = CFrame.new(-2629.7158203125, 231.2174072265625, -12963.6396484375),
+                FarmPart = CFrame.new(nil)
+            },{
+                Name = "206 | Ocean Island",
+                TeleportPart = CFrame.new(-3233.224365234375, 291.1986999511719, -12969.77734375),
+                FarmPart = CFrame.new(nil)
+            },{
+                Name = "207 | Tiki Island",
+                TeleportPart = CFrame.new(-3826.1015625, 411.3309326171875, -12969.77734375),
+                FarmPart = CFrame.new(nil)
+            },{
+                Name = "208 | Jungle Island",
+                TeleportPart = CFrame.new(-4248.77685546875, 592.3612670898438, -12942.4501953125),
+                FarmPart = CFrame.new(nil)
+            },{
+                Name = "209 | Volcano Island",
+                TeleportPart = CFrame.new(-4712.11767578125, 703.6817016601562, -12955.0283203125),
+                FarmPart = CFrame.new(nil)
+            },{
+                Name = "210 | Hacker Matrix",
+                TeleportPart = CFrame.new(-2610.189208984375, 221.7504425048828, -22098.1875),
+                FarmPart = CFrame.new(-2684.010498046875, 209.0163116455078, -22097.220703125)
+            },{
+                Name = "211 | Hacker Fortress",
+                TeleportPart = CFrame.new(-2381.5166015625, 197.1315155029297, -22097.1875),
+                FarmPart = CFrame.new(-2306.194091796875, 158.35711669921875, -22089.064453125)
+            },{
+                Name = "212 | Hacker Cave",
+                TeleportPart = CFrame.new(-2688.826904296875, 196.66514587402344, -21800.216796875),
+                FarmPart = CFrame.new(-2685.2470703125, 163.00021362304688, -21728.95703125)
+            },{
+                Name = "213 | Hacker Lab",
+                TeleportPart = CFrame.new(-2988.027587890625, 195.02821350097656, -22092.69921875),
+                FarmPart = CFrame.new(-3069.41015625, 185.23480224609375, -22097.54296875)
+            },{
+                Name = "214 | Hacker Mainframe",
+                TeleportPart = CFrame.new(-2686.27978515625, 194.35491943359375, -22400.6171875),
+                FarmPart = CFrame.new(-2679.4140625, 189.62388610839844, -22477.89453125)
+            }
+        },
         Eggs = {
             "213 | Rusty Egg",
             "214 | Striped Egg",
