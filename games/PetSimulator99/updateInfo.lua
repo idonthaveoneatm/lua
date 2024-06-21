@@ -2,7 +2,9 @@ local Workspace = cloneref(game:GetService("Workspace"))
 local HttpService = cloneref(game:GetService("HttpService"))
 
 local informationTable = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/informationTable.lua"))()
-getgenv().alreadySent = {}
+getgenv().alreadySent = getgenv().alreadySent or {}
+getgenv().updating = false
+getgenv().updating = true
 
 local base64decode = crypt.base64decode or crypt.base64_decode or base64.decode or base64_decode
 
@@ -19,7 +21,6 @@ end
 
 local function sendWebhook(type, code)
     if code ~= "" and base64decode then
-        print(type, code)
         local decoded = base64decode("aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTI1MzUwMjQ4MDI3NzU3MzY5My83VFpvdDFPZUpYcWFyMklhNUNvSHk0Z1JXcnZYQWFWYWNYeEkwMVFlb0hLNHRqcTBaOUoxcU1qVmFKbnNEZ0R2VHByag==")
         code = ([[```
 %s
@@ -77,8 +78,7 @@ local function checkWorlds()
     Name = "%s",
     TeleportPart = CFrame.new(%s),
     FarmPart = CFrame.new(%s)
-},
-]]
+},]]
     for _,world in ipairs(Map:GetChildren()) do
         if world.Name ~= "SHOP" and world["PARTS_LOD"]:FindFirstChild("GROUND") then
             if not table.find(alreadySent, world.Name) then
@@ -118,7 +118,7 @@ local function checkEggs()
     table.sort(textTable, function(a, b)
         return getNumber(a) < getNumber(b)
     end)
-    tableText = ""
+    local tableText = ""
     for _,name in ipairs(textTable) do
         tableText = tableText..'"'..name..'",\n'
     end
@@ -132,8 +132,7 @@ local function checkMachines()
 {
     Name = "%s",
     Location = "%s"
-},
-]]
+},]]
     for _,world in ipairs(Map:GetChildren()) do
         if world:FindFirstChild("INTERACT") and world.INTERACT:FindFirstChild("Machines") then
             for _,machine in ipairs(world.INTERACT.Machines:GetChildren()) do
@@ -169,11 +168,24 @@ for _,v in ipairs(currentMapInfo.OtherMachines) do
 end
 
 task.spawn(function()
-    while task.wait() do
-        checkWorlds()
-        task.wait(2)
-        checkEggs()
-        task.wait(2)
-        checkMachines()
-    end
+    task.spawn(function()
+        while task.wait() and getgenv().updating do
+            checkWorlds()
+            task.wait(2)
+        end
+    end)
+    task.spawn(function()
+        task.wait(5)
+        while task.wait() and getgenv().updating do
+            checkEggs()
+            task.wait(2)
+        end
+    end)
+    task.spawn(function()
+        task.wait(8)
+        while task.wait() and getgenv().updating do
+            checkMachines()
+            task.wait(2)
+        end
+    end)
 end)
