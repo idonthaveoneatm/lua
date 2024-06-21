@@ -1296,8 +1296,51 @@ return {
             "226 | Hacker Secure Egg",
         },
         Minigames = {},
-        VendingMachines = {},
-        Rewards = {},
-        OtherMachines = {},
+        VendingMachines = {
+            {
+                Name = "RareEnchantsVendingMachine2",
+                Location = "208 | Jungle Island"
+            },
+            {
+                Name = "BundleVendingMachine3",
+                Location = "214 | Hacker Mainframe"
+            },
+        },
+        Rewards = {
+            {
+                Name = "DailyPotions6",
+                Location = "212 | Hacker Cave"
+            }
+        },
+        OtherMachines = {
+            {
+                Name = "SuperMachine",
+                Location = "200 | Void Spawn"
+            },
+            {
+                Name = "RainbowMachine",
+                Location = "200 | Void Spawn"
+            },
+            {
+                Name = "GoldMachine",
+                Location = "200 | Void Spawn"
+            },
+            {
+                Name = "IndexMerchant",
+                Location = "200 | Void Spawn"
+            },
+            {
+                Name = "PetIndexMachine",
+                Location = "200 | Void Spawn"
+            },
+            {
+                Name = "MailboxMachine",
+                Location = "200 | Void Spawn"
+            },
+            {
+                Name = "SpinnyWheel",
+                Location = "200 | Void Spawn"
+            }
+        },
     }
 }
