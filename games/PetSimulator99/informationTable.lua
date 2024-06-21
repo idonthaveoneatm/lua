@@ -692,15 +692,15 @@ return {
                 Location = "32 | Red Desert"
             },
             {
-                Name = "LargeDailyDiamonds",
-                Location = "78 | Dungeon Enterance"
+                Name = "DailyDiamonds3",
+                Location = "78 | Dungeon Entrance"
             },
             {
-                Name = "MediumDailyPotions",
+                Name = "DailyPotions2",
                 Location = "83 | Cotton Candy Forest"
             },
             {
-                Name = "MediumDailyEnchants",
+                Name = "DailyEnchants2",
                 Location = "88 | Carnival"
             },
             {
