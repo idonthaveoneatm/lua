@@ -662,7 +662,7 @@ return {
             {
                 Name = "DailyDiamonds1",
                 Location = "3 | Castle"
-            },        
+            },
             {
                 Name = "SmallDailyDiamonds",
                 Location = "3 | Castle"
@@ -670,10 +670,6 @@ return {
             {
                 Name = "SpinnyWheel",
                 Location = "3 | Castle"
-            },
-            {
-                Name = "DailyPotions",
-                Location = "17 | Jungle"
             },
             {
                 Name = "DailyPotions1",
@@ -684,23 +680,15 @@ return {
                 Location = "20 | Beach"
             },
             {
-                Name = "DailyEnchants",
-                Location = "21 | Coral Reef"
-            },
-            {
                 Name = "DailyEnchants1",
                 Location = "21 | Coral Reef"
-            },
-            {
-                Name = "DailyItems",
-                Location = "24 | Palm Beach"
             },
             {
                 Name = "DailyItems1",
                 Location = "24 | Palm Beach"
             },
             {
-                Name = "MediumDailyDiamonds",
+                Name = "DailyDiamonds2",
                 Location = "32 | Red Desert"
             },
             {
