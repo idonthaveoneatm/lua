@@ -724,9 +724,9 @@ return {
                 Location = "88 | Carnival"
             },
             {
-                Name = "MediumDailyItems",
+                Name = "DailyItems2",
                 Location = "90 | Clouds"
-            }
+            },
         },
         OtherMachines = {
             {
