@@ -2,7 +2,7 @@ local Workspace = cloneref(game:GetService("Workspace"))
 local HttpService = cloneref(game:GetService("HttpService"))
 
 local informationTable = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/informationTable.lua"))()
-getgenv().alreadySent = getgenv().alreadySent or {}
+getgenv().alreadySent = {}
 
 local base64decode = crypt.base64decode or crypt.base64_decode or base64.decode or base64_decode
 
