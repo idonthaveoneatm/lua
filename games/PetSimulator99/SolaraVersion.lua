@@ -6,20 +6,13 @@ Made by griffindoescooking
 
 print("Pet Simulator 99 | griffindoescooking")
 warn('The solara version removes require functions')
-getgenv().griffinVersion = "2.9.7"
+getgenv().griffinVersion = "2.9.8"
 
 repeat
     task.wait()
 until game:IsLoaded()
 if game.PlaceId ~= 8737899170 and game.PlaceId ~= 16498369169 and game.PlaceId ~= 17503543197 then
     game.Players.LocalPlayer:Kick("wrong game")
-end
-
-local mapName = ""
-if game.PlaceId == 8737899170 then
-    mapName = "Map"
-elseif game.PlaceId == 16498369169 then
-    mapName = "Map2"
 end
 
 -- Compatibility Check
@@ -95,16 +88,26 @@ local Lootbags = Things.Lootbags
 local Orbs = Things.Orbs
 local Breakables = Things.Breakables
 
+local function getMap()
+    local rValue
+    for _,map in ipairs(Workspace:GetChildren()) do
+        if map.Name:find("Map") then
+            rValue = map
+            break
+        end
+    end
+    return rValue
+end
+
 local Map
-if Workspace:FindFirstChild(mapName) then
-    Map = Workspace:FindFirstChild(mapName)
+if getMap() then
+    Map = getMap()
 else
-    output(mapName.."not found","warn")
     task.spawn(function()
         repeat
             task.wait()
-        until Workspace:FindFirstChild(mapName)
-        Map = Workspace:FindFirstChild(mapName)
+        until getMap()
+        Map = getMap()
     end)
 end
 
@@ -169,7 +172,7 @@ loadConfig()
 
 getgenv().coinQueue = {} -- needs to be global to clear it on reexecute
 local PS99Info = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/informationTable.lua"))()
-PS99Info = PS99Info[mapName]
+PS99Info = PS99Info[Map.Name]
 
 local worlds = PS99Info.Worlds
 local function getWorld(name: string)
