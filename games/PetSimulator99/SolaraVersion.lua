@@ -1020,7 +1020,9 @@ creditsTab:Button({
     end
 })
 
-getgenv().griffinVersion = "2.9.5"
+loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/updateInfo.lua"))()
+
+getgenv().griffinVersion = "2.9.6"
 local gitVersion = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/version"))()
 if getgenv().griffinVersion and getgenv().griffinVersion == gitVersion then
     print("versions match")
