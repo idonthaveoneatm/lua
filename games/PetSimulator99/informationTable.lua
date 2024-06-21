@@ -660,6 +660,10 @@ return {
                 Location = "1 | Spawn"
             },
             {
+                Name = "DailyDiamonds1",
+                Location = "3 | Castle"
+            },        
+            {
                 Name = "SmallDailyDiamonds",
                 Location = "3 | Castle"
             },
@@ -672,6 +676,10 @@ return {
                 Location = "17 | Jungle"
             },
             {
+                Name = "DailyPotions1",
+                Location = "17 | Jungle"
+            },
+            {
                 Name = "DaycareMachine",
                 Location = "20 | Beach"
             },
@@ -680,7 +688,15 @@ return {
                 Location = "21 | Coral Reef"
             },
             {
+                Name = "DailyEnchants1",
+                Location = "21 | Coral Reef"
+            },
+            {
                 Name = "DailyItems",
+                Location = "24 | Palm Beach"
+            },
+            {
+                Name = "DailyItems1",
                 Location = "24 | Palm Beach"
             },
             {
