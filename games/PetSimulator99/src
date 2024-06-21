@@ -5,6 +5,7 @@ Made by griffindoescooking
 ]]--
 
 print("Pet Simulator 99 | griffindoescooking")
+getgenv().griffinVersion = "2.9.7"
 
 repeat
     task.wait()
@@ -1035,7 +1036,6 @@ creditsTab:Button({
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/updateInfo.lua"))()
 
-getgenv().griffinVersion = "2.9.6"
 local gitVersion = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/version"))()
 if griffinVersion and griffinVersion == gitVersion then
     task.wait()
