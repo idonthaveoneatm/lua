@@ -1798,68 +1798,6 @@ return {
                 ["Name"] = "Zone5",
                 ["FarmPart"] = CFrame.new(-1849.2611083984375, 283.8175964355469, -15470.2578125),
             }
-        },
-        Eggs = {
-            {
-                ["remoteName"] = "d65fa114d3134c4c8f768a3ba54e1706",
-                ["Name"] = "Utopia Egg",
-                ["Position"] = CFrame.new(-1459.2935791015625, 340.0144348144531, -15525.537109375),
-            },
-            {
-                ["remoteName"] = "4552264091cf484b9c212dff60877d78",
-                ["Name"] = "Lava Monster Egg",
-                ["Position"] = CFrame.new(-1127.69482421875, 392.48779296875, -15415.6123046875),
-            },
-            {
-                ["remoteName"] = "a5472b6e5fa14dad8c97011867cc83b7",
-                ["Name"] = "Imp Egg",
-                ["Position"] = CFrame.new(-973.195068359375, 392.48779296875, -15411.3427734375),
-            },
-            {
-                ["remoteName"] = "7edd9cbabc20421fba808b7e7150ea56",
-                ["Name"] = "Ocean Island Parkour 2x",
-                ["Position"] = CFrame.new(-3234.44580078125, 392.6029052734375, -13261.046875),
-            },
-            {
-                ["remoteName"] = "1f8b3f71c8194440a461720dede440aa",
-                ["Name"] = "Heavenly Throne Egg",
-                ["Position"] = CFrame.new(-1127.5849609375, 392.6362609863281, -15526.359375),
-            },
-            {
-                ["remoteName"] = "35c401277a514eb88aa86b8a9edc532a",
-                ["Name"] = "Horned Egg",
-                ["Position"] = CFrame.new(-1853.3790283203125, 289.8458557128906, -15414.005859375),
-            },
-            {
-                ["remoteName"] = "fe7e7c20ebff4a96b071711ae0cae22b",
-                ["Name"] = "Divine Floral Egg",
-                ["Position"] = CFrame.new(-1853.0423583984375, 290.18109130859375, -15526.822265625),
-            },
-            {
-                ["remoteName"] = "910d8359998b4d85992c2090033e7bd4",
-                ["Name"] = "Blessing Egg",
-                ["Position"] = CFrame.new(-2009.083740234375, 290.0144348144531, -15525.5634765625),
-            },
-            {
-                ["remoteName"] = "0988311a17e7430eb221af4ff70b5dda",
-                ["Name"] = "Evil Dragon Egg",
-                ["Position"] = CFrame.new(-1459.2816162109375, 340.0144348144531, -15414.05078125),
-            },
-            {
-                ["remoteName"] = "041daa6ecfe8434eaa280468b8e9630e",
-                ["Name"] = "Angelic Egg",
-                ["Position"] = CFrame.new(-973.19580078125, 392.48779296875, -15528.91015625),
-            },
-            {
-                ["remoteName"] = "95a71477e7be4c4bb67b64ed94f3d8a9",
-                ["Name"] = "Overgrown Magma Egg",
-                ["Position"] = CFrame.new(-2009.073974609375, 289.8985900878906, -15414.7333984375),
-            },
-            {
-                ["remoteName"] = "0ae11bb26a68462e959ef4eb843d08a7",
-                ["Name"] = "Good Vs Evil Team Egg",
-                ["Position"] = CFrame.new(-2156.603515625, 296.5609130859375, -15471.0654296875),
-            }
         }
     }
 }
