@@ -1749,7 +1749,11 @@ return {
             {
                 Name = "SpinnyWheel",
                 Location = "200 | Void Spawn"
-            }
+            },
+            {
+                Name = "SummerGiftMachine",
+                Location = "205 | Beach Island"
+            },
         }
     }
 }
