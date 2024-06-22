@@ -113,7 +113,7 @@ local function checkWorlds()
 },
 ]]
     for _,world in ipairs(Map:GetChildren()) do
-        if world.Name ~= "SHOP" and world["PARTS_LOD"]:FindFirstChild("GROUND") then
+        if world.Name ~= "SHOP" and world:FindFirstChild("INTERACT") and world.INTERACT:FindFirstChild("BREAKABLE_SPAWNS") and world.INTERACT["BREAKABLE_SPAWNS"]:FindFirstChild("Main") then
             if not checkIfAlreadySent("World", world.Name) then
                 table.insert(worldTable, world.Name)
                 table.insert(alreadySent, {Name = world.Name})
@@ -126,23 +126,9 @@ local function checkWorlds()
     for _,world in ipairs(worldTable) do
         local mapWorld = Map:FindFirstChild(world)
         local name = mapWorld.Name
-        local FarmPart
+        local FarmPart = tostring(mapWorld.INTERACT["BREAKABLE_SPAWNS"].Main.Position)
         local TeleportPart = tostring(mapWorld.PERSISTENT.Teleport.Position)
-
-        local GROUND = mapWorld["PARTS_LOD"]:FindFirstChild("GROUND")
-        if mapWorld["PARTS_LOD"]:FindFirstChild("GROUND") then
-            if typeof(GROUND) == "Instance" and GROUND:IsA("Model") then
-                FarmPart = tostring(GROUND.WorldPivot.Position)
-            end
-        end
-        if not FarmPart then
-            for _,v in ipairs(mapWorld["PARTS_LOD"]:FindFirstChild("GROUND"):GetChildren()) do
-                if v:IsA("Part") and v.Name == "Ground" then
-                    FarmPart = tostring(v.Position)
-                    break
-                end
-            end
-        end
+        
         worldText = worldText..newWorldFormat:format(name, TeleportPart, FarmPart)
     end
 
@@ -165,7 +151,7 @@ local function checkWorlds()
 
         local stringIndex = 0
         for i=1, numberOfEmbeds do
-            local privEmbed = worldWebhook.addEmbed("New Zones", 0x58b9ff)
+            local privEmbed = worldWebhook.addEmbed("New Zones", 0x4FAD74)
             local partOfString = ""
             local stopAt = stringIndex + 3000
             repeat
@@ -204,7 +190,7 @@ local function checkWorlds()
 
         end
     elseif #worldText >= 1018 then
-        local privEmbed = worldWebhook.addEmbed("New Zones", 0x58b9ff)
+        local privEmbed = worldWebhook.addEmbed("New Zones", 0x4FAD74)
 
         local splitPartString = string.split(worldText, "")
         local counter2 = #worldText
@@ -230,7 +216,7 @@ local function checkWorlds()
             privEmbed.addField("Code", ([[```%s```]]):format(valueString))
         end
     elseif #worldText < 1018 and worldText ~= "" then
-        local privEmbed = worldWebhook.addEmbed("New Zones", 0x58b9ff)
+        local privEmbed = worldWebhook.addEmbed("New Zones", 0x4FAD74)
         privEmbed.addField("Code", ([[```%s```]]):format(worldText))
     end
     if worldText ~= "" then
@@ -275,7 +261,7 @@ local function checkEggs()
     
         local stringIndex = 0
         for i=1, numberOfEmbeds do
-            local privEmbed = eggWebhook.addEmbed("New Eggs", 0x58b9ff)
+            local privEmbed = eggWebhook.addEmbed("New Eggs", 0xEEF598)
             local partOfString = ""
             local stopAt = stringIndex + 3000
             repeat
@@ -314,7 +300,7 @@ local function checkEggs()
     
         end
     elseif #eggText >= 1018 then
-        local privEmbed = eggWebhook.addEmbed("New Eggs", 0x58b9ff)
+        local privEmbed = eggWebhook.addEmbed("New Eggs", 0xEEF598)
     
         local splitPartString = string.split(eggText, "")
         local counter2 = #eggText
@@ -340,7 +326,7 @@ local function checkEggs()
             privEmbed.addField("Code", ([[```%s```]]):format(valueString))
         end
     elseif #eggText < 1018 and eggText ~= "" then
-        local privEmbed = eggWebhook.addEmbed("New Eggs", 0x58b9ff)
+        local privEmbed = eggWebhook.addEmbed("New Eggs", 0xEEF598)
         privEmbed.addField("Code", ([[```%s```]]):format(eggText))
     end
     if eggText ~= "" then
@@ -389,7 +375,7 @@ local function checkMachines()
     
         local stringIndex = 0
         for i=1, numberOfEmbeds do
-            local privEmbed = machineWebhook.addEmbed("New Machines", 0x58b9ff)
+            local privEmbed = machineWebhook.addEmbed("New Machines", 0x77659F)
             local partOfString = ""
             local stopAt = stringIndex + 3000
             repeat
@@ -428,7 +414,7 @@ local function checkMachines()
     
         end
     elseif #machineText >= 1018 then
-        local privEmbed = machineWebhook.addEmbed("New Machines", 0x58b9ff)
+        local privEmbed = machineWebhook.addEmbed("New Machines", 0x77659F)
     
         local splitPartString = string.split(machineText, "")
         local counter2 = #machineText
@@ -454,7 +440,7 @@ local function checkMachines()
             privEmbed.addField("Code", ([[```%s```]]):format(valueString))
         end
     elseif #machineText < 1018 and machineText ~= "" then
-        local privEmbed = machineWebhook.addEmbed("New Machines", 0x58b9ff)
+        local privEmbed = machineWebhook.addEmbed("New Machines", 0x77659F)
         privEmbed.addField("Code", ([[```%s```]]):format(machineText))
     end
     if machineText ~= "" then
