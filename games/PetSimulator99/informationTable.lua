@@ -1260,14 +1260,91 @@ return {
                 TeleportPart = CFrame.new(-10181.7783203125, 12.33005428314209, 4085.67138671875),
                 FarmPart = CFrame.new(-10089.64453125, 10.348062515258789, 4113.052734375)
             },
-            --[[
-            -- info needed
+            {
+                Name = "183 | Dark Tech Dungeon",
+                TeleportPart = CFrame.new(-10083.3017578125, 12.371002197265625, 4192.2236328125),
+                FarmPart = CFrame.new(-10082.244140625, 10.389320373535156, 4246.4658203125)
+            },
+            {
+                Name = "184 | Dark Tech Forest",
+                TeleportPart = CFrame.new(-10083.3017578125, 12.371002197265625, 4351.7568359375),
+                FarmPart = CFrame.new(-10082.244140625, 10.389320373535156, 4405.9990234375)
+            },
+            {
+                Name = "185 | Hacker Powerplant",
+                TeleportPart = CFrame.new(-10082.1279296875, 12.33005428314209, 4507.298828125),
+                FarmPart = CFrame.new(-10109.5107421875, 10.348062515258789, 4599.4326171875)
+            },
+            {
+                Name = "186 | Hacker Compound",
+                TeleportPart = CFrame.new(-10188.3330078125, 12.371002197265625, 4605.7314453125),
+                FarmPart = CFrame.new(-10242.576171875, 10.389320373535156, 4606.7900390625)
+            },
+            {
+                Name = "187 | Hacker Base",
+                TeleportPart = CFrame.new(-10346.947265625, 12.371002197265625, 4605.7314453125),
+                FarmPart = CFrame.new(-10401.1904296875, 10.389320373535156, 4606.7900390625)
+            },
+            {
+                Name = "188 | Hacker Error",
+                TeleportPart = CFrame.new(-10505.66796875, 12.371002197265625, 4605.7314453125),
+                FarmPart = CFrame.new(-10559.9111328125, 10.389320373535156, 4606.7900390625)
+            },
+            {
+                Name = "189 | Glitch Forest",
+                TeleportPart = CFrame.new(-10664.4677734375, 12.371002197265625, 4605.7314453125),
+                FarmPart = CFrame.new(-10718.7109375, 10.389320373535156, 4606.7900390625)
+            },
             {
                 Name = "190 | Glitch City",
                 TeleportPart = CFrame.new(-10823.4833984375, 12.371002197265625, 4605.9814453125),
-                FarmPart = CFrame.new(-10878.4970703125, 3.889319896697998, 4604.5888671875)
+                FarmPart = CFrame.new(-10877.7265625, 10.389320373535156, 4607.0400390625)
             },
-            ]]
+            {
+                Name = "191 | Glitch Skyscrapers",
+                TeleportPart = CFrame.new(-10978.1611328125, 12.33005428314209, 4607.0185546875),
+                FarmPart = CFrame.new(-11070.294921875, 10.348062515258789, 4579.6357421875)
+            },
+            {
+                Name = "192 | Glitch Town",
+                TeleportPart = CFrame.new(-11068.228515625, 12.371009826660156, 4706.70703125),
+                FarmPart = CFrame.new(-11067.169921875, 10.389328002929688, 4760.9501953125)
+            },
+            {
+                Name = "193 | Glitch Quantum",
+                TeleportPart = CFrame.new(-11067.8037109375, 12.371002197265625, 4865.125),
+                FarmPart = CFrame.new(-11066.74609375, 10.389320373535156, 4919.3681640625)
+            },
+            {
+                Name = "194 | Quantum Forest",
+                TeleportPart = CFrame.new(-11067.8037109375, 12.371002197265625, 5024.125),
+                FarmPart = CFrame.new(-11066.74609375, 10.389320373535156, 5078.3681640625)
+            },
+            {
+                Name = "195 | Quantum Space Base",
+                TeleportPart = CFrame.new(-11067.8037109375, 12.371002197265625, 5182.125),
+                FarmPart = CFrame.new(-11066.74609375, 10.389320373535156, 5236.3681640625)
+            },
+            {
+                Name = "196 | Quantum Galaxy",
+                TeleportPart = CFrame.new(-11067.8037109375, 12.371002197265625, 5340.125),
+                FarmPart = CFrame.new(-11066.74609375, 10.389320373535156, 5394.3681640625)
+            },
+            {
+                Name = "197 | Void Atomic",
+                TeleportPart = CFrame.new(-11067.8037109375, 12.371002197265625, 5499.02490234375),
+                FarmPart = CFrame.new(-11066.74609375, 10.389320373535156, 5553.26806640625)
+            },
+            {
+                Name = "198 | Void Fracture",
+                TeleportPart = CFrame.new(-11067.8037109375, 12.371002197265625, 5657.82470703125),
+                FarmPart = CFrame.new(-11066.74609375, 10.389320373535156, 5712.06787109375)
+            },
+            {
+                Name = "199 | Void Spiral",
+                TeleportPart = CFrame.new(-11067.8037109375, 12.371002197265625, 5816.82470703125),
+                FarmPart = CFrame.new(-11066.74609375, 10.389320373535156, 5871.06787109375)
+            },
         },
         Eggs = {
             "113 | Tech Ciruit Egg",
@@ -1524,6 +1601,10 @@ return {
             {
                 Name = "ZoneSurges",
                 Location = "177 | Holographic City"
+            },
+            {
+                Name = "RebirthShrine",
+                Location = "199 | Void Spiral"
             },
         }
     },
