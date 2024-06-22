@@ -3,7 +3,7 @@ local ImportGlobals
 
 -- Holds direct closure data (defining this before the DOM tree for line debugging etc)
 local ClosureBindings = {
-    function()local wax,script,require=ImportGlobals(1)local ImportGlobals return (function(...)print("Attempting to load Fusion-0.2")
+    function()local wax,script,require=ImportGlobals(1)local ImportGlobals return (function(...)task.wait()
 
 return require(script.Fusion)
 end)() end,
