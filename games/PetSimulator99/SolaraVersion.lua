@@ -173,74 +173,36 @@ loadConfig()
 getgenv().coinQueue = {} -- needs to be global to clear it on reexecute
 local PS99Info = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/informationTable.lua"))()
 PS99Info = PS99Info[Map.Name]
-
 local worlds = PS99Info.Worlds
-local function getWorld(name: string)
-    for index,wInfo in ipairs(worlds) do
-        if wInfo.Name == name then
-            return worlds[index]
-        end
-    end
-end
-local function getWorldNames()
-    local returnTable = {}
-    for _,wInfo in ipairs(worlds) do
-        table.insert(returnTable, wInfo.Name)
-    end
-    return returnTable
-end
-
 local vendingMachines = PS99Info.VendingMachines
-local function getVendingMachine(name: string)
-    for index,vmInfo in ipairs(vendingMachines) do
-        if vmInfo.Name == name then
-            return vendingMachines[index]
-        end
-    end
-end
-local function getVendingMachineNames()
-    local returnTable = {}
-    for _,vmInfo in ipairs(vendingMachines) do
-        table.insert(returnTable, vmInfo.Name)
-    end
-    return returnTable
-end
-
 local rewards = PS99Info.Rewards
-local function getReward(name: string)
-    for index,rInfo in ipairs(rewards) do
-        if rInfo.Name == name then
-            return rewards[index]
-        end
-    end
-end
-local function getRewardNames()
-    local returnTable = {}
-    for _,rInfo in ipairs(rewards) do
-        table.insert(returnTable, rInfo.Name)
-    end
-    return returnTable
-end
-
 local otherMachines = PS99Info.OtherMachines
-local function getOtherMachine(name: string)
-    for index,omInfo in ipairs(otherMachines) do
-        if omInfo.Name == name then
-            return otherMachines[index]
-        end
-    end
-end
-local function getOtherMachineNames()
-    local returnTable = {}
-    for _,omInfo in ipairs(otherMachines) do
-        table.insert(returnTable, omInfo.Name)
-    end
-    return returnTable
-end
-
 local minigames = PS99Info.Minigames
 local eggs = PS99Info.Eggs
-local miscInfo = PS99Info.MiscInfo
+local function getNames(tbl)
+    local returnTable = {}
+    for _,info in tbl do
+        if typeof(info) == "table" then
+            table.insert(returnTable, info.Name)
+        elseif typeof(info) == "string" then
+            table.insert(returnTable, info)
+        end
+    end
+    return returnTable
+end
+local function findInTable(tbl, name)
+    for index,info in tbl do
+        if typeof(info) == "table" and info.Name == name then
+            return tbl[index]
+        elseif typeof(info) == "string" and info == name then
+            return tbl[index]
+        end
+        if info.Name == name then
+            return tbl[index]
+        end
+    end
+    return nil
+end
 
 -- Functions
 
@@ -475,7 +437,7 @@ farmingTab:Toggle({
         config.farmSettings.buyZone = value
         updateConfig()
 
-        for _,worldName in ipairs(getWorldNames()) do
+        for _,worldName in ipairs(getNames(worlds)) do
             if not config.farmSettings.buyZone then break end
             task.spawn(function()
                 while config.farmSettings.buyZone and task.wait() do
@@ -517,7 +479,7 @@ farmingTab:Dropdown({
         config.eggSettings.selectedEgg = eggPicked
         updateConfig()
     end
-})
+})  
 farmingTab:Slider({
     Name = "Amount of eggs",
     Max = 99,
@@ -554,10 +516,10 @@ local selectedWorld
 local goToZone
 teleportsTab:Dropdown({
     Name = "Zones",
-    Items = getWorldNames(),
+    Items = getNames(worlds),
     Multiselect = false,
     Callback = function(chosenWorld)
-        selectedWorld = getWorld(chosenWorld)
+        selectedWorld = findInTable(worlds, chosenWorld)
         goToZone:SetName("Go to "..chosenWorld)
     end
 })
@@ -573,17 +535,17 @@ local selectedVM
 local goToVendingMachine
 teleportsTab:Dropdown({
     Name = "Vending Machines",
-    Items = getVendingMachineNames(),
+    Items = getNames(vendingMachines),
     Multiselect = false,
     Callback = function(chosenVM)
-        selectedVM = getVendingMachine(chosenVM)
+        selectedVM = findInTable(vendingMachines, chosenVM)
         goToVendingMachine:SetName("Go to "..chosenVM)
     end
 })
 goToVendingMachine = teleportsTab:Button({
     Name = "Go to none",
     Callback = function()
-        local vmWorld = getWorld(selectedVM.Location)
+        local vmWorld = findInTable(worlds, selectedVM.Location)
 
         goToPart(vmWorld.TeleportPart + Vector3.new(0,50,0))
         waitFor(Map[vmWorld.Name]["PARTS_LOD"], "GROUND")
@@ -598,17 +560,17 @@ local selectedOM
 local goToOtherMachine
 teleportsTab:Dropdown({
     Name = "Other Machines",
-    Items = getOtherMachineNames(),
+    Items = getNames(otherMachines),
     Multiselect = false,
     Callback = function(chosenOM)
-        selectedOM = getOtherMachine(chosenOM)
+        selectedOM = findInTable(otherMachines, chosenOM)
         goToOtherMachine:SetName("Go to "..chosenOM)
     end
 })
 goToOtherMachine = teleportsTab:Button({
     Name = "Go to none",
     Callback = function()
-        local omWorld = getWorld(selectedOM.Location)
+        local omWorld = findInTable(worlds, selectedOM.Location)
 
         goToPart(omWorld.TeleportPart + Vector3.new(0,50,0))
         waitFor(Map[omWorld.Name]["PARTS_LOD"], "GROUND")
@@ -850,9 +812,9 @@ minigamesTab:Toggle({
 })
 -- Rewards
 
-rewardsTab:Toggle({
+local timeRewards = rewardsTab:Toggle({
     Name = 'Collect Time Rewards',
-    Default = config.rewardSettings.collectTimeRewards,
+    Default = false,
     Callback = function(value)
         config.rewardSettings.collectTimeRewards = value
         updateConfig()
@@ -867,6 +829,7 @@ rewardsTab:Toggle({
         end
     end
 })
+timeRewards:Lock("Need to update")
 rewardsTab:Toggle({
     Name = "Collect Spinner Ticket",
     Default = config.rewardSettings.collectSpinnerTicket,
@@ -884,9 +847,9 @@ local selectedReward
 local getDailyReward
 rewardsTab:Dropdown({
     Name = "Reward Type",
-    Items = getRewardNames(),
+    Items = getNames(rewards),
     Callback = function(chosenReward)
-        selectedReward = getReward(chosenReward)
+        selectedReward = findInTable(rewards, chosenReward)
         getDailyReward:SetName("Get: "..chosenReward)
     end
 })
@@ -902,7 +865,7 @@ getDailyReward = rewardsTab:Button({
     Name = "Get: none",
     Callback = function()
         local oldPos = HumanoidRootPart.CFrame
-        local rewardWorld = getWorld(selectedReward.Location)
+        local rewardWorld = findInTable(worlds, selectedReward.Location)
 
         goToPart(rewardWorld.TeleportPart + Vector3.new(0,50,0))
         waitFor(Map[rewardWorld.Name]["PARTS_LOD"], "GROUND")
@@ -918,7 +881,7 @@ getDailyReward = rewardsTab:Button({
 rewardsTab:Button({
     Name = "Go to Crystal Chest",
     Callback = function()
-        local ccWorld = getWorld("3 | Castle")
+        local ccWorld = findInTable(worlds, "3 | Castle")
 
         goToPart(ccWorld.TeleportPart + Vector3.new(0,50,0))
         waitFor(Map[ccWorld.Name]["PARTS_LOD"], "GROUND")
