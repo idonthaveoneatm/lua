@@ -112,7 +112,7 @@ local farmEventEggsDebounce = false
 local function farmEventEggs()
     if eventConfig.openEggs and not farmEventEggsDebounce then
         farmEventEggsDebounce = true
-        local egg = findInTable(eggs, eventConfig.selectedEgg)
+        local egg = findInTable(customEggs, eventConfig.selectedEgg)
         Invoke("CustomEggs_Hatch",{egg.remoteName, eventConfig.openAmount})
         farmEventEggsDebounce = false
     end
