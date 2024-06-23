@@ -163,6 +163,10 @@ local eggTab = main:Tab({
     tabColor = Color3.fromRGB(84, 177, 147),
     Image = "rbxassetid://10723345518"
 })
+local creditsTab = main:Tab({
+    Name = "Credits",
+    Image = "rbxassetid://10747373176"
+})
 
 checkActive("GoodEvilInstance")
 
@@ -234,6 +238,16 @@ eggTab:Toggle({
     Default = eventConfig.skipAnimation,
     Callback = function(value)
         eventConfig.skipAnimation = value
+    end
+})
+
+creditsTab:Label("UI: griffindoescooking")
+creditsTab:Label("Script: griffindoescooking")
+creditsTab:Section("Support: ")
+creditsTab:Button({
+    Name = "Discord",
+    Callback = function()
+        setclipboard("https://discord.gg/DBPHwFyCVT")
     end
 })
 
