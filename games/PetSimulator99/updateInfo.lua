@@ -458,7 +458,7 @@ local function checkMachines()
     end
 end
 
-for i,v in informationTable[getMap().Name] do
+for i,v in informationTable do
     for _,v2 in v do
         table.insert(alreadySent, v2)
     end
