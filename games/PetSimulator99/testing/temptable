@@ -629,13 +629,41 @@ return {
                 Name = "Minefield",
                 IsLoopable = false,
                 CustomFunction = [[
+                    local Players = cloneref(game:GetService("Players"))
+                    local Workspace = cloneref(game:GetService("Workspace"))
+
+                    local LocalPlayer = Players.LocalPlayer
+                    local HumanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart", true)
+
+                    local Things = Workspace["__THINGS"]
+                    local Instances = Things.Instances
+                    local instanceContainer = Things["__INSTANCE_CONTAINER"]
+
+                    local function waitFor(path, object, bool)
+                        bool = bool or false
+                        repeat
+                            task.wait()
+                        until path:FindFirstChild(object, bool)
+                        return path:FindFirstChild(object, bool)
+                    end
+                    local function goTo(coord)
+                        if typeof(coord) == "CFrame" then
+                            LocalPlayer.Character:PivotTo(coord)
+                        else
+                            coord = CFrame.new(coord.X,coord.Y,coord.Z)
+                            goTo(coord)
+                        end
+                    end
+
+                    local minefield = waitFor(instanceContainer.Active, "Minefield")
+
                     if identifyexecutor() ~= "Solara" then
-                        local common = require(loadedMG.Common)
+                        local common = require(minefield.Common)
                         common.Config.RespawnTimer = 0
                         common.Config.WinTimer = 0
 
-                        local mines = waitFor(loadedMG, "Mines")
-                        local finish = waitFor(loadedMG, "Finish")
+                        local mines = waitFor(minefield, "Mines")
+                        local finish = waitFor(minefield, "Finish")
                         local nextX,nextZ = 0, 0
                         for _,mine in ipairs(mines:GetChildren()) do
                             local oldPos = mine.Pad.CFrame
