@@ -812,6 +812,7 @@ return {
                     end
 
                     local minecart = waitFor(instanceContainer.Active, "Minecart")
+                    waitFor(minecart, "Interactable")
 
                     waitFor(minecart.Interactable, "StartLine")
                     waitFor(minecart.Interactable, "Goal")
