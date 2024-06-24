@@ -658,7 +658,7 @@ return {
                         end
                         goTo(finish.CFrame + Vector3.new(0,3,0))
                     else
-                        
+
                     end
                 ]]
             },
@@ -670,13 +670,14 @@ return {
             {
                 Name = "Atlantis",
                 IsLoopable = false,
-                CustomFunction = [[
-                    local atlantis = waitFor(instanceContainer.Active, "Atlantis")
-                    local rings = waitFor(atlantis, "Rings")
-                    for i=1,31 do
-                        local ring = waitFor(rings, tostring(i))
-                        task.wait(0.4)
-                        HumanoidRootPart.CFrame = ring.Collision.CFrame
+                CustomFunction = [[return function(waitFor, instanceContainer, HumanoidRootPart)
+                        local atlantis = waitFor(instanceContainer.Active, "Atlantis")
+                        local rings = waitFor(atlantis, "Rings")
+                        for i=1,31 do
+                            local ring = waitFor(rings, tostring(i))
+                            task.wait(0.4)
+                            HumanoidRootPart.CFrame = ring.Collision.CFrame
+                        end
                     end
                 ]]
             },
