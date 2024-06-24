@@ -674,15 +674,17 @@ return {
                                 nextX = mine.Pad.Position.X
                                 nextZ = mine.Pad.Position.Z
                             end
-                            mine.Pad.CFrame = HumanoidRootPart.CFrame
-                            task.wait(0.2)
-                            mine.Pad.CFrame = oldPos
-                            mine.Pad.CanCollide = true
-                            if tostring(mine.Pad.BrickColor) == "Really red" then
-                                nextX = nextX + 10
-                                task.wait(2)
-                            else
-                                nextZ = nextZ + 10
+                            if mine.Pad.Position.X == nextX and mine.Pad.Position.Z == nextZ then
+                                mine.Pad.CFrame = HumanoidRootPart.CFrame
+                                task.wait(0.2)
+                                mine.Pad.CFrame = oldPos
+                                mine.Pad.CanCollide = true
+                                if tostring(mine.Pad.BrickColor) == "Really red" then
+                                    nextZ = nextZ + 10
+                                    task.wait(2)
+                                else
+                                    nextX = nextX + 10
+                                end
                             end
                         end
                         goTo(finish.CFrame + Vector3.new(0,3,0))
