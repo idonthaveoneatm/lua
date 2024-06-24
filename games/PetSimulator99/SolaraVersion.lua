@@ -1,12 +1,14 @@
 --[[
 
-Made by griffindoescooking
+Made by griffin
+Discord: @griffindoescooking
+Github: https://github.com/idonthaveoneatm
 
 ]]--
 
 print("Pet Simulator 99 | griffindoescooking")
 warn('The solara version removes require functions')
-getgenv().griffinVersion = "2.9.8"
+getgenv().griffinVersion = "3.0.0"
 
 repeat
     task.wait()
@@ -69,18 +71,14 @@ end
 local LocalPlayer = game.Players.LocalPlayer
 local HumanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart", true)
 
-local sqrt = math.sqrt
-local pow = math.pow
-
 local VirtualUser = cloneref(game:GetService("VirtualUser"))
 local HttpService = cloneref(game:GetService("HttpService"))
 local UserInputService = cloneref(game:GetService("UserInputService"))
 
 local ReplicatedStorage = cloneref(game:GetService("ReplicatedStorage"))
-local ClientNetwork = ReplicatedStorage.Network
+local Network = ReplicatedStorage.Network
 
 local Workspace = cloneref(game:GetService("Workspace"))
-local Debris = Workspace['__DEBRIS']
 local Things = Workspace["__THINGS"]
 local Instances = Things.Instances
 local instanceContainer = Things["__INSTANCE_CONTAINER"]
@@ -110,6 +108,9 @@ else
         Map = getMap()
     end)
 end
+
+getgenv().griffindoescooking = false
+getgenv().griffindoescooking = true
 
 -- Configuration File
 
@@ -171,14 +172,17 @@ loadConfig()
 -- Tables
 
 getgenv().coinQueue = {} -- needs to be global to clear it on reexecute
-local PS99Info = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/informationTable.lua"))()
-PS99Info = PS99Info[Map.Name]
+local PS99Info = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/table/"..Map.Name..".lua"))()
+
 local worlds = PS99Info.Worlds
 local vendingMachines = PS99Info.VendingMachines
 local rewards = PS99Info.Rewards
 local otherMachines = PS99Info.OtherMachines
 local minigames = PS99Info.Minigames
 local eggs = PS99Info.Eggs
+
+-- Misc Functions
+
 local function getNames(tbl)
     local returnTable = {}
     for _,info in tbl do
@@ -203,21 +207,36 @@ local function findInTable(tbl, name)
     end
     return nil
 end
-
--- Functions
-
-local function calcDistance(obj1, obj2)
+local function Fire(name, args)
+    if Network:FindFirstChild(name) then
+        Network[name]:FireServer(unpack(args))
+    else
+        warn("theres no Network."..name)
+    end
+end
+local function Invoke(name, args)
+    if Network:FindFirstChild(name) then
+        Network[name]:InvokeServer(unpack(args))
+    else
+        warn("theres no Network."..name)
+    end
+end
+local function XZDist(obj1, obj2)
     local PosX1, PosZ1 = obj1.CFrame.X, obj1.CFrame.Z
     local PosX2, PosZ2 = obj2.CFrame.X, obj2.CFrame.Z
-
-    return sqrt(pow(PosX1 - PosX2, 2) + pow(PosZ1 - PosZ2, 2))
+    return math.sqrt(math.pow(PosX1 - PosX2, 2) + math.pow(PosZ1 - PosZ2, 2))
 end
 local function clickPosition(x,y)
     VirtualUser:Button1Down(Vector2.new(x,y))
     VirtualUser:Button1Up(Vector2.new(x,y))
 end
-local function goToPart(cframe)
-    HumanoidRootPart.CFrame = cframe
+local function goTo(coord)
+    if typeof(coord) == "CFrame" then
+        LocalPlayer.Character:PivotTo(coord)
+    else
+        coord = CFrame.new(coord.X,coord.Y,coord.Z)
+        goTo(coord)
+    end
 end
 local function waitFor(path, object, bool)
     bool = bool or false
@@ -228,7 +247,7 @@ local function waitFor(path, object, bool)
 end
 local function checkActive(name)
     if not instanceContainer.Active:FindFirstChild(name) then
-        goToPart(Instances[name]:FindFirstChild("Enter", true).CFrame)
+        goTo(Instances[name]:FindFirstChild("Enter", true).CFrame)
     end
 end
 local function completeObby(obbyInfo)
@@ -246,30 +265,80 @@ local function completeObby(obbyInfo)
         obbyInfo.EndPad = obbyInfo.EndPad.CFrame
     end
 
-    goToPart(obbyInfo.StartLine + Vector3.new(0,3,0))
-    task.wait(0.5)
+    goTo(obbyInfo.StartLine + Vector3.new(0,3,0))
+    task.wait(5)
 
-    warn("Removed a require for Common.WinTimer. May break functionality")
-
-    goToPart(obbyInfo.EndPad + Vector3.new(0,3,0))
+    goTo(obbyInfo.EndPad + Vector3.new(0,3,0))
 end
-local function Fire(name, args)
-    if ClientNetwork:FindFirstChild(name) then
-        ClientNetwork[name]:FireServer(unpack(args))
-    else
-        warn("theres no ClientNetwork."..name)
+local function findNearestBreakable()
+    local nearestBreakable
+    local nearestDistance = 9e9
+    for _, breakable in ipairs(Breakables:GetChildren()) do
+        if breakable:FindFirstChildWhichIsA("MeshPart") then
+            local meshPart = breakable:FindFirstChildWhichIsA("MeshPart")
+            local distance = (HumanoidRootPart.Position - meshPart.Position).magnitude
+            if distance < nearestDistance then
+                nearestBreakable = breakable
+                nearestDistance = distance
+            end
+        end
+    end
+    return nearestBreakable
+end
+local function isBreakableInRadius(breakable)
+    if breakable:FindFirstChild("Hitbox", true) and XZDist(breakable:FindFirstChild("Hitbox", true), HumanoidRootPart) <= config.farmSettings.breakRadius then
+        return true
+    end
+    return false
+end
+
+-- Looped Functions
+
+local doingQueue = false
+local farmBreakablesDebounce = false
+local collectLootbagsDebounce = false
+local collectOrbsDebounce = false
+local farmEggsDebounce = false
+local collectTimeRewardsDebounce = false
+local collectStarterWheelTicketDebounce = false
+local antiAFKDebounce = false
+
+local function farmBreakables()
+    if config.farmSettings.breakObjects and not farmBreakablesDebounce then
+        farmBreakablesDebounce = true
+        local breakable = findNearestBreakable()
+        if config.farmSettings.singleTarget then
+            repeat
+                task.wait(config.farmSettings.waitTime)
+                Fire("Breakables_PlayerDealDamage", {breakable.Name})
+            until not Breakables:FindFirstChild(breakable.Name) or not isBreakableInRadius(breakable) or not config.farmSettings.breakObjects or not config.farmSettings.singleTarget
+        else
+            if not table.find(coinQueue, breakable.Name) then
+                table.insert(coinQueue, breakable.Name)
+                task.spawn(function()
+                    repeat
+                        task.wait()
+                    until not Breakables:FindFirstChild(breakable) or not isBreakableInRadius(breakable) or config.farmSettings.singleTarget or not config.farmSettings.breakObjects
+                    table.remove(coinQueue, table.find(coinQueue, breakable))
+                end)
+            end
+            task.spawn(function()
+                if not doingQueue then
+                    doingQueue = true
+                    for _,currentCoin in ipairs(coinQueue) do
+                        Fire("Breakables_PlayerDealDamage", {currentCoin})
+                        task.wait(config.farmSettings.waitTime)
+                    end
+                    doingQueue = false
+                end
+            end)
+        end
+        farmBreakablesDebounce = false
     end
 end
-local function Invoke(name, args)
-    if ClientNetwork:FindFirstChild(name) then
-        ClientNetwork[name]:InvokeServer(unpack(args))
-    else
-        warn("theres no ClientNetwork."..name)
-    end
-end
-
 local function collectLootbags()
-    if config.farmSettings.collectOrbsAndLootbags then
+    if config.farmSettings.collectOrbsAndLootbags and not collectLootbagsDebounce then
+        collectLootbagsDebounce = true
         local lootbags = {}
         for _, lootbag in ipairs(Lootbags:GetChildren()) do
             if not config.farmSettings.collectOrbsAndLootbags then break end
@@ -277,10 +346,12 @@ local function collectLootbags()
             lootbag:Destroy()
         end
         Fire("Lootbags_Claim", {lootbags})
+        collectLootbagsDebounce = false
     end
 end
 local function collectOrbs()
-    if config.farmSettings.collectOrbsAndLootbags then
+    if config.farmSettings.collectOrbsAndLootbags and not collectOrbsDebounce then
+        collectOrbsDebounce = true
         local orbs = {}
         for _, orb in ipairs(Orbs:GetChildren()) do
             if not config.farmSettings.collectOrbsAndLootbags then break end
@@ -288,6 +359,45 @@ local function collectOrbs()
             orb:Destroy()
         end
         Fire("Orbs: Collect", {orbs})
+        collectOrbsDebounce = false
+    end
+end
+local function farmEggs()
+    if config.eggSettings.openEggs and not farmEggsDebounce then
+        farmEggsDebounce = true
+        local splitName = string.split(config.eggSettings.selectedEgg, " | ")
+        Invoke("Eggs_RequestPurchase",{splitName[2], config.eggSettings.openAmount})
+        task.wait(0.4)
+        repeat
+            task.wait()
+            clickPosition(math.huge,math.huge)
+        until not Workspace.Camera:FindFirstChild("Eggs") or not config.eggSettings.openEggs
+        task.wait(0.75)
+        farmEggsDebounce = false
+    end
+end
+local function collectTimeRewards()
+    if config.rewardSettings.collectTimeRewards and not collectTimeRewardsDebounce then
+        collectTimeRewardsDebounce = true
+        for i=1,12 do
+            Invoke("Redeem Free Gift", {i})
+        end
+        collectTimeRewardsDebounce = false
+    end
+end
+local function collectStarterWheelTicket()
+    if config.rewardSettings.collectSpinnerTicket and not collectStarterWheelTicketDebounce then
+        collectStarterWheelTicketDebounce = true
+        Fire("Spinny Wheel: Request Ticket", {"StarterWheel"})
+        collectStarterWheelTicketDebounce = false
+    end
+end
+local function antiAFK()
+    if config.miscSettings.antiAFK and not antiAFKDebounce then
+        antiAFKDebounce = true
+        LocalPlayer.Character.Humanoid:ChangeState(3)
+        task.wait(math.random(120,180))
+        antiAFKDebounce = false
     end
 end
 
@@ -303,6 +413,11 @@ local farmingTab = main:Tab({
     Name = "Farming",
     tabColor = Color3.fromHex("#71d1f5"),
     Image = "rbxassetid://10709769841"
+})
+local eggTab = main:Tab({
+    Name = "Eggs",
+    tabColor = Color3.fromRGB(84, 177, 147),
+    Image = "rbxassetid://10723345518"
 })
 local teleportsTab = main:Tab({
     Name = "Teleports",
@@ -337,52 +452,9 @@ farmingTab:Toggle({
     Callback = function(value)
         config.farmSettings.breakObjects = value
         updateConfig()
-
-        local doingQueue = false
-
-        while config.farmSettings.breakObjects and task.wait() do
-            for _, v in ipairs(Breakables:GetChildren()) do
-
-                if v:FindFirstChild("Hitbox", true) then
-                    local coinPart = v:FindFirstChild("Hitbox", true)
-                    local coinName = v.Name
-
-                    if calcDistance(coinPart, HumanoidRootPart) <= config.farmSettings.breakRadius then
-                        if config.farmSettings.singleTarget then
-
-                            repeat
-                                task.wait(config.farmSettings.waitTime)
-                                Fire("Breakables_PlayerDealDamage", {coinName})
-                            until not Breakables:FindFirstChild(coinName) or calcDistance(coinPart, HumanoidRootPart) > config.farmSettings.breakRadius or not config.farmSettings.breakObjects or not config.farmSettings.singleTarget
-
-                        else
-
-                            if not table.find(coinQueue, v.Name) then
-                                table.insert(coinQueue, v.Name)
-                                task.spawn(function()
-                                    repeat
-                                        task.wait()
-                                    until not Breakables:FindFirstChild(coinName) or calcDistance(coinPart, HumanoidRootPart) > config.farmSettings.breakRadius or config.farmSettings.singleTarget or not config.farmSettings.breakObjects
-                                    table.remove(coinQueue, table.find(coinQueue, coinName))
-                                end)
-                            end
-                            task.spawn(function()
-                                if not doingQueue then
-                                    doingQueue = true
-                                    for _,currentCoin in ipairs(coinQueue) do
-                                        Fire("Breakables_PlayerDealDamage", {currentCoin})
-                                        task.wait(config.farmSettings.waitTime)
-                                    end
-                                    doingQueue = false
-                                end
-                            end)
-
-                        end
-                    end
-                end
-            end
+        if not config.farmSettings.breakObjects then
+            table.clear(coinQueue)
         end
-        table.clear(coinQueue)
     end
 })
 farmingTab:Toggle({
@@ -398,17 +470,16 @@ radiusSetter = farmingTab:TextBox({
     Name = "Radius (Recommended: 70)",
     Default = config.farmSettings.breakRadius,
     Callback = function(value)
-        if tonumber(value) then
-            config.farmSettings.breakRadius = tonumber(value)
-        elseif value ~= "" and not tonumber(value) then
-            config.farmSettings.breakRadius = 40
-            radiusSetter:SetInput("40")
+        if value ~= "" or not tonumber(value) then
+            --radiusSetter:SetInput("40")
             main:Notify({
                 Title = "Radius Error",
                 Duration = 20,
                 Body = "You need the RADIUS to be a number. It is now 40"
             })
+            return
         end
+        config.farmSettings.breakRadius = tonumber(value)
         updateConfig()
     end
 })
@@ -417,19 +488,22 @@ waitSetter = farmingTab:TextBox({
     Name = "Wait Time (Recommended: 0.2)",
     Default = config.farmSettings.waitTime,
     Callback = function(value)
-        if tonumber(value) then
-            config.farmSettings.waitTime = tonumber(value)
-        elseif value ~= "" and not tonumber(value) then
-            waitSetter:SetInput("0.2")
+        if value ~= "" or not tonumber(value) then
+            --waitSetter:SetInput("0.2")
             main:Notify({
                 Title = "Wait Time Error",
                 Duration = 20,
                 Body = "You need the WAIT TIME to be a number. It is now 0.2"
             })
+            return
         end
+        config.farmSettings.waitTime = tonumber(value)
         updateConfig()
     end
 })
+
+
+
 farmingTab:Toggle({
     Name = "Buy Next Zone",
     Default = config.farmSettings.buyZone,
@@ -456,21 +530,14 @@ collectOrbsAndLootbags = farmingTab:Toggle({
     Default = config.farmSettings.collectOrbsAndLootbags,
     Callback = function(value)
         config.farmSettings.collectOrbsAndLootbags = value
-        task.spawn(function()
-            while config.farmSettings.collectOrbsAndLootbags and task.wait() do
-                collectLootbags()
-                collectOrbs()
-            end
-        end)
         updateConfig()
     end
 })
 
+-- Eggs
 
-
-farmingTab:Section("Egg Farming")
-farmingTab:Label("You must be near eggs to hatch them")
-farmingTab:Dropdown({
+eggTab:Label("You must be near eggs to hatch them")
+eggTab:Dropdown({
     Name = "Egg to farm",
     Items = eggs,
     Multiselect = false,
@@ -479,8 +546,8 @@ farmingTab:Dropdown({
         config.eggSettings.selectedEgg = eggPicked
         updateConfig()
     end
-})  
-farmingTab:Slider({
+})
+eggTab:Slider({
     Name = "Amount of eggs",
     Max = 99,
     Min = 1,
@@ -490,23 +557,12 @@ farmingTab:Slider({
         updateConfig()
     end
 })
-farmingTab:Toggle({
+eggTab:Toggle({
     Name = "Farm selected egg",
     Default = config.eggSettings.openEggs,
     Callback = function(value)
         config.eggSettings.openEggs = value
         updateConfig()
-
-        while config.eggSettings.openEggs and task.wait() do
-            local splitName = string.split(config.eggSettings.selectedEgg, " | ")
-            Invoke("Eggs_RequestPurchase",{splitName[2], config.eggSettings.openAmount})
-            task.wait(0.4)
-            repeat
-                task.wait()
-                clickPosition(math.huge,math.huge)
-            until not Workspace.Camera:FindFirstChild("Eggs") or not config.eggSettings.openEggs
-            task.wait(0.75)
-        end
     end
 })
 
@@ -521,14 +577,16 @@ teleportsTab:Dropdown({
     Callback = function(chosenWorld)
         selectedWorld = findInTable(worlds, chosenWorld)
         goToZone:SetName("Go to "..chosenWorld)
+        goToZone:Unlock()
     end
 })
 goToZone = teleportsTab:Button({
     Name = "Go to none",
     Callback = function()
-        goToPart(selectedWorld.TeleportPart + Vector3.new(0,3,0))
+        goTo(selectedWorld.TeleportPart + Vector3.new(0,3,0))
     end
 })
+goToZone:Lock("Select Zone")
 
 teleportsTab:Section("Vending Machines")
 local selectedVM
@@ -540,6 +598,7 @@ teleportsTab:Dropdown({
     Callback = function(chosenVM)
         selectedVM = findInTable(vendingMachines, chosenVM)
         goToVendingMachine:SetName("Go to "..chosenVM)
+        goToVendingMachine:Unlock()
     end
 })
 goToVendingMachine = teleportsTab:Button({
@@ -547,13 +606,13 @@ goToVendingMachine = teleportsTab:Button({
     Callback = function()
         local vmWorld = findInTable(worlds, selectedVM.Location)
 
-        goToPart(vmWorld.TeleportPart + Vector3.new(0,50,0))
+        goTo(vmWorld.TeleportPart + Vector3.new(0,50,0))
         waitFor(Map[vmWorld.Name]["PARTS_LOD"], "GROUND")
-        local world = Map[vmWorld.Name]
-        local vendingPad = waitFor(world.INTERACT.Machines, selectedVM.Name).Pad.CFrame
-        goToPart(vendingPad)
+        local vendingPad = waitFor(Map[vmWorld.Name].INTERACT.Machines, selectedVM.Name).Pad.CFrame
+        goTo(vendingPad)
     end
 })
+goToVendingMachine:Lock("Select Vending Machine")
 
 teleportsTab:Section("Other Machines")
 local selectedOM
@@ -565,6 +624,7 @@ teleportsTab:Dropdown({
     Callback = function(chosenOM)
         selectedOM = findInTable(otherMachines, chosenOM)
         goToOtherMachine:SetName("Go to "..chosenOM)
+        goToOtherMachine:Unlock()
     end
 })
 goToOtherMachine = teleportsTab:Button({
@@ -572,45 +632,45 @@ goToOtherMachine = teleportsTab:Button({
     Callback = function()
         local omWorld = findInTable(worlds, selectedOM.Location)
 
-        goToPart(omWorld.TeleportPart + Vector3.new(0,50,0))
+        goTo(omWorld.TeleportPart + Vector3.new(0,50,0))
         waitFor(Map[omWorld.Name]["PARTS_LOD"], "GROUND")
-        local world = Map[omWorld.Name]
-        local vendingPad = waitFor(world.INTERACT.Machines, selectedOM.Name).Pad.CFrame
-        goToPart(vendingPad)
+        local vendingPad = waitFor(Map[omWorld.Name].INTERACT.Machines, selectedOM.Name).Pad.CFrame
+        goTo(vendingPad)
     end
 })
-
-teleportsTab:Label("Miscellaneous")
-teleportsTab:Button({
-    Name = "Remove Water",
-    Callback = function()
-        for _, water in ipairs(Map:GetDescendants()) do
-            if water:IsA("Folder") and water.Name == "Water Bounds" then
-                water:Destroy()
-            end
-        end
-    end
-})
+goToOtherMachine:Lock("Select Other Machine")
 
 -- Minigames
-
 local selectedMG
 local goToMinigame
 local completeMinigame
+
+local nonLoopables = {}
+for _, minigame in minigames do
+    if not minigame.IsLoopable then
+        table.insert(nonLoopables, minigame)
+    end
+end
+
 minigamesTab:Dropdown({
     Name = "Select Minigame",
-    Items = minigames,
+    Items = getNames(nonLoopables),
     Multiselect = false,
     Callback = function(chosenMG)
         selectedMG = chosenMG
         goToMinigame:SetName("Go to "..chosenMG)
         completeMinigame:SetName("Complete "..chosenMG)
+        if not findInTable(minigames, selectedMG).HasCompletion then
+            completeMinigame:Lock("There is no auto complete")
+        else
+            completeMinigame:Unlock()
+        end
     end
 })
 goToMinigame = minigamesTab:Button({
     Name = "Go to none",
     Callback = function()
-        goToPart(Things.Instances[selectedMG]:FindFirstChild("Enter", true).CFrame)
+        goTo(Things.Instances[selectedMG]:FindFirstChild("Enter", true).CFrame)
     end
 })
 minigamesTab:Section("Auto Complete")
@@ -621,195 +681,45 @@ completeMinigame = minigamesTab:Button({
         task.wait(1)
         local loadedMG = waitFor(instanceContainer.Active, selectedMG)
         task.wait(1)
-        if selectedMG ~= "Minefield" and selectedMG ~= "Atlantis" and selectedMG ~= "Minecart" then
-            local StartLine = waitFor(loadedMG, "StartLine", true)
-            local Goal = waitFor(loadedMG, "Goal", true)
+        local minigameInfo = findInTable(minigames, selectedMG)
+
+        if minigameInfo.CustomFunction then
+            loadstring(minigameInfo.CustomFunction)()
+        else
             completeObby({
                 Name = selectedMG,
-                StartLine = StartLine,
-                EndPad = Goal.Pad
-            })
-        elseif selectedMG == "Minefield" then
-
-            warn("Removed a require for Common.WinTimer and Common.RespawnTimer. May break functionality")
-
-            local mines = waitFor(loadedMG, "Mines")
-            local finish = waitFor(loadedMG, "Finish")
-            local nextX,nextZ = 0, 0
-            for _,mine in ipairs(mines:GetChildren()) do
-                if nextX == 0 then
-                    local oldPos = mine.Pad.CFrame
-                    mine.Pad.CanCollide = false
-                    nextX = mine.Pad.Position.X
-                    nextZ = mine.Pad.Position.Z
-                    mine.Pad.CFrame = HumanoidRootPart.CFrame
-                    task.wait(0.2)
-                    mine.Pad.CFrame = oldPos
-                    mine.Pad.CanCollide = true
-                    if tostring(mine.Pad.BrickColor) == "Really red" then
-                        nextZ = nextZ + 10
-                        task.wait(2)
-                    else
-                        nextX = nextX + 10
-                    end
-                else
-                    if mine.Pad.Position.X == nextX and mine.Pad.Position.Z == nextZ then
-                        local oldPos = mine.Pad.CFrame
-                        mine.Pad.CanCollide = false
-                        mine.Pad.CFrame = HumanoidRootPart.CFrame
-                        task.wait(0.2)
-                        mine.Pad.CFrame = oldPos
-                        mine.Pad.CanCollide = true
-                        if tostring(mine.Pad.BrickColor) == "Really red" then
-                            nextZ = nextZ + 10
-                            task.wait(2)
-                        else
-                            nextX = nextX + 10
-                        end
-                    end
-                end
-            end
-            goToPart(finish.CFrame + Vector3.new(0,3,0))
-        elseif selectedMG == "Atlantis" then
-            checkActive("Atlantis")
-            task.wait(1)
-            local atlantis = waitFor(instanceContainer.Active, "Atlantis")
-            local rings = waitFor(atlantis, "Rings")
-            for i=1,31 do
-                local ring = waitFor(rings, tostring(i))
-                task.wait(0.4)
-                HumanoidRootPart.CFrame = ring.Collision.CFrame
-            end
-        elseif selectedMG == "Minecart" then
-            waitFor(loadedMG.Interactable, "StartLine")
-            waitFor(loadedMG.Interactable, "Goal")
-            completeObby({
-                Name = selectedMG,
-                StartLine = CFrame.new(0,0,0) + Vector3.new(-1380.3746337890625, -102.0365982055664, -4659.6044921875),
-                EndPad = loadedMG.Interactable.Goal.Pad
+                StartLine = waitFor(loadedMG, "StartLine", true),
+                EndPad = waitFor(loadedMG, "Goal", true).Pad
             })
         end
     end
 })
-minigamesTab:Toggle({
-    Name = "Farm Fishing",
-    Default = config.minigameSettings.farmFishing,
-    Callback = function(value)
-        config.minigameSettings.farmFishing = value
-        updateConfig()
 
-        checkActive("Fishing")
-        task.wait(0.2)
-        local fishing = waitFor(instanceContainer.Active, "Fishing")
-        local Layer1 =  waitFor(fishing.Water, "Layer1")
-        local L1Position = Layer1.Position
-        local function fishingRemote(type, args)
-            if type == "Invoke" then
-                return Invoke("Instancing_InvokeCustomFromClient", {"Fishing", unpack(args)})
-            elseif type == "Fire" then
-                return Fire("Instancing_FireCustomFromClient", {"Fishing", unpack(args)})
-            end
-        end
-        local function isBubbling()
-            local bubbling = false
-            for _,host in ipairs(Debris:GetChildren()) do
-                if host.Name == "host" and host:FindFirstChild("Attachment") and (host.Attachment:FindFirstChild("Bubbles") or host.Attachment:FindFirstChild("Rare Bubbles")) then
-                    local distance = (L1Position.X - host.Position.X)
-                    if distance <= 2 then
-                        bubbling = true
-                    end
-                end
-            end
-            return bubbling
-        end
-        while config.minigameSettings.farmFishing and task.wait() do
-            fishingRemote("Fire",{"RequestCast", Vector3.new(L1Position.X,L1Position.Y,L1Position.Z)})
-            repeat task.wait() until isBubbling() or not config.minigameSettings.farmFishing
-            fishingRemote("Fire", {"RequestReel"})
-            repeat
-                task.wait()
-                fishingRemote("Invoke", {"Clicked"})
-            until (not isBubbling()) or not config.minigameSettings.farmFishing
-        end
-        goToPart(fishing.Interactable:FindFirstChild("Pad", true).CFrame + Vector3.new(0,3,0))
-    end
-})
-minigamesTab:Toggle({
-    Name = "Farm Digsite",
-    Default = false,
-    Callback = function(value)
-        config.minigameSettings.farmDigsite = value
-        updateConfig()
+getgenv().activeLoopedMinigame = ""
 
-        checkActive("Digsite")
-        task.wait(0.2)
-        local digsite = waitFor(instanceContainer.Active, "Digsite")
-        local function digsiteRemote(type, args)
-            if type == "Invoke" then
-                return Invoke("Instancing_InvokeCustomFromClient", {"Digsite", unpack(args)})
-            elseif type == "Fire" then
-                return Fire("Instancing_FireCustomFromClient", {"Digsite", unpack(args)})
-            end
-        end
-        local ActiveChests = digsite.Important.ActiveChests
-        local ActiveBlocks = digsite.Important.ActiveBlocks
-        local starterPos = CFrame.new(-75.44137573242188, 60.91250991821289, -2530.437744140625)
-        local endPos = CFrame.new(-65.44137573242188, 60.91250991821289, -2520.437744140625)
-
-        local function getChests(oldPosition)
-            for _,chest in ipairs(ActiveChests:GetChildren()) do
-                print(chest.Name)
-                if chest.Name == "Animated" then
-                    print("attempting ", chest.Name)
-                    goToPart(chest.Bottom.CFrame)
-                    task.wait(0.2)
-                    digsiteRemote("Fire",{"DigChest",chest:GetAttribute("Coord")})
-                    repeat task.wait() until not ActiveChests:FindFirstChild(chest)
-                    task.wait(1)
-                end
-            end
-            goToPart(oldPosition)
-        end
-        local function checkForChests()
-            local isChest = false
-            for _, chest in ipairs(ActiveChests:GetChildren()) do
-                if chest.Name == "Animated" then
-                    isChest = true
-                end
-            end
-            return isChest
-        end
-        local function getBlockDistance(obj)
-            return (HumanoidRootPart.Position - obj.Position).magnitude
-        end
-        if config.minigameSettings.farmDigsite then
-            goToPart(starterPos)
-            task.wait(0.2)
-            getChests(starterPos)
-        end
-        while config.minigameSettings.farmDigsite and task.wait() do
-            for _,block in ipairs(ActiveBlocks:GetChildren()) do
-                if checkForChests() then
-                    getChests(HumanoidRootPart.CFrame)
-                    break
-                end
-                if block.Name == "Part" then
-                    local distance = getBlockDistance(block)
-
-                    if distance < 8 then
-                        print(distance)
+for _,minigame in minigames do
+    if minigame.IsLoopable then
+        local togglableMinigame
+        togglableMinigame = minigamesTab:Toggle({
+            Name = "Farm "..minigame.Name,
+            Default = false,
+            Callback = function(value)
+                if value then
+                    getgenv().activeLoopedMinigame = minigame.Name
+                    task.spawn(loadstring(minigame.CustomFunction))
+                    task.spawn(function()
                         repeat
-                            digsiteRemote("Fire", {"DigBlock", block:GetAttribute("Coord")})
                             task.wait()
-                        until not ActiveBlocks:FindFirstChild(block) or (getBlockDistance(block) > 8)
-                    end
+                        until getgenv().activeLoopedMinigame ~= minigame.Name
+                        togglableMinigame:SetValue(false)
+                    end)
+                else
+                    getgenv().activeLoopedMinigame = ""
                 end
             end
-        end
-
-        goToPart(endPos)
+        })
     end
-})
+end
 -- Rewards
 
 local timeRewards = rewardsTab:Toggle({
@@ -821,25 +731,14 @@ local timeRewards = rewardsTab:Toggle({
         if not config.farmSettings.collectOrbsAndLootbags then
             collectOrbsAndLootbags:SetValue(config.rewardSettings.collectTimeRewards)
         end
-
-        while config.rewardSettings.collectTimeRewards and task.wait() do
-            for i=1,12 do
-                Invoke("Redeem Free Gift", {i})
-            end
-        end
     end
 })
-timeRewards:Lock("Need to update")
 rewardsTab:Toggle({
     Name = "Collect Spinner Ticket",
     Default = config.rewardSettings.collectSpinnerTicket,
     Callback = function(value)
         config.rewardSettings.collectSpinnerTicket = value
         updateConfig()
-
-        while config.rewardSettings.collectSpinnerTicket and task.wait() do
-            Fire("Spinny Wheel: Request Ticket", {"StarterWheel"})
-        end
     end
 })
 rewardsTab:Section("Daily Rewards")
@@ -867,27 +766,15 @@ getDailyReward = rewardsTab:Button({
         local oldPos = HumanoidRootPart.CFrame
         local rewardWorld = findInTable(worlds, selectedReward.Location)
 
-        goToPart(rewardWorld.TeleportPart + Vector3.new(0,50,0))
+        goTo(rewardWorld.TeleportPart + Vector3.new(0,50,0))
         waitFor(Map[rewardWorld.Name]["PARTS_LOD"], "GROUND")
         local world = Map[rewardWorld.Name]
         local rewardPad = waitFor(world.INTERACT.Machines, selectedReward.Name).Pad.CFrame
-        goToPart(rewardPad + Vector3.new(0,3,0))
+        goTo(rewardPad + Vector3.new(0,3,0))
         if not config.rewardSettings.teleportAndStay then
             task.wait(0.2)
-            goToPart(oldPos)
+            goTo(oldPos)
         end
-    end
-})
-rewardsTab:Button({
-    Name = "Go to Crystal Chest",
-    Callback = function()
-        local ccWorld = findInTable(worlds, "3 | Castle")
-
-        goToPart(ccWorld.TeleportPart + Vector3.new(0,50,0))
-        waitFor(Map[ccWorld.Name]["PARTS_LOD"], "GROUND")
-        local world = Map[ccWorld.Name]
-        local rewardPad = waitFor(world.INTERACT, "CrystalChest").Pad.CFrame
-        goToPart(rewardPad + Vector3.new(0,3,0))
     end
 })
 
@@ -916,7 +803,7 @@ completeStairs = miscTab:Toggle({
         updateConfig()
 
         if config.miscSettings.stairwayToHeaven and not instanceContainer.Active:FindFirstChild("StairwayToHeaven") then
-            goToPart(CFrame.new(0,-100,0))
+            goTo(CFrame.new(0,-100,0))
         end
         repeat task.wait() until instanceContainer.Active:FindFirstChild("StairwayToHeaven")
         local stairway = instanceContainer.Active.StairwayToHeaven
@@ -930,7 +817,7 @@ completeStairs = miscTab:Toggle({
                 completeStairs:SetValue(false)
                 local goal = stairway:FindFirstChild("Goal", true)
                 task.wait(0.3)
-                goToPart(goal.Shrine.Pad.CFrame + Vector3.new(0,3,0))
+                goTo(goal.Shrine.Pad.CFrame + Vector3.new(0,3,0))
             end
             task.spawn(function()
                 for _,part in ipairs(stairway:GetDescendants()) do
@@ -939,7 +826,7 @@ completeStairs = miscTab:Toggle({
                         completeStairs:SetValue(false)
                         local goal = stairway:FindFirstChild("Goal", true)
                         task.wait(0.3)
-                        goToPart(goal.Shrine.Pad.CFrame + Vector3.new(0,3,0))
+                        goTo(goal.Shrine.Pad.CFrame + Vector3.new(0,3,0))
                     end
                 end
             end)
@@ -962,7 +849,7 @@ completeStairs = miscTab:Toggle({
             if oldHighest ~= highestY then
                 oldHighest = highestY
                 pcall(function()
-                    goToPart(highestCFrame + Vector3.new(0,3,0))
+                    goTo(highestCFrame + Vector3.new(0,3,0))
                 end)
                 task.wait(0.2)
             end
@@ -970,6 +857,16 @@ completeStairs = miscTab:Toggle({
     end
 })
 miscTab:Label("^ This probably doesn't even work ^")
+miscTab:Button({
+    Name = "Remove Water",
+    Callback = function()
+        for _, water in ipairs(Map:GetDescendants()) do
+            if water:IsA("Folder") and water.Name == "Water Bounds" then
+                water:Destroy()
+            end
+        end
+    end
+})
 
 creditsTab:Label("UI: griffindoescooking")
 creditsTab:Label("Script: griffindoescooking, project L")
@@ -987,11 +884,21 @@ creditsTab:Button({
     end
 })
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/updateInfo.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/updateInfo.lua"))
 
 local gitVersion = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/version"))()
 if getgenv().griffinVersion and getgenv().griffinVersion == gitVersion then
     print("versions match")
 else
     warn("versions don't match. either you are on the wrong version or the github raw hasnt updated")
+end
+
+while task.wait() and getgenv().griffindoescooking do
+    task.spawn(farmBreakables)
+    task.spawn(collectLootbags)
+    task.spawn(collectOrbs)
+    task.spawn(farmEggs)
+    task.spawn(collectTimeRewards)
+    task.spawn(collectStarterWheelTicket)
+    task.spawn(antiAFK)
 end
