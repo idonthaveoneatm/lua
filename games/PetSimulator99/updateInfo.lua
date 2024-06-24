@@ -9,7 +9,6 @@ Github: https://github.com/idonthaveoneatm
 local Workspace = cloneref(game:GetService("Workspace"))
 local HttpService = cloneref(game:GetService("HttpService"))
 
-local informationTable = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/informationTable.lua"))()
 getgenv().alreadySent = {}
 getgenv().updating = false
 getgenv().updating = true
@@ -31,6 +30,9 @@ local function getMap()
         return getMap()
     end
 end
+
+local informationTable = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/table/"..getMap().Name..".lua"))()
+
 
 local function checkIfAlreadySent(type, name, zone)
     if type == "World" then
@@ -235,7 +237,7 @@ end
 local function checkEggs()
     local zoneEggs = game.ReplicatedStorage['__DIRECTORY'].Eggs['Zone Eggs']
     local textTable = {}
-    for _,egg in ipairs(zoneEggs["World "..tostring(getNumber(getMap().Name))]:GetDescendants()) do
+    for _,egg in ipairs(zoneEggs["World "..tostring(getNumber(getMap().Name) or 1)]:GetDescendants()) do
         if egg:IsA("ModuleScript") then
             if not checkIfAlreadySent("Egg", egg.Name) then
                 table.insert(textTable,egg.Name)
