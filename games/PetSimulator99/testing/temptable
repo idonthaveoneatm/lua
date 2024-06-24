@@ -1115,7 +1115,7 @@ return {
                     end
                     checkActive("AdvancedDigsite")
                     task.wait(0.2)
-                    local digsite = waitFor(instanceContainer.Active, "Digsite")
+                    local digsite = waitFor(instanceContainer.Active, "AdvancedDigsite")
                     local function digsiteRemote(type, args)
                         if type == "Invoke" then
                             return Invoke("Instancing_InvokeCustomFromClient", {"AdvancedDigsite", unpack(args)})
