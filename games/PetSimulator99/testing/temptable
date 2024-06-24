@@ -838,9 +838,129 @@ return {
             {
                 Name = "Digsite",
                 IsLoopable = true,
-                CustomFunction = function()
-                    
-                end
+                CustomFunction = [[
+                    local Players = cloneref(game:GetService("Players"))
+                    local Workspace = cloneref(game:GetService("Workspace"))
+                    local ReplicatedStorage = cloneref(game:GetService("ReplicatedStorage"))
+                    local Network
+                    if identifyexecutor() ~= "Solara" then
+                        Network = require(ReplicatedStorage.Library.Client.Network)
+                    else
+                        Network = ReplicatedStorage.Network
+                    end
+                    local LocalPlayer = Players.LocalPlayer
+                    local HumanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart", true)
+                    local Things = Workspace["__THINGS"]
+                    local Instances = Things.Instances
+                    local instanceContainer = Things["__INSTANCE_CONTAINER"]
+                    local function Fire(name, args)
+                        if identifyexecutor() ~= "Solara" then
+                            Network.Fire(name, unpack(args))
+                        else
+                            if Network:FindFirstChild(name) then
+                                Network[name]:FireServer(unpack(args))
+                            else
+                                warn("theres no Network."..name)
+                            end
+                        end
+                    end
+                    local function Invoke(name, args)
+                        if identifyexecutor() ~= "Solara" then
+                            Network.Invoke(name, unpack(args))
+                        else
+                            if Network:FindFirstChild(name) then
+                                Network[name]:InvokeServer(unpack(args))
+                            else
+                                warn("theres no Network."..name)
+                            end
+                        end
+                    end
+                    local function checkIfSelected(name)
+                        return (getgenv().activeLoopedMinigame == name)
+                    end
+                    local function goTo(coord)
+                        if typeof(coord) == "CFrame" then
+                            LocalPlayer.Character:PivotTo(coord)
+                        else
+                            coord = CFrame.new(coord.X,coord.Y,coord.Z)
+                            goTo(coord)
+                        end
+                    end
+                    local function checkActive(name)
+                        if not instanceContainer.Active:FindFirstChild(name) then
+                            goTo(Instances[name]:FindFirstChild("Enter", true).CFrame)
+                        end
+                    end
+                    local function waitFor(path, object, bool)
+                        bool = bool or false
+                        repeat
+                            task.wait()
+                        until path:FindFirstChild(object, bool)
+                        return path:FindFirstChild(object, bool)
+                    end
+                    checkActive("Digsite")
+                    task.wait(0.2)
+                    local digsite = waitFor(instanceContainer.Active, "Digsite")
+                    local function digsiteRemote(type, args)
+                        if type == "Invoke" then
+                            return Invoke("Instancing_InvokeCustomFromClient", {"Digsite", unpack(args)})
+                        elseif type == "Fire" then
+                            return Fire("Instancing_FireCustomFromClient", {"Digsite", unpack(args)})
+                        end
+                    end
+                    local ActiveChests = digsite.Important.ActiveChests
+                    local ActiveBlocks = digsite.Important.ActiveBlocks
+                    local starterPos = CFrame.new(-75.44137573242188, 60.91250991821289, -2530.437744140625)
+                    local endPos = CFrame.new(-65.44137573242188, 60.91250991821289, -2520.437744140625)
+
+                    local function getChests(oldPosition)
+                        for _,chest in ipairs(ActiveChests:GetChildren()) do
+                            if chest.Name == "Animated" then
+                                goTo(chest.Bottom.CFrame)
+                                task.wait(0.2)
+                                digsiteRemote("Fire",{"DigChest",chest:GetAttribute("Coord")})
+                                repeat task.wait() until not ActiveChests:FindFirstChild(chest)
+                                task.wait(1)
+                            end
+                        end
+                        goTo(oldPosition)
+                    end
+                    local function checkForChests()
+                        local isChest = false
+                        for _, chest in ipairs(ActiveChests:GetChildren()) do
+                            if chest.Name == "Animated" then
+                                isChest = true
+                            end
+                        end
+                        return isChest
+                    end
+                    local function getBlockDistance(obj)
+                        return (HumanoidRootPart.Position - obj.Position).magnitude
+                    end
+                    if checkIfSelected("Digsite") then
+                        goTo(starterPos)
+                        task.wait(0.2)
+                    end
+                    while checkIfSelected("Digsite") and task.wait() do
+                        for _,block in ipairs(ActiveBlocks:GetChildren()) do
+                            if checkForChests() then
+                                getChests(HumanoidRootPart.CFrame)
+                                break
+                            end
+                            if block.Name == "Part" then
+                                local distance = getBlockDistance(block)
+
+                                if distance < 7 then
+                                    repeat
+                                        digsiteRemote("Fire", {"DigBlock", block:GetAttribute("Coord")})
+                                        task.wait()
+                                    until not ActiveBlocks:FindFirstChild(block) or (getBlockDistance(block) > 8) or not checkIfSelected("Digsite")
+                                end
+                            end
+                        end
+                    end
+                    goTo(endPos)
+                ]]
             },
             {
                 Name = "IceObby",
