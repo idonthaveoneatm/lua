@@ -623,11 +623,13 @@ return {
             {
                 Name = "SpawnObby",
                 IsLoopable = false,
+                HasCompletion = true,
                 CustomFunction = nil
             },
             {
                 Name = "Minefield",
                 IsLoopable = false,
+                HasCompletion = true,
                 CustomFunction = [[
                     local Players = cloneref(game:GetService("Players"))
                     local Workspace = cloneref(game:GetService("Workspace"))
@@ -696,11 +698,13 @@ return {
             {
                 Name = "JungleObby",
                 IsLoopable = false,
+                HasCompletion = true,
                 CustomFunction = nil
             },
             {
                 Name = "Atlantis",
                 IsLoopable = false,
+                HasCompletion = true,
                 CustomFunction = [[
                     local Players = cloneref(game:GetService("Players"))
                     local Workspace = cloneref(game:GetService("Workspace"))
@@ -732,6 +736,7 @@ return {
             {
                 Name = "Fishing",
                 IsLoopable = true,
+                HasCompletion = true,
                 CustomFunction = [[
                     local Players = cloneref(game:GetService("Players"))
                     local Workspace = cloneref(game:GetService("Workspace"))
@@ -831,12 +836,13 @@ return {
             {
                 Name = "ChestRush",
                 IsLoopable = false,
+                HasCompletion = false,
                 CustomFunction = nil,
-                HasCompletion = false
             },
             {
                 Name = "Digsite",
                 IsLoopable = true,
+                HasCompletion = true,
                 CustomFunction = [[
                     local Players = cloneref(game:GetService("Players"))
                     local Workspace = cloneref(game:GetService("Workspace"))
@@ -964,11 +970,13 @@ return {
             {
                 Name = "IceObby",
                 IsLoopable = false,
+                HasCompletion = true,
                 CustomFunction = nil
             },
             {
                 Name = "Minecart",
                 IsLoopable = false,
+                HasCompletion = true,
                 CustomFunction = [[
                     local Players = cloneref(game:GetService("Players"))
                     local Workspace = cloneref(game:GetService("Workspace"))
@@ -1037,22 +1045,25 @@ return {
             {
                 Name = "PyramidObby",
                 IsLoopable = false,
+                HasCompletion = true,
                 CustomFunction = nil
             },
             {
                 Name = "SledRace",
                 IsLoopable = false,
+                HasCompletion = false,
                 CustomFunction = nil
             },
             {
                 Name = "FlowerGarden",
                 IsLoopable = false,
-                CustomFunction = nil,
-                HasCompletion = false
+                HasCompletion = false,
+                CustomFunction = nil
             },
             {
                 Name = "AdvancedDigsite",
                 IsLoopable = true,
+                HasCompletion = true,
                 CustomFunction = [[
                     local Players = cloneref(game:GetService("Players"))
                     local Workspace = cloneref(game:GetService("Workspace"))
@@ -1180,12 +1191,13 @@ return {
             {
                 Name = "LuckyBlocks",
                 IsLoopable = false,
-                CustomFunction = nil,
-                HasCompletion = false
+                HasCompletion = false,
+                CustomFunction = nil
             },
             {
                 Name = "AdvancedFishing",
                 IsLoopable = true,
+                HasCompletion = true,
                 CustomFunction = [[
                     local Players = cloneref(game:GetService("Players"))
                     local Workspace = cloneref(game:GetService("Workspace"))
