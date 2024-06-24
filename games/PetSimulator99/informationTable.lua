@@ -1,3 +1,11 @@
+--[[
+
+Made by griffin
+Discord: @griffindoescooking
+Github: https://github.com/idonthaveoneatm
+
+]]--
+
 return {
     Map = {
         Worlds = {
@@ -1769,35 +1777,6 @@ return {
                 Name = "SummerGiftMachine",
                 Location = "205 | Beach Island"
             },
-        }
-    },
-    Event = {
-        Worlds = {
-            {
-                ["TeleportPart"] = CFrame.new(-2063.862060546875, 284.57958984375, -15470.486328125),
-                ["Name"] = "Zone1",
-                ["FarmPart"] = CFrame.new(-2008.361083984375, 283.59259033203125, -15470.2578125),
-            },
-            {
-                ["TeleportPart"] = CFrame.new(-1905.1298828125, 284.57958984375, -15470.2939453125),
-                ["Name"] = "Zone2",
-                ["FarmPart"] = CFrame.new(-1460.2755126953125, 333.8175964355469, -15470.7578125),
-            },
-            {
-                ["TeleportPart"] = CFrame.new(-1514.615478515625, 334.57958984375, -15470.77734375),
-                ["Name"] = "Zone3",
-                ["FarmPart"] = CFrame.new(-1129.8255615234375, 386.45953369140625, -15470.2578125),
-            },
-            {
-                ["TeleportPart"] = CFrame.new(-1184.71630859375, 387.2215270996094, -15471.5947265625),
-                ["Name"] = "Zone4",
-                ["FarmPart"] = CFrame.new(-971.8255004882812, 386.45953369140625, -15470.2578125),
-            },
-            {
-                ["TeleportPart"] = CFrame.new(-1025.92431640625, 387.2215270996094, -15471.34765625),
-                ["Name"] = "Zone5",
-                ["FarmPart"] = CFrame.new(-1849.2611083984375, 283.8175964355469, -15470.2578125),
-            }
         }
     }
 }
