@@ -180,14 +180,14 @@ return {
                 FarmPart = CFrame.new(811.985595703125, 13.73931884765625, 1256.66552734375)
             },
             {
-                Name = "36 | Mountains",
-                TeleportPart = CFrame.new(1076.3909912109375, 13.625, 1256.342041015625),
-                FarmPart = CFrame.new(1121.5223388671875, 13.739326477050781, 1281.3121337890625)
-            },
-            {
                 Name = "35 | Safari",
                 TeleportPart = CFrame.new(909.9240112304688, 13.625, 1256.342041015625),
                 FarmPart = CFrame.new(964.8655395507812, 13.73931884765625, 1256.66552734375)
+            },
+            {
+                Name = "36 | Mountains",
+                TeleportPart = CFrame.new(1076.3909912109375, 13.625, 1256.342041015625),
+                FarmPart = CFrame.new(1121.5223388671875, 13.739326477050781, 1281.3121337890625)
             },
             {
                 Name = "37 | Snow Village",
@@ -215,6 +215,11 @@ return {
                 FarmPart = CFrame.new(662.650390625, 13.739326477050781, 1707.9376220703125)
             },
             {
+                Name = "42 | Fire and Ice",
+                TeleportPart = CFrame.new(760.237976, 13.625, 1732.84204),
+                FarmPart = CFrame.new(838.304382, 13.7393188, 1733.30823)
+            },
+            {
                 Name = "43 | Volcano",
                 TeleportPart = CFrame.new(909.4849243164062, 13.625, 1732.842041015625),
                 FarmPart = CFrame.new(963.9013671875, 13.73931884765625, 1733.3082275390625)
@@ -238,6 +243,11 @@ return {
                 Name = "47 | Underworld Bridge",
                 TeleportPart = CFrame.new(1416.886962890625, 13.625, 1873.783935546875),
                 FarmPart = CFrame.new(1417.3260498046875, 13.73931884765625, 1928.330078125)
+            },
+            {
+                Name = "48 | Underworld Castle",
+                TeleportPart = CFrame.new(1416.886962890625, 13.625, 2025.4990234375),
+                FarmPart = CFrame.new(1416.5223388671875, 13.739326477050781, 2094.8310546875)
             },
             {
                 Name = "49 | Metal Dojo",
