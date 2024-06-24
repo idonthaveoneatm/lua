@@ -670,14 +670,31 @@ return {
             {
                 Name = "Atlantis",
                 IsLoopable = false,
-                CustomFunction = [[return function(waitFor, instanceContainer, HumanoidRootPart)
-                        local atlantis = waitFor(instanceContainer.Active, "Atlantis")
-                        local rings = waitFor(atlantis, "Rings")
-                        for i=1,31 do
-                            local ring = waitFor(rings, tostring(i))
-                            task.wait(0.4)
-                            HumanoidRootPart.CFrame = ring.Collision.CFrame
-                        end
+                CustomFunction = [[
+                    local Players = cloneref(game:GetService("Players"))
+                    local Workspace = cloneref(game:GetService("Workspace"))
+
+                    local LocalPlayer = Players.LocalPlayer
+                    local HumanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart", true)
+
+                    local Things = Workspace["__THINGS"]
+                    local Instances = Things.Instances
+                    local instanceContainer = Things["__INSTANCE_CONTAINER"]
+
+                    local function waitFor(path, object, bool)
+                        bool = bool or false
+                        repeat
+                            task.wait()
+                        until path:FindFirstChild(object, bool)
+                        return path:FindFirstChild(object, bool)
+                    end
+
+                    local atlantis = waitFor(instanceContainer.Active, "Atlantis")
+                    local rings = waitFor(atlantis, "Rings")
+                    for i=1,31 do
+                        local ring = waitFor(rings, tostring(i))
+                        task.wait(0.4)
+                        HumanoidRootPart.CFrame = ring.Collision.CFrame
                     end
                 ]]
             },
