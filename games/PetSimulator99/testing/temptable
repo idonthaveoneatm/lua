@@ -656,6 +656,7 @@ return {
                     end
 
                     local minefield = waitFor(instanceContainer.Active, "Minefield")
+                    task.wait(1)
 
                     if identifyexecutor() ~= "Solara" then
                         local common = require(minefield.Common)
@@ -678,15 +679,15 @@ return {
                             mine.Pad.CFrame = oldPos
                             mine.Pad.CanCollide = true
                             if tostring(mine.Pad.BrickColor) == "Really red" then
-                                nextZ = nextZ + 10
+                                nextX = nextX + 10
                                 task.wait(2)
                             else
-                                nextX = nextX + 10
+                                nextZ = nextZ + 10
                             end
                         end
                         goTo(finish.CFrame + Vector3.new(0,3,0))
                     else
-
+                        print("soon")
                     end
                 ]]
             },
@@ -756,10 +757,64 @@ return {
                 Name = "Minecart",
                 IsLoopable = false,
                 CustomFunction = [[
-                    waitFor(loadedMG.Interactable, "StartLine")
-                    waitFor(loadedMG.Interactable, "Goal")
+                    local Players = cloneref(game:GetService("Players"))
+                    local Workspace = cloneref(game:GetService("Workspace"))
+
+                    local LocalPlayer = Players.LocalPlayer
+                    local HumanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart", true)
+
+                    local Things = Workspace["__THINGS"]
+                    local Instances = Things.Instances
+                    local instanceContainer = Things["__INSTANCE_CONTAINER"]
+
+                    local function waitFor(path, object, bool)
+                        bool = bool or false
+                        repeat
+                            task.wait()
+                        until path:FindFirstChild(object, bool)
+                        return path:FindFirstChild(object, bool)
+                    end
+                    local function goTo(coord)
+                        if typeof(coord) == "CFrame" then
+                            LocalPlayer.Character:PivotTo(coord)
+                        else
+                            coord = CFrame.new(coord.X,coord.Y,coord.Z)
+                            goTo(coord)
+                        end
+                    end
+                    local completeObby
+                    if identifyexecutor ~= "Solara" then
+                        completeObby = function(obbyInfo)
+                            if typeof(obbyInfo) ~= "table" then
+                                return error("Not a table")
+                            end
+                            if typeof(obbyInfo.StartLine) ~= "CFrame" then
+                                if obbyInfo.StartLine:IsA("Model") then
+                                    obbyInfo.StartLine = obbyInfo.StartLine:FindFirstChild("Part").CFrame
+                                else
+                                    obbyInfo.StartLine = obbyInfo.StartLine.CFrame
+                                end
+                            end
+                            if typeof(obbyInfo.EndPad) ~= "CFrame" then
+                                obbyInfo.EndPad = obbyInfo.EndPad.CFrame
+                            end
+
+                            goTo(obbyInfo.StartLine + Vector3.new(0,3,0))
+                            task.wait(0.5)
+
+                            local common = require(instanceContainer.Active:FindFirstChild(obbyInfo.Name):FindFirstChild("Common", true))
+                            common.WinTimer = 0
+
+                            goTo(obbyInfo.EndPad + Vector3.new(0,3,0))
+                        end
+                    end
+
+                    local minecart = waitFor(instanceContainer.Active, "Minecart")
+
+                    waitFor(minecart.Interactable, "StartLine")
+                    waitFor(minecart.Interactable, "Goal")
                     completeObby({
-                        Name = selectedMG,
+                        Name = minecart,
                         StartLine = CFrame.new(0,0,0) + Vector3.new(-1380.3746337890625, -102.0365982055664, -4659.6044921875),
                         EndPad = loadedMG.Interactable.Goal.Pad
                     })
