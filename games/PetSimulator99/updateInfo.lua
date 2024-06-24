@@ -1,3 +1,11 @@
+--[[
+
+Made by griffin
+Discord: @griffindoescooking
+Github: https://github.com/idonthaveoneatm
+
+]]--
+
 local Workspace = cloneref(game:GetService("Workspace"))
 local HttpService = cloneref(game:GetService("HttpService"))
 
