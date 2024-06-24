@@ -732,9 +732,101 @@ return {
             {
                 Name = "Fishing",
                 IsLoopable = true,
-                CustomFunction = function()
-                    
-                end
+                CustomFunction = [[
+                    local Players = cloneref(game:GetService("Players"))
+                    local Workspace = cloneref(game:GetService("Workspace"))
+                    local ReplicatedStorage = cloneref(game:GetService("ReplicatedStorage"))
+                    local Network
+                    if identifyexecutor() ~= "Solara" then
+                        Network = require(ReplicatedStorage.Library.Client.Network)
+                    else
+                        Network = ReplicatedStorage.Network
+                    end
+                    local LocalPlayer = Players.LocalPlayer
+                    local Debris = Workspace['__DEBRIS']
+                    local Things = Workspace["__THINGS"]
+                    local Instances = Things.Instances
+                    local instanceContainer = Things["__INSTANCE_CONTAINER"]
+                    local function Fire(name, args)
+                        if identifyexecutor() ~= "Solara" then
+                            Network.Fire(name, unpack(args))
+                        else
+                            if Network:FindFirstChild(name) then
+                                Network[name]:FireServer(unpack(args))
+                            else
+                                warn("theres no Network."..name)
+                            end
+                        end
+                    end
+                    local function Invoke(name, args)
+                        if identifyexecutor() ~= "Solara" then
+                            Network.Invoke(name, unpack(args))
+                        else
+                            if Network:FindFirstChild(name) then
+                                Network[name]:InvokeServer(unpack(args))
+                            else
+                                warn("theres no Network."..name)
+                            end
+                        end
+                    end
+                    local function checkIfSelected(name)
+                        return (getgenv().activeLoopedMinigame == name)
+                    end
+                    local function goTo(coord)
+                        if typeof(coord) == "CFrame" then
+                            LocalPlayer.Character:PivotTo(coord)
+                        else
+                            coord = CFrame.new(coord.X,coord.Y,coord.Z)
+                            goTo(coord)
+                        end
+                    end
+                    local function checkActive(name)
+                        if not instanceContainer.Active:FindFirstChild(name) then
+                            goTo(Instances[name]:FindFirstChild("Enter", true).CFrame)
+                        end
+                    end
+                    local function waitFor(path, object, bool)
+                        bool = bool or false
+                        repeat
+                            task.wait()
+                        until path:FindFirstChild(object, bool)
+                        return path:FindFirstChild(object, bool)
+                    end
+                    checkActive("Fishing")
+                    task.wait(0.2)
+                    local fishing = waitFor(instanceContainer.Active, "Fishing")
+                    local Layer1 =  waitFor(fishing.Water, "Layer1")
+                    local L1Position = Layer1.Position
+                    local function fishingRemote(type, args)
+                        if type == "Invoke" then
+                            return Invoke("Instancing_InvokeCustomFromClient", {"Fishing", unpack(args)})
+                        elseif type == "Fire" then
+                            return Fire("Instancing_FireCustomFromClient", {"Fishing", unpack(args)})
+                        end
+                    end
+                    local function isBubbling()
+                        local bubbling = false
+                        for _,host in ipairs(Debris:GetChildren()) do
+                            if host.Name == "host" and host:FindFirstChild("Attachment") and (host.Attachment:FindFirstChild("Bubbles") or host.Attachment:FindFirstChild("Rare Bubbles")) then
+                                local distance = (L1Position.X - host.Position.X)
+                                if distance <= 2 then
+                                    bubbling = true
+                                end
+                            end
+                        end
+                        return bubbling
+                    end
+                    while checkIfSelected("Fishing") and task.wait() do
+                        fishingRemote("Fire",{"RequestCast", Vector3.new(L1Position.X,L1Position.Y,L1Position.Z)})
+                        repeat task.wait() until isBubbling() or not checkIfSelected("Fishing")
+                        fishingRemote("Fire", {"RequestReel"})
+                        repeat
+                            task.wait()
+                            fishingRemote("Invoke", {"Clicked"})
+                        until (not isBubbling()) or not checkIfSelected("Fishing")
+                    end
+                    goTo(fishing.Interactable:FindFirstChild("Pad", true).CFrame + Vector3.new(0,3,0))
+                ]]
             },
             {
                 Name = "ChestRush",
