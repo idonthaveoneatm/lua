@@ -35,6 +35,8 @@ task.wait()
 getgenv().griffindoescooking = true
 
 local UserInputService = cloneref(game:GetService("UserInputService"))
+local RunService = cloneref(game:GetService("RunService"))
+RunService:Set3dRenderingEnabled(true)
 local Workspace = cloneref(game:GetService("Workspace"))
 local Players = cloneref(game:GetService("Players"))
 
@@ -209,7 +211,6 @@ local slider = eggTab:Slider({
         eventConfig.openAmount = value
     end
 })
-
 eggTab:Label("You must be near eggs to hatch them")
 local farmEggs = eggTab:Toggle({
     Name = "Farm selected egg",
@@ -232,12 +233,18 @@ oldPlayEggAnimation = hookfunction(EggFrontend.PlayEggAnimation, function(...)
     end
     return oldPlayEggAnimation(...)
 end)
-
 eggTab:Toggle({
     Name = "Remove Animation",
     Default = eventConfig.skipAnimation,
     Callback = function(value)
         eventConfig.skipAnimation = value
+    end
+})
+eggTab:Toggle({
+    Name = "Disable 3D Rendering",
+    Default = false,
+    Callback = function(value)
+        RunService:Set3dRenderingEnabled(not value)
     end
 })
 
@@ -265,7 +272,7 @@ end)
 local oldnamecall = nil
 oldnamecall = hookmetamethod(game, "__namecall", function(self,...)
     local method = getnamecallmethod()
-    if self.Name == "Is Real Player" or self.Name:find("Idle")and method:lower() == "invokeserver" then
+    if (self.Name == "Is Real Player" or self.Name:find("Idle")) and method:lower() == "invokeserver" then
         print(self.Name, "attempted to run")
         return
     end
