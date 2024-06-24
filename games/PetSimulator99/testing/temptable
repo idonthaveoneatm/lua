@@ -630,8 +630,6 @@ return {
                 IsLoopable = false,
                 CustomFunction = [[
                     if identifyexecutor() ~= "Solara" then
-                        
-                    else
                         local common = require(loadedMG.Common)
                         common.Config.RespawnTimer = 0
                         common.Config.WinTimer = 0
@@ -659,6 +657,8 @@ return {
                             end
                         end
                         goTo(finish.CFrame + Vector3.new(0,3,0))
+                    else
+                        
                     end
                 ]]
             },
