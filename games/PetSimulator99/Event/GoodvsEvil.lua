@@ -218,9 +218,9 @@ local farmEggs = eggTab:Toggle({
     Callback = function(value)
         local egg = findInTable(customEggs, eventConfig.selectedEgg)
         if eventConfig.side == "Good" then
-            goTo(egg.Position + Vector3.new(0,0,25))
+            goTo(egg.Position + Vector3.new(0,0,28))
         else
-            goTo(egg.Position + Vector3.new(0,0,-25))
+            goTo(egg.Position + Vector3.new(0,0,-28))
         end
         task.wait(0.2)
         eventConfig.openEggs = value
