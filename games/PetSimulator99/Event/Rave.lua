@@ -206,7 +206,19 @@ local farmEggs = eggTab:Toggle({
     Callback = function(value)
         local egg = findInTable(customEggs, eventConfig.selectedEgg)
         if eventConfig.selectedEgg == "Disco Egg" then
-            goTo(egg.Position + Vector3.new(math.random(-7,-5),0,math.random(-5,5)))
+            local random1 = math.random(-32,32)
+            if random1 > -8 then
+                random1 -= 8
+            elseif random1 < 8 then
+                random1 += 8
+            end
+            local random2 = math.random(-32,32)
+            if random2 > -8 then
+                random2 -= 8
+            elseif random1 < 8 then
+                random2 += 8
+            end
+            goTo(egg.Position + Vector3.new(random1,0,random2))
         else
             goTo(egg.Position + Vector3.new(math.random(0,3),0,math.random(28,29)))
         end
