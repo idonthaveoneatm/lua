@@ -65,9 +65,15 @@ local UserInputService = cloneref(game:GetService("UserInputService"))
 local Workspace = cloneref(game:GetService("Workspace"))
 local Players = cloneref(game:GetService("Players"))
 
-local ReplicatedStorage = cloneref(game:GetService("ReplicatedStorage"))
-local Client = require(ReplicatedStorage.Library.Client)
-local Network = require(ReplicatedStorage.Library.Client.Network)
+local Client = {}
+for _,v in cloneref(game:GetService("ReplicatedStorage")).Library.Client:GetChildren() do
+    if not Client[v.Name] then
+        local success, result = pcall(require, v)
+        if success then
+            Client[v.Name] = result
+        end
+    end
+end
 
 local LocalPlayer = Players.LocalPlayer
 local HumanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart", true)
@@ -94,6 +100,7 @@ local Map
 if getMap() then
     Map = getMap()
 else
+    warn("map not found")
     task.spawn(function()
         repeat
             task.wait()
@@ -111,10 +118,6 @@ getgenv().config = getgenv().config
 local isFirstTime = false
 local configTemplate = {
     farmSettings = {
-        breakObjects = false,
-        singleTarget = false,
-        breakRadius = 70,
-        waitTime = 0.2,
         amountOfPets = 1,
         petsPerBreakable = 1,
         sendPets = false,
@@ -122,6 +125,11 @@ local configTemplate = {
         buyZones = false,
         stayInMaxZone = false,
         collectOrbsAndLootbags = false,
+    },
+    fruitSettings = {
+        selectedFruits = {},
+        amountToStayAt = 0,
+        consumeFruits = false
     },
     eggSettings = {
         openEggs = false,
@@ -169,6 +177,14 @@ local rewards = PS99Info.Rewards
 local otherMachines = PS99Info.OtherMachines
 local minigames = PS99Info.Minigames
 local eggs = PS99Info.Eggs
+local fruits = {
+	"Watermelon",
+	"Apple",
+	"Rainbow",
+	"Pineapple",
+	"Orange",
+	"Banana"
+}
 
 -- Misc Functions
 
@@ -194,15 +210,10 @@ local function findInTable(tbl, name)
     return nil
 end
 local function Fire(name, args)
-    Network.Fire(name, unpack(args))
+    Client.Network.Fire(name, unpack(args))
 end
 local function Invoke(name, args)
-    Network.Invoke(name, unpack(args))
-end
-local function XZDist(obj1, obj2)
-    local PosX1, PosZ1 = obj1.CFrame.X, obj1.CFrame.Z
-    local PosX2, PosZ2 = obj2.CFrame.X, obj2.CFrame.Z
-    return math.sqrt(math.pow(PosX1 - PosX2, 2) + math.pow(PosZ1 - PosZ2, 2))
+    Client.Network.Invoke(name, unpack(args))
 end
 local function clickPosition(x,y)
     VirtualUser:Button1Down(Vector2.new(x,y))
@@ -251,26 +262,8 @@ local function completeObby(obbyInfo)
 
     goTo(obbyInfo.EndPad + Vector3.new(0,3,0))
 end
-local function findNearestBreakable()
-    local nearestBreakable
-    local nearestDistance = 9e9
-    for _, breakable in ipairs(Breakables:GetChildren()) do
-        if breakable:FindFirstChildWhichIsA("MeshPart") then
-            local meshPart = breakable:FindFirstChildWhichIsA("MeshPart")
-            local distance = (HumanoidRootPart.Position - meshPart.Position).magnitude
-            if distance < nearestDistance then
-                nearestBreakable = breakable
-                nearestDistance = distance
-            end
-        end
-    end
-    return nearestBreakable
-end
-local function isBreakableInRadius(breakable)
-    if breakable:FindFirstChild("Hitbox", true) and XZDist(breakable:FindFirstChild("Hitbox", true), HumanoidRootPart) <= config.farmSettings.breakRadius then
-        return true
-    end
-    return false
+local function getPlayerSave()
+    return Client.Save.Get()
 end
 local function getBreakables()
     local rTable = {}
@@ -324,7 +317,7 @@ local function sendPetsToTargets(amountSending, amountPerBreakable)
         tempValue -= amountPerBreakable
         amountOfBreakables += 1
     until tempValue <= 0
-    
+
     local targets = getNearestBreakables(amountOfBreakables)
 
     local currentPet = 0
@@ -345,11 +338,77 @@ local function sendPetsToTargets(amountSending, amountPerBreakable)
     end
     return targets
 end
+local function getFlags()
+    local rTable = {}
+    for i,v in pairs(getPlayerSave().Inventory.Misc) do
+        if typeof(v) == "table" and v.id:find("Flag") and v.id ~= "Flag Bundle" then
+            table.insert(rTable, {
+                id = v.id,
+                uid = i,
+                _am = v._am
+            })
+        end
+    end
+    return rTable
+end
+local function useFlag(name, amount)
+    assert(amount, "amount required")
+    local Flags = getFlags()
+    local chosenFlag
+    for _,flag in ipairs(Flags) do
+        if flag.id == name then
+            chosenFlag = flag
+            break
+        end
+    end
+    if chosenFlag._am < amount then
+        return warn("amount too high: "..tostring(chosenFlag._am).."(has) < "..tostring(amount).."(requested)")
+    end
+    print("Attempting to use", name, "with uid of", chosenFlag.uid, "x", amount)
+    for i=1,amount do
+        Invoke("Flags: Consume", {chosenFlag.id, chosenFlag.uid})
+        task.wait()
+    end
+    print("done")
+end
+local function getFruitAmount(fruit)
+    local count = 0
+    if Client.FruitCmds.GetActiveFruits()[fruit] then
+        for _,v in Client.FruitCmds.GetActiveFruits()[fruit] do
+			count += #v
+		end
+        return count
+    else
+        return count
+    end
+end
+local function getFruitFromInventory(fruit)
+	for uid,iFruit in getPlayerSave().Inventory.Fruit do
+		if iFruit.id ~= fruit then
+			continue
+		end
+		return {
+			uid = uid,
+			id = fruit,
+			quantity = iFruit._am or 1
+		}
+	end
+end
+local function eatFruit(fruit, amount)
+	local fruitData = getFruitFromInventory(fruit)
+	local amountNeeded = amount - getFruitAmount(fruit)
+	if amountNeeded <= 0 then
+		return
+	end
+	if fruitData.quantity < amountNeeded then
+		amountNeeded = math.clamp(amountNeeded, 0, fruitData.quantity)
+	end
+	Fire("Fruits: Consume", {fruitData.uid, amountNeeded})
+    task.wait(2)
+end
 
 -- Looped Functions
 
-local doingQueue = false
-local farmBreakablesDebounce = false
 local farmBreakablesWithPetsDebounce = false
 local collectLootbagsDebounce = false
 local collectOrbsDebounce = false
@@ -359,40 +418,8 @@ local farmEggsDebounce = false
 local collectTimeRewardsDebounce = false
 local collectStarterWheelTicketDebounce = false
 local antiAFKDebounce = false
+local consumeFruitsDebounce = false
 
-local function farmBreakables()
-    if config.farmSettings.breakObjects and not farmBreakablesDebounce then
-        farmBreakablesDebounce = true
-        local breakable = findNearestBreakable()
-        if config.farmSettings.singleTarget then
-            repeat
-                task.wait(config.farmSettings.waitTime)
-                Fire("Breakables_PlayerDealDamage", {breakable.Name})
-            until not Breakables:FindFirstChild(breakable.Name) or not isBreakableInRadius(breakable) or not config.farmSettings.breakObjects or not config.farmSettings.singleTarget
-        else
-            if not table.find(coinQueue, breakable.Name) then
-                table.insert(coinQueue, breakable.Name)
-                task.spawn(function()
-                    repeat
-                        task.wait()
-                    until not Breakables:FindFirstChild(breakable) or not isBreakableInRadius(breakable) or config.farmSettings.singleTarget or not config.farmSettings.breakObjects
-                    table.remove(coinQueue, table.find(coinQueue, breakable))
-                end)
-            end
-            task.spawn(function()
-                if not doingQueue then
-                    doingQueue = true
-                    for _,currentCoin in ipairs(coinQueue) do
-                        Fire("Breakables_PlayerDealDamage", {currentCoin})
-                        task.wait(config.farmSettings.waitTime)
-                    end
-                    doingQueue = false
-                end
-            end)
-        end
-        farmBreakablesDebounce = false
-    end
-end
 local function farmBreakablesWithPets()
     if config.farmSettings.sendPets and not farmBreakablesWithPetsDebounce then
         farmBreakablesWithPetsDebounce = true
@@ -498,45 +525,21 @@ local function antiAFK()
         antiAFKDebounce = false
     end
 end
-local function getFlags()
-    local rTable = {}
-    for i,v in pairs(Client.Save.GetSaves()[LocalPlayer].Inventory.Misc) do
-        if typeof(v) == "table" and v.id:find("Flag") and v.id ~= "Flag Bundle" then
-            table.insert(rTable, {
-                id = v.id,
-                uid = i,
-                _am = v._am
-            })
+local function consumeFruits()
+    if config.fruitSettings.consumeFruits and not consumeFruitsDebounce then
+        consumeFruitsDebounce = true
+        for _,fruit in config.fruitSettings.selectedFruits do
+            eatFruit(fruit, config.fruitSettings.amountToStayAt)
         end
+        consumeFruitsDebounce = false
     end
-    return rTable
 end
-local function useFlag(name, amount)
-    assert(amount, "amount required")
-    local Flags = getFlags()
-    local chosenFlag
-    for _,flag in ipairs(Flags) do
-        if flag.id == name then
-            chosenFlag = flag
-            break
-        end
-    end
-    if chosenFlag._am < amount then
-        return warn("amount too high: "..tostring(chosenFlag._am).."(has) < "..tostring(amount).."(requested)")
-    end
-    print("Attempting to use", name, "with uid of", chosenFlag.uid, "x", amount)
-    for i=1,amount do
-        Invoke("Flags: Consume", {chosenFlag.id, chosenFlag.uid})
-        task.wait()
-    end
-    print("done")
-end
-
 -- Library/Main script
 
 local quake = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/Libraries/normal/quake/src"))()
 local main = quake:Window({
     Title = "Pet Simulator 99",
+    Parent = game.CoreGui,
     isMobile = UserInputService.TouchEnabled and not UserInputService.MouseEnabled
 })
 
@@ -577,68 +580,7 @@ local creditsTab = main:Tab({
 
 -- Farming
 
-local legacyFarm = farmingTab:Group({
-    Name = "Legacy Farming"
-})
-local legacyFarmCoins = legacyFarm:Toggle({
-    Name = "Farm Coins",
-    Default = config.farmSettings.breakObjects,
-    Callback = function(value)
-        config.farmSettings.breakObjects = value
-        updateConfig()
-        if not config.farmSettings.breakObjects then
-            table.clear(coinQueue)
-        end
-    end
-})
-legacyFarm:Toggle({
-    Name = "Single Target",
-    Default = config.farmSettings.singleTarget,
-    Callback = function(value)
-        config.farmSettings.singleTarget = value
-        updateConfig()
-    end
-})
-local radiusSetter
-radiusSetter = legacyFarm:TextBox({
-    Name = "Radius (Recommended: 70)",
-    Default = config.farmSettings.breakRadius,
-    Callback = function(value)
-        if value ~= "" or not tonumber(value) then
-            --radiusSetter:SetInput("40")
-            main:Notify({
-                Title = "Radius Error",
-                Duration = 20,
-                Body = "You need the RADIUS to be a number. It is now 40"
-            })
-            return
-        end
-        config.farmSettings.breakRadius = tonumber(value)
-        updateConfig()
-    end
-})
-local waitSetter
-waitSetter = legacyFarm:TextBox({
-    Name = "Wait Time (Recommended: 0.2)",
-    Default = config.farmSettings.waitTime,
-    Callback = function(value)
-        if value ~= "" or not tonumber(value) then
-            --waitSetter:SetInput("0.2")
-            main:Notify({
-                Title = "Wait Time Error",
-                Duration = 20,
-                Body = "You need the WAIT TIME to be a number. It is now 0.2"
-            })
-            return
-        end
-        config.farmSettings.waitTime = tonumber(value)
-        updateConfig()
-    end
-})
-local petFarming = farmingTab:Group({
-    Name = "Pet Farming"
-})
-petFarming:Slider({
+farmingTab:Slider({
     Name = "Amount of Pets to Send",
     InitialValue = getMaxPetsEquipped(),
     Min = 1,
@@ -649,7 +591,7 @@ petFarming:Slider({
         updateConfig()
     end
 })
-petFarming:Slider({
+farmingTab:Slider({
     Name = "Amount of Pets per Breakable",
     Min = 1,
     Max = getMaxPetsEquipped(),
@@ -660,13 +602,12 @@ petFarming:Slider({
         updateConfig()
     end
 })
-petFarming:Toggle({
+farmingTab:Toggle({
     Name = "Send Pets to Target",
     Default = config.farmSettings.sendPets,
     Callback = function(value)
         config.farmSettings.sendPets = value
         updateConfig()
-        legacyFarmCoins:SetValue(false)
     end
 })
 
@@ -714,9 +655,35 @@ collectOrbsAndLootbags = farmingTab:Toggle({
     end
 })
 
--- Items
-
--- eta son
+farmingTab:Section("Fruits")
+farmingTab:Dropdown({
+    Name = "Fruits",
+    Multiselect = true,
+    Items = fruits,
+    Default = config.fruitSettings.selectedFruits,
+    Callback = function(value)
+        config.fruitSettings.selectedFruits = value
+        updateConfig()
+    end
+})
+farmingTab:Slider({
+    Name = "Amount to stay at",
+    Min = 1,
+    Max = 100,
+    InitialValue = config.fruitSettings.amountToStayAt,
+    Callback = function(value)
+        config.fruitSettings.amountToStayAt = value
+        updateConfig()
+    end
+})
+farmingTab:Toggle({
+    Name = "Auto consume fruits",
+    Default = config.fruitSettings.consumeFruits,
+    Callback = function(value)
+        config.fruitSettings.consumeFruits = value
+        updateConfig()
+    end
+})
 
 -- Eggs
 
@@ -1103,12 +1070,12 @@ else
 end
 
 while task.wait() and getgenv().griffindoescooking do
-    task.spawn(farmBreakables)
     task.spawn(farmBreakablesWithPets)
     task.spawn(collectLootbags)
     task.spawn(collectOrbs)
     task.spawn(buyZones)
     task.spawn(stayInMaxZone)
+    task.spawn(consumeFruits)
     task.spawn(farmEggs)
     task.spawn(collectTimeRewards)
     task.spawn(collectStarterWheelTicket)
