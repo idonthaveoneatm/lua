@@ -13,6 +13,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/n
 or
 ```lua
 loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/WorseSolaraVersion.lua"))()
+```
 if you are on mobile and cannot copy this to replace the loadstring:
 
 https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/src
