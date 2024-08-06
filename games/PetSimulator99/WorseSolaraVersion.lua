@@ -531,7 +531,7 @@ collectOrbsAndLootbags = farmingTab:CreateToggle({
 
 -- Eggs
 
-eggTab:Label("You must be near eggs to hatch them")
+eggTab:CreateTextLabel("You must be near eggs to hatch them")
 eggTab:CreateDropdown({
     Name = "Egg to farm",
     Items = eggs,
@@ -752,7 +752,7 @@ getDailyReward = rewardsTab:CreateButton({
 
 -- Miscellaneous
 
-miscTab:Label("These are things that dont fit in a category")
+miscTab:CreateTextLabel("These are things that dont fit in a category")
 miscTab:CreateToggle({
     Name = "Anti AFK",
     Callback = function(value)
@@ -824,7 +824,7 @@ completeStairs = miscTab:CreateToggle({
         end
     end
 })
-miscTab:Label("^ This probably doesn't even work ^")
+miscTab:CreateTextLabel("^ This probably doesn't even work ^")
 miscTab:CreateButton({
     Name = "Remove Water",
     Callback = function()
@@ -836,8 +836,8 @@ miscTab:CreateButton({
     end
 })
 
-creditsTab:Label("UI: griffindoescooking")
-creditsTab:Label("Script: griffindoescooking, project L")
+creditsTab:CreateTextLabel("UI: griffindoescooking")
+creditsTab:CreateTextLabel("Script: griffindoescooking, project L")
 creditsTab:CreateButton({
     Name = "project L",
     Callback = function()
