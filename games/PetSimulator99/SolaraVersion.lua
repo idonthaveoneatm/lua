@@ -6,6 +6,9 @@ Github: https://github.com/idonthaveoneatm
 
 ]]--
 
+print("all my homies hate solara")
+return loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/WorseSolaraVersion.lua"))()
+
 print("Pet Simulator 99 | griffindoescooking")
 warn('The solara version removes require functions')
 getgenv().griffinVersion = "3.0.0"
