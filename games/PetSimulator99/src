@@ -6,11 +6,6 @@ Github: https://github.com/idonthaveoneatm
 
 ]]--
 
-if identifyexecutor() == "Solara" then
-    print("loading Solara version instead of normal")
-    return loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/SolaraVersion.lua"))()
-end
-
 print("Pet Simulator 99 | griffindoescooking")
 getgenv().griffinVersion = "3.0.0"
 
