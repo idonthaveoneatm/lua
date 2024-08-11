@@ -6,8 +6,8 @@ Github: https://github.com/idonthaveoneatm
 
 ]]--
 
-if identifyexecutor() == "Solara" then
-    print("loading Solara version instead of normal")
+if identifyexecutor() == "Solara" or identifyexecutor():find("Celery") then
+    print("loading requireless version instead of normal")
     return loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/SolaraVersion.lua"))()
 end
 
@@ -534,9 +534,10 @@ local function consumeFruits()
         consumeFruitsDebounce = false
     end
 end
+
 -- Library/Main script
 
-local quake = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/Libraries/normal/quake/src"))()
+local quake = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/quake/normal/bundled.lua"))()
 local main = quake:Window({
     Title = "Pet Simulator 99",
     Parent = game.CoreGui,
