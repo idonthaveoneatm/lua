@@ -7,7 +7,7 @@ Github: https://github.com/idonthaveoneatm
 ]]--
 
 print("Pet Simulator 99 | griffindoescooking")
-warn('The solara version removes require functions')
+warn('This version removes require functions')
 getgenv().griffinVersion = "3.0.0"
 
 repeat
@@ -101,6 +101,7 @@ local Map
 if getMap() then
     Map = getMap()
 else
+    warn("map not found")
     task.spawn(function()
         repeat
             task.wait()
@@ -405,7 +406,7 @@ end
 
 local quake = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/quake/normal/rbxmSuite.lua"))()
 local main = quake:Window({
-    Title = "Pet Simulator 99 | Solara",
+    Title = "Pet Simulator 99 | Requireless",
     isMobile = UserInputService.TouchEnabled and not UserInputService.MouseEnabled
 })
 
@@ -501,8 +502,6 @@ waitSetter = farmingTab:TextBox({
         updateConfig()
     end
 })
-
-
 
 farmingTab:Toggle({
     Name = "Buy Next Zone",
