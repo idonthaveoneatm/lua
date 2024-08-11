@@ -404,7 +404,12 @@ end
 
 -- Library/Main script
 
-local quake = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/quake/normal/rbxmSuite.lua"))()
+local quake
+if identifyexecutor() == "Solara" then
+    quake = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/quake/normal/rbxmSuite.lua"))()
+else
+    quake = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/quake/normal/bundled.lua"))()
+end
 local main = quake:Window({
     Title = "Pet Simulator 99 | Requireless",
     isMobile = UserInputService.TouchEnabled and not UserInputService.MouseEnabled
