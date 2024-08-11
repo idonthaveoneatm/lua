@@ -6,9 +6,6 @@ Github: https://github.com/idonthaveoneatm
 
 ]]--
 
-print("all my homies hate solara")
-return loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/WorseSolaraVersion.lua"))()
-
 print("Pet Simulator 99 | griffindoescooking")
 warn('The solara version removes require functions')
 getgenv().griffinVersion = "3.0.0"
@@ -406,7 +403,7 @@ end
 
 -- Library/Main script
 
-local quake = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/Libraries/normal/quake/src"))()
+local quake = loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/quake/normal/rbxmSuite.lua"))()
 local main = quake:Window({
     Title = "Pet Simulator 99 | Solara",
     isMobile = UserInputService.TouchEnabled and not UserInputService.MouseEnabled
