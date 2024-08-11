@@ -6,34 +6,27 @@ https://www.roblox.com/games/8737899170/Pet-Simulator-99-NEW
 ```lua
 loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/src"))()
 ```
-if solara
+if your executor doesn't have `require(module)` aka bad use this
 ```lua
 loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/SolaraVersion.lua"))()
 ```
-or
-```lua
-loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/WorseSolaraVersion.lua"))()
-```
-if you are on mobile and cannot copy this to replace the loadstring:
-
-https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/src
 
 ## Features
 
-farm orbs
+- farm orbs
 
-farm eggs
+- collect orbs
 
-farm fishing
+- collect lootbag
 
-collect orbs
+- farm eggs
 
-collect lootbag
+- use fruits
 
-teleport zones
+- teleport zones
 
-teleport vending machines
+- teleport vending machines
 
-complete obbies
+- complete obbies
 
-collect rewards
+- collect rewards
