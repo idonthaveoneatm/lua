@@ -1,9 +1,20 @@
+--[[
+
+Made by griffin
+Discord: @griffindoescooking
+Github: https://github.com/idonthaveoneatm
+
+]]--
+
 local webhookLibrary = {}
 local HttpService = cloneref(game:GetService("HttpService"))
+local request = request or httprequest or http_request
 
 function webhookLibrary.createMessage(properties)
     assert(properties.Url, "Url required")
     assert(properties.username, "username required")
+    assert(properties.content, "content required")
+
     local requestTable = {
         Url = properties.Url,
         Method = "POST",
@@ -18,8 +29,9 @@ function webhookLibrary.createMessage(properties)
     }
     local webhookFunctions = {}
     local EmbedIndex = 0
-    function webhookFunctions.addEmbed(title: string, color: number)
+    function webhookFunctions.addEmbed(title: string, color: number, description: string)
         assert(title, "title required")
+        assert(description, "description required")
         assert(color, "color required")
 
         EmbedIndex += 1
@@ -28,6 +40,7 @@ function webhookLibrary.createMessage(properties)
         table.insert(requestTable.Body.embeds, {
             ["title"] = title,
             ["color"] = tonumber(color),
+            ["description"] = description,
             ["fields"] = {}
         })
         local embedFunctions = {}
