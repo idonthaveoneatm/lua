@@ -1,3 +1,11 @@
+--[[
+
+Made by griffin
+Discord: @griffindoescooking
+Github: https://github.com/idonthaveoneatm
+
+]]--
+
 local timeToLoad = tick()
 
 getgenv().isLooping = false
