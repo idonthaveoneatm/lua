@@ -10,6 +10,10 @@ if your executor doesn't have `require(module)` aka bad use this
 ```lua
 loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/normal/games/PetSimulator99/SolaraVersion.lua"))()
 ```
+incomplete autoranker
+```lua
+loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/refs/heads/normal/games/PetSimulator99/autoRanker.lua"))()
+```
 
 ## Features
 
