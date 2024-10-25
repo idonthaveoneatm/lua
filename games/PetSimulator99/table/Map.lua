@@ -1482,7 +1482,7 @@ return {
             Location = "50 | Fire Dojo"
         },
         {
-            Name = "UpgradeFruitsMachine",
+            Name = "UpgradeFruitsSelectorMachine",
             Location = "52 | Bamboo Forest"
         },
         {
@@ -1507,7 +1507,11 @@ return {
         },
         {
             Name = "IndexMerchant",
-            Location = "76 | Haunted Graveyards"
+            Location = "76 | Haunted Graveyard"
+        },
+        {
+            Name = "PetIndexMachine",
+            Location = "76 | Haunted Graveyard"
         },
         {
             Name = "MagicMachine",
