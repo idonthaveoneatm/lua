@@ -84,6 +84,31 @@ return {
             TeleportPart = CFrame.new(-2686.27978515625, 194.35491943359375, -22400.6171875),
             FarmPart = CFrame.new(-2686.020751953125, 194.93186950683594, -22473.296875)
         },
+        {
+            Name = "225 | Grassy Plains",
+            TeleportPart = CFrame.new(713.1748046875, 13.715641021728516, -24950.107421875),
+            FarmPart = CFrame.new(779.667236328125, 13.841465950012207, -24949.017578125)
+        },
+        {
+            Name = "226 | Rocky Ridge",
+            TeleportPart = CFrame.new(875.4248046875, 13.696640968322754, -24950.107421875),
+            FarmPart = CFrame.new(941.917236328125, 13.841465950012207, -24949.017578125)
+        },
+        {
+            Name = "227 | Crystal Lake",
+            TeleportPart = CFrame.new(1037.2998046875, 13.704641342163086, -24950.107421875),
+            FarmPart = CFrame.new(1103.792236328125, 13.841465950012207, -24949.017578125)
+        },
+        {
+            Name = "228 | Electro Forge",
+            TeleportPart = CFrame.new(1198.7998046875, 13.698640823364258, -24950.107421875),
+            FarmPart = CFrame.new(1265.292236328125, 13.841465950012207, -24949.017578125)
+        },
+        {
+            Name = "229 | Elemental Realm",
+            TeleportPart = CFrame.new(1360.7998046875, 13.286641120910645, -24950.107421875),
+            FarmPart = CFrame.new(1427.292236328125, 13.841465950012207, -24949.017578125)
+        },
     },
     Eggs = {
         "213 | Rusty Egg",
@@ -129,7 +154,11 @@ return {
         {
             Name = "BundleVendingMachine3",
             Location = "214 | Hacker Mainframe"
-        }
+        },
+        {
+            Name = "PotionVendingMachine6",
+            Location = "228 | Electro Forge"
+        },
     },
     Rewards = {
         {
@@ -147,7 +176,11 @@ return {
         {
             Name = "DailyPotions6",
             Location = "212 | Hacker Cave"
-        }
+        },
+        {
+            Name = "DailyDiamonds8",
+            Location = "227 | Crystal Lake"
+        },
     },
     OtherMachines = {
         {
@@ -181,6 +214,14 @@ return {
         {
             Name = "SummerGiftMachine",
             Location = "205 | Beach Island"
+        },
+        {
+            Name = "ElementalQuest",
+            Location = "229 | Elemental Realm"
+        },
+        {
+            Name = "PetCubeStore",
+            Location = "225 | Grassy Plains"
         },
     }
 }
