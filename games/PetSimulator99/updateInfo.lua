@@ -18,7 +18,7 @@ local base64decode = crypt.base64decode or crypt.base64_decode or base64.decode 
 local function getMap()
     local rValue
     for _,map in ipairs(Workspace:GetChildren()) do
-        if map.Name:find("Map") then
+        if map.Name == "Map" or map.Name == "Map2" or map.Name == "Map3" then
             rValue = map
             break
         end
