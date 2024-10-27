@@ -18,7 +18,7 @@ local base64decode = crypt.base64decode or crypt.base64_decode or base64.decode 
 local function getMap()
     local rValue
     for _,map in ipairs(Workspace:GetChildren()) do
-        if map.Name == "Map" or map.Name == "Map2" or map.Name == "Map3" then
+        if map.Name:find("Map") then
             rValue = map
             break
         end
@@ -467,6 +467,9 @@ task.wait(2)
 
 task.spawn(function()
     while task.wait() and updating do
+        if getMap().Name == "Map" or getMap().Name == "Map2" then
+            break
+        end
         checkWorlds()
         checkEggs()
         checkMachines()
