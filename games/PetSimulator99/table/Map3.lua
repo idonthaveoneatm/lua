@@ -33,12 +33,7 @@ return {
             TeleportPart = CFrame.new(-2208.323974609375, 13.62100601196289, -8504.15625),
             FarmPart = CFrame.new(-2141.937255859375, 14.591465950012207, -8505.8544921875)
         },
-        
-        {
-            Name = "207 | Tiki Island",
-            TeleportPart = CFrame.new(-3826.1015625, 411.3309326171875, -12969.77734375),
-            FarmPart = CFrame.new(-3894.145263671875, 409.9169006347656, -12968.7373046875)
-        },
+
         {
             Name = "205 | Beach Island",
             TeleportPart = CFrame.new(-2629.7158203125, 231.2174072265625, -12963.6396484375),
@@ -48,6 +43,11 @@ return {
             Name = "206 | Ocean Island",
             TeleportPart = CFrame.new(-3233.224365234375, 291.1986999511719, -12969.77734375),
             FarmPart = CFrame.new(-3304.645263671875, 290.82281494140625, -12966.9365234375)
+        },
+        {
+            Name = "207 | Tiki Island",
+            TeleportPart = CFrame.new(-3826.1015625, 411.3309326171875, -12969.77734375),
+            FarmPart = CFrame.new(-3894.145263671875, 409.9169006347656, -12968.7373046875)
         },
         {
             Name = "208 | Jungle Island",
@@ -84,6 +84,32 @@ return {
             TeleportPart = CFrame.new(-2686.27978515625, 194.35491943359375, -22400.6171875),
             FarmPart = CFrame.new(-2686.020751953125, 194.93186950683594, -22473.296875)
         },
+        {
+            Name = "215 | Dirt Village",
+            TeleportPart = CFrame.new(713.1748046875, 13.715641021728516, -14306.9501953125),
+            FarmPart = CFrame.new(779.667236328125, 13.841465950012207, -14305.857421875)
+        },
+        {
+            Name = "216 | Stone Forts",
+            TeleportPart = CFrame.new(875.4248046875, 13.696640968322754, -14306.9501953125),
+            FarmPart = CFrame.new(941.917236328125, 13.841465950012207, -14305.857421875)
+        },
+        {
+            Name = "217 | Silver City",
+            TeleportPart = CFrame.new(1037.2998046875, 13.704641342163086, -14306.9501953125),
+            FarmPart = CFrame.new(1103.792236328125, 13.841465950012207, -14305.857421875)
+        },
+        {
+            Name = "218 | Golden Metropolis",
+            TeleportPart = CFrame.new(1198.7998046875, 13.698640823364258, -14306.9501953125),
+            FarmPart = CFrame.new(1265.292236328125, 13.841465950012207, -14305.857421875)
+        },
+        {
+            Name = "219 | Diamond Mega City",
+            TeleportPart = CFrame.new(1360.7998046875, 13.286641120910645, -14306.9501953125),
+            FarmPart = CFrame.new(1427.292236328125, 13.841465950012207, -14305.857421875)
+        },
+        
         {
             Name = "225 | Grassy Plains",
             TeleportPart = CFrame.new(713.1748046875, 13.715641021728516, -24950.107421875),
@@ -214,6 +240,18 @@ return {
         {
             Name = "SummerGiftMachine",
             Location = "205 | Beach Island"
+        },
+        {
+            Name = "BoostExchangeMachine",
+            Location = "217 | Silver City"
+        },
+        {
+            Name = "RaffleMerchant",
+            Location = "218 | Golden Metropolis"
+        },
+        {
+            Name = "RebirthShrine",
+            Location = "219 | Diamond Mega City"
         },
         {
             Name = "ElementalQuest",
