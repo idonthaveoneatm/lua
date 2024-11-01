@@ -111,6 +111,21 @@ return {
         },
         
         {
+            Name = "222 | Kawaii Grove",
+            TeleportPart = CFrame.new(1037.2998046875, 13.704641342163086, -36306.94921875),
+            FarmPart = CFrame.new(1103.792236328125, 13.841465950012207, -36305.859375)
+        },
+        {
+            Name = "223 | Kawaii Dreamland",
+            TeleportPart = CFrame.new(1198.7998046875, 13.698640823364258, -36306.94921875),
+            FarmPart = CFrame.new(1265.292236328125, 13.841465950012207, -36305.859375)
+        },
+        {
+            Name = "224 | Kawaii Temple",
+            TeleportPart = CFrame.new(1360.7998046875, 13.286641120910645, -36306.94921875),
+            FarmPart = CFrame.new(1427.292236328125, 13.841465950012207, -36305.859375)
+        },
+        {
             Name = "225 | Grassy Plains",
             TeleportPart = CFrame.new(713.1748046875, 13.715641021728516, -24950.107421875),
             FarmPart = CFrame.new(779.667236328125, 13.841465950012207, -24949.017578125)
@@ -182,6 +197,10 @@ return {
             Location = "214 | Hacker Mainframe"
         },
         {
+            Name = "FruitVendingMachine4",
+            Location = "224 | Kawaii Temple"
+        },
+        {
             Name = "PotionVendingMachine6",
             Location = "228 | Electro Forge"
         },
@@ -202,6 +221,10 @@ return {
         {
             Name = "DailyPotions6",
             Location = "212 | Hacker Cave"
+        },
+        {
+            Name = "DailyEnchants6",
+            Location = "222 | Kawaii Grove"
         },
         {
             Name = "DailyDiamonds8",
