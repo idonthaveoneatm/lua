@@ -158,6 +158,22 @@ return {
             TeleportPart = CFrame.new(1360.7998046875, 13.286641120910645, -24950.107421875),
             FarmPart = CFrame.new(1427.292236328125, 13.841465950012207, -24949.017578125)
         },
+
+        {
+            Name = "232 | Lost Library",
+            TeleportPart = CFrame.new(6089.61767578125, 194.95469665527344, -20570.408203125),
+            FarmPart = CFrame.new(6156.1103515625, 195.0915069580078, -20569.31640625)
+        },
+        {
+            Name = "233 | Nebula Forest",
+            TeleportPart = CFrame.new(6539.01123046875, 313.6986389160156, -20570.408203125),
+            FarmPart = CFrame.new(6605.5029296875, 313.8414611816406, -20569.31640625)
+        },        
+        {
+            Name = "234 | Aether Colosseum",
+            TeleportPart = CFrame.new(6920.125, 413.28662109375, -20570.408203125),
+            FarmPart = CFrame.new(6986.6171875, 413.8414611816406, -20569.31640625)
+        },
     },
     Eggs = {
         "213 | Rusty Egg",
@@ -189,6 +205,11 @@ return {
         "239 | Water Type Egg",
         "240 | Electric Type Egg",
         "241 | Fire Type Egg",
+        "242 | Elysium Egg",
+        "243 | Paradise Egg",
+        "244 | Lost Library Egg",
+        "245 | Nebula Egg",
+        "246 | Colosseum Egg",
     },
     Minigames = {},
     VendingMachines = {
