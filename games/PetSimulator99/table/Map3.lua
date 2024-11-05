@@ -158,7 +158,16 @@ return {
             TeleportPart = CFrame.new(1360.7998046875, 13.286641120910645, -24950.107421875),
             FarmPart = CFrame.new(1427.292236328125, 13.841465950012207, -24949.017578125)
         },
-
+        {
+            Name = "230 | Elysium Fields",
+            TeleportPart = CFrame.new(5390.375, 13.715641021728516, -20570.408203125),
+            FarmPart = CFrame.new(5456.8671875, 13.841465950012207, -20569.31640625)
+        },
+        {
+            Name = "231 | Ocean Paradise",
+            TeleportPart = CFrame.new(5739.6044921875, 98.89356231689453, -20570.408203125),
+            FarmPart = CFrame.new(5806.0966796875, 99.03839111328125, -20569.31640625)
+        },
         {
             Name = "232 | Lost Library",
             TeleportPart = CFrame.new(6089.61767578125, 194.95469665527344, -20570.408203125),
@@ -259,6 +268,10 @@ return {
             Name = "DailyDiamonds8",
             Location = "227 | Crystal Lake"
         },
+        {
+            Name = "DailyItems6",
+            Location = "231 | Ocean Paradise"
+        },
     },
     OtherMachines = {
         {
@@ -312,6 +325,10 @@ return {
         {
             Name = "PetCubeStore",
             Location = "225 | Grassy Plains"
+        },
+        {
+            Name = "WingsUpgradesMachine",
+            Location = "230 | Elysium Fields"
         },
     }
 }
