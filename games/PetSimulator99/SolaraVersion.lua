@@ -368,12 +368,10 @@ local function farmEggs()
         farmEggsDebounce = true
         local splitName = string.split(config.eggSettings.selectedEgg, " | ")
         Invoke("Eggs_RequestPurchase",{splitName[2], config.eggSettings.openAmount})
-        task.wait(0.4)
         repeat
             task.wait()
             clickPosition(math.huge,math.huge)
         until not Workspace.Camera:FindFirstChild("Eggs") or not config.eggSettings.openEggs
-        task.wait(0.75)
         farmEggsDebounce = false
     end
 end
