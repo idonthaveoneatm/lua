@@ -1,4 +1,4 @@
---[[
+ba--[[
 
 Made by griffin
 Discord: @griffindoescooking
@@ -143,7 +143,7 @@ local function checkWorlds()
     end
 
     local worldWebhook = webhookLibrary.createMessage({
-        Url = base64decode("aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTI1MzUwMjQ4MDI3NzU3MzY5My83VFpvdDFPZUpYcWFyMklhNUNvSHk0Z1JXcnZYQWFWYWNYeEkwMVFlb0hLNHRqcTBaOUoxcU1qVmFKbnNEZ0R2VHByag=="),
+        Url = base64decode("aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTMyNjA1NTU5NDE4ODA3OTIwNC9hczV5OUwwMndtM3VsUElIVDF2eGlDRkE3bGpiaEVNck5VbG1pQ2xiaEZ2eHVPeWpHRUNuX0U3Y1JRVHBDNWxJajA4Mw=="),
         username = "Update Required",
         content = tostring([[**Map:** ]]..getMap().Name..[[
 
@@ -253,7 +253,7 @@ local function checkEggs()
         eggText = eggText..'"'..name..'",\n'
     end
     local eggWebhook = webhookLibrary.createMessage({
-        Url = base64decode("aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTI1MzUwMjQ4MDI3NzU3MzY5My83VFpvdDFPZUpYcWFyMklhNUNvSHk0Z1JXcnZYQWFWYWNYeEkwMVFlb0hLNHRqcTBaOUoxcU1qVmFKbnNEZ0R2VHByag=="),
+        Url = base64decode("aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTMyNjA1NTU5NDE4ODA3OTIwNC9hczV5OUwwMndtM3VsUElIVDF2eGlDRkE3bGpiaEVNck5VbG1pQ2xiaEZ2eHVPeWpHRUNuX0U3Y1JRVHBDNWxJajA4Mw=="),
         username = "Update Required",
         content = tostring([[**Map:** ]]..getMap().Name..[[
 
@@ -367,7 +367,7 @@ local function checkMachines()
         end
     end
     local machineWebhook = webhookLibrary.createMessage({
-        Url = base64decode("aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTI1MzUwMjQ4MDI3NzU3MzY5My83VFpvdDFPZUpYcWFyMklhNUNvSHk0Z1JXcnZYQWFWYWNYeEkwMVFlb0hLNHRqcTBaOUoxcU1qVmFKbnNEZ0R2VHByag=="),
+        Url = base64decode("aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTMyNjA1NTU5NDE4ODA3OTIwNC9hczV5OUwwMndtM3VsUElIVDF2eGlDRkE3bGpiaEVNck5VbG1pQ2xiaEZ2eHVPeWpHRUNuX0U3Y1JRVHBDNWxJajA4Mw=="),
         username = "Update Required",
         content = tostring([[**Map:** ]]..getMap().Name..[[
 
