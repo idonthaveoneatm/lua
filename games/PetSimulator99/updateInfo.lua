@@ -1,4 +1,4 @@
-ba--[[
+--[[
 
 Made by griffin
 Discord: @griffindoescooking
