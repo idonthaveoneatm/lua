@@ -1,5 +1,5 @@
 
-# Pet Simulator 99
+# Pet Simulator 99 DISCONTINUED
 
 https://www.roblox.com/games/8737899170/Pet-Simulator-99-NEW
 
