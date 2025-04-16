@@ -44,12 +44,14 @@ function webhookLibrary.createMessage(properties)
             ["fields"] = {}
         })
         local embedFunctions = {}
-        function embedFunctions.addField(name, value)
+        function embedFunctions.addField(name, value, inline)
             assert(name, "name required")
             assert(value, "value required")
+            inline = inline or false
             table.insert(requestTable.Body.embeds[privateIndex].fields, {
                 ["name"] = name,
-                ["value"] = value
+                ["value"] = value,
+                ["inline"] = inline
             })
         end
         return embedFunctions
