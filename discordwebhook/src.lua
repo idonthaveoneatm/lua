@@ -29,10 +29,11 @@ function webhookLibrary.createMessage(properties)
     }
     local webhookFunctions = {}
     local EmbedIndex = 0
-    function webhookFunctions.addEmbed(title: string, color: number, description: string)
+    function webhookFunctions.addEmbed(title: string, color: number, description: string, footer)
         assert(title, "title required")
         assert(description, "description required")
         assert(color, "color required")
+        footer = footer or ""
 
         EmbedIndex += 1
         local privateIndex = EmbedIndex
@@ -41,7 +42,8 @@ function webhookLibrary.createMessage(properties)
             ["title"] = title,
             ["color"] = tonumber(color),
             ["description"] = description,
-            ["fields"] = {}
+            ["fields"] = {},
+            ["footer"] = {["text"] = footer}
         })
         local embedFunctions = {}
         function embedFunctions.addField(name, value, inline)
