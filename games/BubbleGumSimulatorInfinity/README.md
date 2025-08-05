@@ -7,10 +7,8 @@ I do not know what it features.
 loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/refs/heads/normal/games/BubbleGumSimulatorInfinity/general.luau"))()
 ```
 ### Server Scraper
-Was used when I was scraping servers. Put in autoexecute
-```lua
-loadstring(game:HttpGet("https://raw.githubusercontent.com/idonthaveoneatm/lua/refs/heads/normal/games/BubbleGumSimulatorInfinity/serverScraper.luau"))()
-```
+Was used when I was scraping servers. Put in autoexecute. You must edit for usage
+https://raw.githubusercontent.com/idonthaveoneatm/lua/refs/heads/normal/games/BubbleGumSimulatorInfinity/serverScraper.luau
 ### Quest Completer
 Incomplete quest completer it lacked flexibility with worlds.
 ```lua
